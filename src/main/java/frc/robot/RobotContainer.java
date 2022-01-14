@@ -24,17 +24,17 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain();
 
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
-  private final DriveCurrentMoniter driveCurrentMoniter = new DriveCurrentMoniter(driveTrain);
-  private final CommandBase driveInteruptCommand = (new WaitCommand(0.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
+  private final DriveCurrentMoniter driveCurrentMoniter = new DriveCurrentMoniter();
+  private final CommandBase driveInteruptCommand = (new WaitCommand(1.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMoniter.getPowerDistributionPanel());
+    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMoniter.getPowerDistribution());
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
-    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMoniter, driveInteruptCommand);
+    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMoniter); // note that the drive interupt command is not here becuase it does not show up correctly
     CardinalShuffleboard.setupErrorsLayout();
 
     CardinalShuffleboard.setCurrentProtectionCommand(driveCurrentMoniter);

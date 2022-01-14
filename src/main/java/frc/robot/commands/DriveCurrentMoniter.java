@@ -4,31 +4,42 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants.Current;
-import frc.robot.subsystems.DriveTrain;
 
 public class DriveCurrentMoniter extends CommandBase {
-  private PowerDistribution powerDistributionPanel = new PowerDistribution();
-
-  private DriveTrain driveTrainSubsystem;
+  /**
+   * Link to WPI for using power distribution class
+   * https://docs.wpilib.org/en/stable/docs/software/hardware-apis/motors/wpi-drive-classes.html
+   * Link to API
+   * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/PowerDistribution.html
+   * Object for controlling the power distribution panel
+   */
+  private PowerDistribution powerDistribution = new PowerDistribution();
 
   // set this to the max current at full throtle
-  private final double maxCurrent = 30.0;
+  private final double maxCurrent = 20.0;
 
-  private double leftCurrentCounter = 0;
-  private double rightCurrentCounter = 0;
+  /**
+   * Link to WPILib for using Median Filters
+   * https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/median-filter.html
+   * Link to API
+   * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/filter/MedianFilter.html
+   * uses the median of the last 15 samples to filter the inputs
+   */
+  
+  private MedianFilter leftCurrentFilter = new MedianFilter(15);
+  private MedianFilter rightCurrentFilter = new MedianFilter(15);
 
   // the state of the DriveTrain
   private boolean isStalled;
 
   /** Creates a new DriveCurrentMoniter. */
-  public DriveCurrentMoniter(DriveTrain driveTrainSubsystem) {
+  public DriveCurrentMoniter() {
     // Use addRequirements() here to declare subsystem dependencies.
-
-    this.driveTrainSubsystem = driveTrainSubsystem;
 
     // Do not addRequirements(driveTrainSubsystem)
     // Do not need to add requirements because this is only reading values
@@ -43,23 +54,21 @@ public class DriveCurrentMoniter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double frontRightCurrent = powerDistributionPanel.getCurrent(Current.FRONT_RIGHT_DRIVE);
-    double backRightCurrent = powerDistributionPanel.getCurrent(Current.BACK_RIGHT_DRIVE);
-    double frontLeftCurrent = powerDistributionPanel.getCurrent(Current.FRONT_LEFT_DRIVE);
-    double backLeftCurrent = powerDistributionPanel.getCurrent(Current.BACK_LEFT_DRIVE);
+    double frontRightCurrent = powerDistribution.getCurrent(Current.FRONT_RIGHT_DRIVE); // Current.FRONT_RIGHT_DRIVE is frome the constants file
+    double backRightCurrent = powerDistribution.getCurrent(Current.BACK_RIGHT_DRIVE);
+    double frontLeftCurrent = powerDistribution.getCurrent(Current.FRONT_LEFT_DRIVE);
+    double backLeftCurrent = powerDistribution.getCurrent(Current.BACK_LEFT_DRIVE);
 
-    double rightCurrent = Math.max(frontRightCurrent, backRightCurrent);
-    double leftCurrent = Math.max(frontLeftCurrent, backLeftCurrent);
+    // get averages of left and right currents
+    double rightCurrent = (frontRightCurrent + backRightCurrent) / 2;
+    double leftCurrent = (frontLeftCurrent + backLeftCurrent) / 2;
 
     // dampening for current spikes
-    rightCurrentCounter = rightCurrentCounter * 0.9 + rightCurrent * 0.1;
-    leftCurrentCounter = leftCurrentCounter * 0.9 + leftCurrent * 0.1;
+    rightCurrent = rightCurrentFilter.calculate(rightCurrent);
+    leftCurrent = leftCurrentFilter.calculate(leftCurrent);
 
-    rightCurrent = rightCurrentCounter;
-    leftCurrent = leftCurrentCounter;
-
-    boolean isRightStalled = rightCurrent / (driveTrainSubsystem.getRightPercent() + 0.1) > maxCurrent;
-    boolean isLeftStalled = leftCurrent / (driveTrainSubsystem.getLeftPercent() + 0.1) > maxCurrent;
+    boolean isRightStalled = rightCurrent > maxCurrent;
+    boolean isLeftStalled = leftCurrent > maxCurrent;
 
     if (isRightStalled || isLeftStalled)
     {
@@ -85,7 +94,7 @@ public class DriveCurrentMoniter extends CommandBase {
     return isStalled;
   }
 
-  public PowerDistribution getPowerDistributionPanel() {
-    return powerDistributionPanel;
+  public PowerDistribution getPowerDistribution() {
+    return powerDistribution;
   }
 }

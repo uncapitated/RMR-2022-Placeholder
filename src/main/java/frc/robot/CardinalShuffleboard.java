@@ -6,8 +6,6 @@ package frc.robot;
 
 import java.util.Map;
 
-import org.opencv.features2d.FlannBasedMatcher;
-
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 
@@ -34,13 +32,14 @@ public class CardinalShuffleboard {
     // block for Driver
     private static ShuffleboardLayout driveTrainLayout = cardinalTab.getLayout("Drive Train", BuiltInLayouts.kList)
             .withSize(3, 6).withPosition(8, 0);
+    
     private static NetworkTableEntry maxForwardPowerEntry;
     private static NetworkTableEntry maxTurnPowerEntry;
     private static NetworkTableEntry currentProtectionEnabledEntry;
 
     // Main block
-    private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList).withSize(6, 6)
-            .withPosition(2, 0);
+    private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList)
+            .withSize(6, 6).withPosition(2, 0);
 
     public static void setupMainLayout(DifferentialDrive drive, PowerDistribution panel) {
         mainLayout.add(drive).withWidget(BuiltInWidgets.kDifferentialDrive);
@@ -78,7 +77,7 @@ public class CardinalShuffleboard {
 
     public static void setCurrentProtectionCommand(CommandBase currentMoniterCommand) {
         currentProtectionEnabledEntry.addListener(event -> {
-            if (event.value.getBoolean()) {
+            if (event.value.getBoolean()) { // if the switch is turned on then the current moniter command is disabled
                 currentMoniterCommand.cancel();
             }
             else {
