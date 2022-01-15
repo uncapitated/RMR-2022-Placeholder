@@ -28,12 +28,4 @@ public class LaunchWheels extends SubsystemBase {
     wheelsSRXRight.set(-d);
     System.out.println("Triggered");
   }
-
-  public void setLeft(double d) {
-    wheelsSRXLeft.set(d);
-  }
-
-  public void setRight(double d) {
-    wheelsSRXRight.set(d);
-  }
 }
