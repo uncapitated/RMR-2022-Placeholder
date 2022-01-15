@@ -23,8 +23,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
   private final Levitation levitation = new Levitation();
+  private final LaunchWheels launchWheels = new LaunchWheels();
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
   private final WingardiumLeviosa wingardiumLeviosa = new WingardiumLeviosa(levitation);
+  private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
 
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -34,6 +36,7 @@ public class RobotContainer {
 
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
     CardinalShuffleboard.setupErrorsLayout();
+    CardinalShuffleboard.setupArmWheelsLayout(launchWheels, Controller.Drive.get_a_button());
 
   }
 
@@ -58,6 +61,7 @@ public class RobotContainer {
     // command that will run on drive train when no other commands are running
     driveTrain.setDefaultCommand(driveCommand);
     levitation.setDefaultCommand(wingardiumLeviosa);
+    launchWheels.setDefaultCommand(wheelsCommand);
     
 
     // command responsible for checking PDP
