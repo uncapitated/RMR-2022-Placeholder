@@ -59,11 +59,11 @@ public class Controller
         }
 
         public static boolean get_a_button() {
-            return controller.getAButton();
+            return controller.getAButtonPressed();
         }
 
         public static boolean get_b_button() {
-            return controller.getBButton();
+            return controller.getBButtonPressed();
         }
 
         public static void setRumble(boolean hasRumble)
