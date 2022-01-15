@@ -54,22 +54,6 @@ public class Controller
             return controller.getLeftX() * multiplier;
         }
 
-        public static double get_secondary_vertical_stick(){
-            return controller.getRightY();
-        }
-
-        public static boolean get_a_button() {
-            return controller.getAButton();
-        }
-
-        public static boolean get_b_button() {
-            return controller.getBButton();
-        }
-
-        public static double get_right_stick_horizontal(){
-            return controller.getRightX();
-        }
-
         public static void setRumble(boolean hasRumble)
         {
             if (hasRumble)
