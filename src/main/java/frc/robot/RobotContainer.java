@@ -24,7 +24,7 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain();
 
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
-  private final CommandBase driveInteruptCommand = (new WaitCommand(0.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
+
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

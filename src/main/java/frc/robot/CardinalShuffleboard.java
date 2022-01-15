@@ -36,7 +36,7 @@ public class CardinalShuffleboard {
             .withSize(3, 6).withPosition(8, 0);
     private static NetworkTableEntry maxForwardPowerEntry;
     private static NetworkTableEntry maxTurnPowerEntry;
-    private static NetworkTableEntry currentProtectionEnabledEntry;
+
 
     // Main block
     private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList).withSize(6, 6)
@@ -64,8 +64,7 @@ public class CardinalShuffleboard {
         maxTurnPowerEntry = driveTrainLayout.addPersistent("Max Turn Power", maxTurnPower)
                 .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
 
-        currentProtectionEnabledEntry = driveTrainLayout.add("Disable Current Protection", false)
-                .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+
     }
 
     public static double getMaxForwardPowerEntry() {
@@ -76,16 +75,7 @@ public class CardinalShuffleboard {
         return maxTurnPowerEntry.getDouble(1.0);
     }
 
-    public static void setCurrentProtectionCommand(CommandBase currentMoniterCommand) {
-        currentProtectionEnabledEntry.addListener(event -> {
-            if (event.value.getBoolean()) {
-                currentMoniterCommand.cancel();
-            }
-            else {
-                currentMoniterCommand.schedule();
-            }
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-    }
+ 
 
     public static void setupCommandsLayout(CommandBase... commands)
     {
