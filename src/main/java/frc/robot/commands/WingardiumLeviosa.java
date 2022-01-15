@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.ResourceBundle.Control;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Controller;
@@ -12,6 +11,7 @@ import frc.robot.subsystems.Levitation;
 
 public class WingardiumLeviosa extends CommandBase {
   private Levitation levitation;
+  private double valController = 0.0;
   /** Creates a new WingardiumLeviosa. */
   public WingardiumLeviosa(Levitation levitation) {
     this.levitation = levitation;
@@ -26,7 +26,14 @@ public class WingardiumLeviosa extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    levitation.set(Controller.Drive.get_secondary_vertical_stick());
+    valController = Controller.Drive.get_secondary_vertical_stick();
+    levitation.set(valController);
+    
+  }
+
+  public double getRotation()
+  {
+    return valController;
   }
 
   // Called once the command ends or is interrupted.

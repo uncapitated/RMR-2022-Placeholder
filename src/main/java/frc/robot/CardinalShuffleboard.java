@@ -6,15 +6,13 @@ package frc.robot;
 
 import java.util.Map;
 
-import org.opencv.features2d.FlannBasedMatcher;
-
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Levitation;
 
 /**
  * Interface for populating Shuffleboard with the Robot state All new widgets
@@ -29,22 +27,26 @@ public class CardinalShuffleboard {
 
     // block for Errors
     private static ShuffleboardLayout errorsLayout = cardinalTab.getLayout("Errors", BuiltInLayouts.kList)
-            .withSize(2, 3).withPosition(0, 3);
+            .withSize(2, 1).withPosition(0, 3);
 
     // block for Driver
     private static ShuffleboardLayout driveTrainLayout = cardinalTab.getLayout("Drive Train", BuiltInLayouts.kList)
-            .withSize(3, 6).withPosition(8, 0);
+            .withSize(2, 4).withPosition(6, 0);
     private static NetworkTableEntry maxForwardPowerEntry;
     private static NetworkTableEntry maxTurnPowerEntry;
 
 
-    // Main block
-    private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList).withSize(6, 6)
-            .withPosition(2, 0);
+    // block for elevator
+    private static ShuffleboardLayout elevatorShuffleboardLayout = cardinalTab.getLayout("Elevator", BuiltInLayouts.kList)
+            .withSize(1,4).withPosition(8, 0);
+    private static NetworkTableEntry maxRotationSpeed;
 
-    public static void setupMainLayout(DifferentialDrive drive, PowerDistribution panel) {
+    // Main block
+    private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList)
+            .withSize(4, 4).withPosition(2, 0);
+
+    public static void setupMainLayout(DifferentialDrive drive) {
         mainLayout.add(drive).withWidget(BuiltInWidgets.kDifferentialDrive);
-        mainLayout.add(panel).withWidget(BuiltInWidgets.kPowerDistribution);
     }
 
     public static void setupErrorsLayout() {
@@ -82,5 +84,12 @@ public class CardinalShuffleboard {
         for (CommandBase command : commands) {
             commandsLayout.add(command).withWidget(BuiltInWidgets.kCommand);
         }
+    }
+
+    public static void setupElevatorLayout(Levitation levitation, double rotationSpeed)
+    {
+        elevatorShuffleboardLayout.add(levitation);
+        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Rotation Speed", rotationSpeed)
+                .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -1, "max", 1)).getEntry();
     }
 }
