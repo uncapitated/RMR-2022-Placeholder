@@ -27,7 +27,7 @@ public class WingardiumLeviosa extends CommandBase {
   @Override
   public void execute() {
     valController = Controller.Drive.get_secondary_vertical_stick();
-    levitation.set(valController);
+    levitation.set(valController * 0.6);
     
   }
 
