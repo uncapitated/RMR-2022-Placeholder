@@ -37,6 +37,7 @@ public class DriveTrain extends SubsystemBase {
     backLeft.setInverted(true);
 
     left = new MotorControllerGroup(frontLeft, backLeft);
+    left.setInverted(true);
 
     // setup right drive
     frontRight = new WPI_VictorSPX(Drive.FRONT_RIGHT);
