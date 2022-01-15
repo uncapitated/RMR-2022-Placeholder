@@ -24,7 +24,6 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain();
 
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
-  private final DriveCurrentMoniter driveCurrentMoniter = new DriveCurrentMoniter(driveTrain);
   private final CommandBase driveInteruptCommand = (new WaitCommand(0.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -32,12 +31,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMoniter.getPowerDistributionPanel());
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
-    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMoniter, driveInteruptCommand);
     CardinalShuffleboard.setupErrorsLayout();
 
-    CardinalShuffleboard.setCurrentProtectionCommand(driveCurrentMoniter);
   }
 
   /**
@@ -62,13 +58,9 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(driveCommand);
 
     // command responsible for checking PDP
-    driveCurrentMoniter.schedule();
   }
 
   public void checkForCommandsToSchedule()
   {
-    if (driveCurrentMoniter.isStalled()) {
-      driveInteruptCommand.schedule();
-    }
   }
 }
