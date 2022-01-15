@@ -55,8 +55,15 @@ public class Controller
         }
 
         public static double get_secondary_vertical_stick(){
-            System.out.println(controller.getRightY());
             return controller.getRightY();
+        }
+
+        public static boolean get_a_button() {
+            return controller.getAButton();
+        }
+
+        public static boolean get_b_button() {
+            return controller.getBButton();
         }
 
         public static void setRumble(boolean hasRumble)
