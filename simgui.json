@@ -3,11 +3,13 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain": "Subsystem",
+      "/LiveWindow/Levitation": "Subsystem",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/Shuffleboard/Cardinal/Commands/DriveCommand": "Command",
       "/Shuffleboard/Cardinal/Commands/ParallelDeadlineGroup": "Command",
       "/Shuffleboard/Cardinal/Drive Train/DriveTrain": "Subsystem",
+      "/Shuffleboard/Cardinal/Elevator/Levitation": "Subsystem",
       "/Shuffleboard/Cardinal/Main/DifferentialDrive[1]": "DifferentialDrive"
     }
   }
