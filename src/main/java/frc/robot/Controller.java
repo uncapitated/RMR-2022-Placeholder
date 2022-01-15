@@ -66,6 +66,10 @@ public class Controller
             return controller.getBButton();
         }
 
+        public static double get_right_stick_horizontal(){
+            return controller.getRightX();
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             if (hasRumble)

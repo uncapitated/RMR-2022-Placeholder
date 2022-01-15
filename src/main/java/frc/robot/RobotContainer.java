@@ -27,7 +27,8 @@ public class RobotContainer {
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
   private final WingardiumLeviosa wingardiumLeviosa = new WingardiumLeviosa(levitation);
   private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
-
+  private final SpinnyThing spinnyThing = new SpinnyThing();
+  private final SpinTheSpinner spinTheSpinner = new SpinTheSpinner(spinnyThing);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -62,7 +63,7 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(driveCommand);
     levitation.setDefaultCommand(wingardiumLeviosa);
     launchWheels.setDefaultCommand(wheelsCommand);
-    
+    spinnyThing.setDefaultCommand(spinTheSpinner);
 
     // command responsible for checking PDP
   }
