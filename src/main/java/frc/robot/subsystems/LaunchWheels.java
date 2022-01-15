@@ -5,17 +5,19 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LaunchWheels extends SubsystemBase {
-  private WPI_TalonSRX wheelsSRXLeft;
-  private WPI_TalonSRX wheelsSRXRight;
+  private WPI_VictorSPX wheelsSRXLeft;
+  private WPI_VictorSPX wheelsSRXRight;
 
   /** Creates a new LaunchWheels. */
   public LaunchWheels() {
-    wheelsSRXLeft = new WPI_TalonSRX(Constants.Grabber.LEFT);
-    wheelsSRXRight = new WPI_TalonSRX(Constants.Grabber.RIGHT);
+    wheelsSRXLeft = new WPI_VictorSPX(Constants.Grabber.LEFT);
+    wheelsSRXRight = new WPI_VictorSPX(Constants.Grabber.RIGHT);
   }
 
   @Override
