@@ -1,4 +1,5 @@
 [NetworkTables Storage 3.0]
-double "/Shuffleboard/Cardinal/Drive Train/Max Forward Power"=1
-double "/Shuffleboard/Cardinal/Drive Train/Max Turn Power"=0.364641
+double "/Shuffleboard/Cardinal/Drive Train/Max Forward Power"=0.756522
+double "/Shuffleboard/Cardinal/Drive Train/Max Turn Power"=0.655945
+double "/Shuffleboard/Cardinal/Elevator/Current Elevator Speed"=0
 double "/Shuffleboard/Cardinal/Elevator/Current Rotation Speed"=0

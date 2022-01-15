@@ -85,9 +85,9 @@ public class CardinalShuffleboard {
         }
     }
 
-    public static void setupElevatorLayout(double levitation)
+    public static void setupElevatorLayout(Levitation levitations)
     {
-        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Elevator Speed", levitation)
-                .withWidget(BuiltInWidgets.kVoltageView).withProperties(Map.of("min", -1, "max", 1)).getEntry();
+        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Elevator Speed", levitations.get_levitation())
+                .withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -1, "max", 1)).getEntry();
     }
 }

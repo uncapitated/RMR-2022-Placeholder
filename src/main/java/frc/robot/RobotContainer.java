@@ -34,7 +34,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
-    CardinalShuffleboard.setupElevatorLayout(levitation.get_levitation());
+    CardinalShuffleboard.setupElevatorLayout(levitation);
     CardinalShuffleboard.setupMainLayout(driveTrain.getDrive());
     CardinalShuffleboard.setupErrorsLayout();
 

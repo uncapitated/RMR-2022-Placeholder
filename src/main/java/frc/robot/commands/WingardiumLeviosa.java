@@ -11,7 +11,6 @@ import frc.robot.subsystems.Levitation;
 
 public class WingardiumLeviosa extends CommandBase {
   private Levitation levitation;
-  private double valController;
   /** Creates a new WingardiumLeviosa. */
   public WingardiumLeviosa(Levitation levitation) {
     this.levitation = levitation;
@@ -26,15 +25,10 @@ public class WingardiumLeviosa extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    valController = Controller.Drive.get_secondary_vertical_stick();
-    levitation.set(valController * 0.6);
+    levitation.set(Controller.Drive.get_secondary_vertical_stick() * 0.6);
     
   }
 
-  public double getRotation()
-  {
-    return valController;
-  }
 
   // Called once the command ends or is interrupted.
   @Override
