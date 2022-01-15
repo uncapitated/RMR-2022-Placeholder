@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
+import frc.robot.subsystems.LaunchWheels;
 import frc.robot.subsystems.DriveTrain;
 
 /**
@@ -37,6 +39,10 @@ public class CardinalShuffleboard {
     private static NetworkTableEntry maxForwardPowerEntry;
     private static NetworkTableEntry maxTurnPowerEntry;
 
+    //block for Arm Wheels
+    private static ShuffleboardLayout wheelsLayout = cardinalTab.getLayout("Arm Wheels", BuiltInLayouts.kList)
+            .withSize(2, 3).withPosition(0, 0);
+    private static NetworkTableEntry currentPowerEntry;
 
     // Main block
     private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList).withSize(6, 6)
@@ -54,6 +60,12 @@ public class CardinalShuffleboard {
 
     public static void setError(String name, boolean value) {
         errorsLayout.add(name, value);
+    }
+
+    public static void setupArmWheelsLayout(LaunchWheels launchWheels, boolean aPress) {
+        wheelsLayout.add(launchWheels);
+        currentPowerEntry = wheelsLayout.addPersistent("Current Power", aPress).withWidget(BuiltInWidgets.kBooleanBox)
+            .getEntry();
     }
 
     public static void setupDriveTrainLayout(DriveTrain driveTrain, double maxForwardPower, double maxTurnPower) {
