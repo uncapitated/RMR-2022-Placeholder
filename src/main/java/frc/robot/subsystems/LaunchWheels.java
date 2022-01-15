@@ -26,6 +26,8 @@ public class LaunchWheels extends SubsystemBase {
   public void set(double d) {
     wheelsSRXLeft.set(d);
     wheelsSRXRight.set(-d);
-    System.out.println("Triggered");
+    if (Math.abs(d) > 0.01){
+      System.out.println("Triggered");
+    }
   }
 }
