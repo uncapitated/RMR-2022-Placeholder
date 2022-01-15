@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
+import frc.robot.subsystems.LaunchWheels;
 import frc.robot.subsystems.DriveTrain;
 
 /**
@@ -36,7 +38,11 @@ public class CardinalShuffleboard {
             .withSize(3, 6).withPosition(8, 0);
     private static NetworkTableEntry maxForwardPowerEntry;
     private static NetworkTableEntry maxTurnPowerEntry;
-    private static NetworkTableEntry currentProtectionEnabledEntry;
+
+    //block for Arm Wheels
+    private static ShuffleboardLayout wheelsLayout = cardinalTab.getLayout("Arm Wheels", BuiltInLayouts.kList)
+            .withSize(2, 3).withPosition(0, 0);
+    private static NetworkTableEntry currentPowerEntry;
 
     // Main block
     private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList).withSize(6, 6)
@@ -56,6 +62,12 @@ public class CardinalShuffleboard {
         errorsLayout.add(name, value);
     }
 
+    public static void setupArmWheelsLayout(LaunchWheels launchWheels, boolean aPress) {
+        wheelsLayout.add(launchWheels);
+        currentPowerEntry = wheelsLayout.addPersistent("Current Power", aPress).withWidget(BuiltInWidgets.kBooleanBox)
+            .getEntry();
+    }
+
     public static void setupDriveTrainLayout(DriveTrain driveTrain, double maxForwardPower, double maxTurnPower) {
         driveTrainLayout.add(driveTrain);
         maxForwardPowerEntry = driveTrainLayout.addPersistent("Max Forward Power", maxForwardPower)
@@ -64,8 +76,7 @@ public class CardinalShuffleboard {
         maxTurnPowerEntry = driveTrainLayout.addPersistent("Max Turn Power", maxTurnPower)
                 .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
 
-        currentProtectionEnabledEntry = driveTrainLayout.add("Disable Current Protection", false)
-                .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+
     }
 
     public static double getMaxForwardPowerEntry() {
@@ -76,16 +87,7 @@ public class CardinalShuffleboard {
         return maxTurnPowerEntry.getDouble(1.0);
     }
 
-    public static void setCurrentProtectionCommand(CommandBase currentMoniterCommand) {
-        currentProtectionEnabledEntry.addListener(event -> {
-            if (event.value.getBoolean()) {
-                currentMoniterCommand.cancel();
-            }
-            else {
-                currentMoniterCommand.schedule();
-            }
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-    }
+ 
 
     public static void setupCommandsLayout(CommandBase... commands)
     {

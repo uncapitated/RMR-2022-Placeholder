@@ -6,39 +6,37 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Controller;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.LaunchWheels;
 
-public class DriveInteruptCommand extends CommandBase {
-  private DriveTrain driveTrainSubsystem;
+public class WheelsCommand extends CommandBase {
+  private LaunchWheels launchWheels;
 
-  /** Creates a new InteruptDriveCommand. */
-  public DriveInteruptCommand(DriveTrain driveTrainSubsystem) {
+  /** Creates a new WheelsCommand. */
+  public WheelsCommand(LaunchWheels launchWheels) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.driveTrainSubsystem = driveTrainSubsystem;
-    addRequirements(driveTrainSubsystem);
+    this.launchWheels = launchWheels;
+    addRequirements(launchWheels);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    // frees the motors and does not try to hold them
-    driveTrainSubsystem.setCoast();
-    Controller.Drive.setRumble(true);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrainSubsystem.set(0, 0);
+    if (Controller.Drive.get_a_button()) {
+      launchWheels.set(1);
+    } else if (Controller.Drive.get_b_button()) {
+      launchWheels.set(-1);
+    } else {
+      launchWheels.set(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    // motors conform to the set power
-    driveTrainSubsystem.setBreak();
-    Controller.Drive.setRumble(false);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
