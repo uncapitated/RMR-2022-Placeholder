@@ -54,6 +54,11 @@ public class Controller
             return controller.getLeftX() * multiplier;
         }
 
+        public static double get_secondary_vertical_stick(){
+            System.out.println(controller.getRightY());
+            return controller.getRightY();
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             if (hasRumble)

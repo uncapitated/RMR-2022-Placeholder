@@ -22,8 +22,9 @@ import frc.robot.commands.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
-
+  private final Levitation levitation = new Levitation();
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
+  private final WingardiumLeviosa wingardiumLeviosa = new WingardiumLeviosa(levitation);
 
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -56,6 +57,8 @@ public class RobotContainer {
   public void scheduleTeleOpCommands() {
     // command that will run on drive train when no other commands are running
     driveTrain.setDefaultCommand(driveCommand);
+    levitation.setDefaultCommand(wingardiumLeviosa);
+    
 
     // command responsible for checking PDP
   }
