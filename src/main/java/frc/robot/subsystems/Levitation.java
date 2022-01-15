@@ -10,6 +10,7 @@ import frc.robot.Constants;
 
 public class Levitation extends SubsystemBase {
   private WPI_TalonSRX levitationTalonSRX;
+  private double speed;
   /** Creates a new Levitation. */
   public Levitation() {
     levitationTalonSRX = new WPI_TalonSRX(Constants.Grabber.ELEVATOR);
@@ -21,7 +22,13 @@ public class Levitation extends SubsystemBase {
   }
 
   public void set(double d) {
+    speed = d;
     levitationTalonSRX.set(d);
     levitationTalonSRX.setInverted(true);
+  }
+
+  public double get_levitation()
+  {
+    return speed;
   }
 }

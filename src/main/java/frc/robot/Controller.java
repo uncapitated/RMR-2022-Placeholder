@@ -55,7 +55,6 @@ public class Controller
         }
 
         public static double get_secondary_vertical_stick(){
-            System.out.println(controller.getRightY());
             return controller.getRightY();
         }
 

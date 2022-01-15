@@ -59,7 +59,6 @@ public class CardinalShuffleboard {
     }
 
     public static void setupDriveTrainLayout(DriveTrain driveTrain, double maxForwardPower, double maxTurnPower) {
-        driveTrainLayout.add(driveTrain);
         maxForwardPowerEntry = driveTrainLayout.addPersistent("Max Forward Power", maxForwardPower)
                 .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
 
@@ -86,10 +85,9 @@ public class CardinalShuffleboard {
         }
     }
 
-    public static void setupElevatorLayout(Levitation levitation, double rotationSpeed)
+    public static void setupElevatorLayout(double levitation)
     {
-        elevatorShuffleboardLayout.add(levitation);
-        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Rotation Speed", rotationSpeed)
-                .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -1, "max", 1)).getEntry();
+        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Elevator Speed", levitation)
+                .withWidget(BuiltInWidgets.kVoltageView).withProperties(Map.of("min", -1, "max", 1)).getEntry();
     }
 }

@@ -71,8 +71,8 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setCoast()
   {
-    VictorSPX[] moters = {frontLeft, frontRight, backLeft, backRight};
-    for (VictorSPX motor : moters) {
+    VictorSPX[] motors = {frontLeft, frontRight, backLeft, backRight};
+    for (VictorSPX motor : motors) {
       motor.setNeutralMode(NeutralMode.Coast);
     }
 
@@ -84,8 +84,8 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setBreak()
   {
-    VictorSPX[] moters = {frontLeft, frontRight, backLeft, backRight};
-    for (VictorSPX motor : moters) {
+    VictorSPX[] motors = {frontLeft, frontRight, backLeft, backRight};
+    for (VictorSPX motor : motors) {
       motor.setNeutralMode(NeutralMode.Brake);
     }
   }

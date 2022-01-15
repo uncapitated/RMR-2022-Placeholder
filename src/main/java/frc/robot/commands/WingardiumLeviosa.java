@@ -11,7 +11,7 @@ import frc.robot.subsystems.Levitation;
 
 public class WingardiumLeviosa extends CommandBase {
   private Levitation levitation;
-  private double valController = 0.0;
+  private double valController;
   /** Creates a new WingardiumLeviosa. */
   public WingardiumLeviosa(Levitation levitation) {
     this.levitation = levitation;
