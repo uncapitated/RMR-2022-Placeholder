@@ -17,8 +17,8 @@ public class DriveCommand extends CommandBase {
   private double maxTurn = Math.sqrt(0.5);
 
   // percent per seccond
-  private final double ACCELERATION = 1.0;
-  private final double DECCELERATION = 3.0;
+  private double ACCELERATION = 1.0;
+  private double DECCELERATION = 3.0;
 
   private final double ANGULAR_ACCELERATION = 3.0;
 
@@ -44,13 +44,22 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     // will be squared later in differential drive
-    maxForward = Math.sqrt(CardinalShuffleboard.getMaxForwardPowerEntry());
+    // maxForward = Math.sqrt(CardinalShuffleboard.getMaxForwardPowerEntry());
     maxTurn = Math.sqrt(CardinalShuffleboard.getMaxTurnPowerEntry());
+    maxForward = 1;
 
     double targetForwardPower = Controller.Drive.get_forward();
     double targetTurnPower = Controller.Drive.get_turn();
 
     // adjust forward power based on the target
+
+    if (forwardPower > 0.4 || forwardPower < -0.4) {
+      ACCELERATION = 1;
+    } else {
+      ACCELERATION = 10;
+    }
+
+    System.out.println(ACCELERATION);
 
     // if close enough set them equal
     if (Math.abs(targetForwardPower - forwardPower) < Math.max(ACCELERATION, DECCELERATION) * Robot.period) {
@@ -61,7 +70,7 @@ public class DriveCommand extends CommandBase {
        normally until it hits half power, in which the robot
        will then use acceleration to hit max speed
     */
-    else if ((forwardPower > 0.5 && targetForwardPower > forwardPower) || (forwardPower < -0.5 && targetForwardPower < forwardPower))
+    else if ((forwardPower > 0 && targetForwardPower > forwardPower) || (forwardPower < 0 && targetForwardPower < forwardPower))
     {
       forwardPower += Math.copySign(ACCELERATION, forwardPower) * Robot.period;
     }
