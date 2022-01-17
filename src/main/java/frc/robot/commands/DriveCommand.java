@@ -16,9 +16,9 @@ public class DriveCommand extends CommandBase {
   private double maxForward = Math.sqrt(0.7); 
   private double maxTurn = Math.sqrt(0.5);
 
-  // percent per seccond
-  private double ACCELERATION = 1.0;
-  private double DECCELERATION = 3.0;
+  // percent per second
+  private double acceleration = 1.0;
+  private double deceleration = 3.0;
 
   private final double ANGULAR_ACCELERATION = 3.0;
 
@@ -54,15 +54,15 @@ public class DriveCommand extends CommandBase {
     // adjust forward power based on the target
 
     if (forwardPower > 0.4 || forwardPower < -0.4) {
-      ACCELERATION = 1;
+      acceleration = 1.5;
     } else {
-      ACCELERATION = 10;
+      acceleration = 10;
     }
 
-    System.out.println(ACCELERATION);
+    System.out.println(acceleration);
 
     // if close enough set them equal
-    if (Math.abs(targetForwardPower - forwardPower) < Math.max(ACCELERATION, DECCELERATION) * Robot.period) {
+    if (Math.abs(targetForwardPower - forwardPower) < Math.max(acceleration, deceleration) * Robot.period) {
       forwardPower = targetForwardPower;
     }
     // if accelerating
@@ -72,11 +72,11 @@ public class DriveCommand extends CommandBase {
     */
     else if ((forwardPower > 0 && targetForwardPower > forwardPower) || (forwardPower < 0 && targetForwardPower < forwardPower))
     {
-      forwardPower += Math.copySign(ACCELERATION, forwardPower) * Robot.period;
+      forwardPower += Math.copySign(acceleration, forwardPower) * Robot.period;
     }
     // else decelerate
     else {
-      forwardPower += Math.copySign(DECCELERATION, -forwardPower) * Robot.period;
+      forwardPower += Math.copySign(deceleration, -forwardPower) * Robot.period;
     }
 
     // adjust turn power based on the target
