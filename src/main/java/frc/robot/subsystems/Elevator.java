@@ -9,15 +9,17 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Levitation extends SubsystemBase {
-  private WPI_TalonSRX levitationTalonSRX;
+public class Elevator extends SubsystemBase {
+  private WPI_TalonSRX ElevatorMotor;
   private double speed;
   private DigitalInput top;
   private DigitalInput bottom;
-  /** Creates a new Levitation. */
-  public Levitation() {
-    levitationTalonSRX = new WPI_TalonSRX(Constants.Grabber.ELEVATOR);
+
+  /** Creates a new Elevator. */
+  public Elevator() {
+    ElevatorMotor = new WPI_TalonSRX(Constants.Grabber.ELEVATOR);
     top = new DigitalInput(Constants.LimitSwitches.TOP);
+    bottom = new DigitalInput(Constants.LimitSwitches.BOTTOM);
   }
 
   @Override
@@ -27,11 +29,11 @@ public class Levitation extends SubsystemBase {
 
   public void set(double d) {
     speed = d;
-    levitationTalonSRX.set(d);
-    levitationTalonSRX.setInverted(true);
+    ElevatorMotor.set(d);
+    ElevatorMotor.setInverted(true);
   }
 
-  public double get_levitation()
+  public double get_Elevator()
   {
     return speed;
   }

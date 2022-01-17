@@ -8,14 +8,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Controller;
-import frc.robot.subsystems.Levitation;
+import frc.robot.subsystems.Elevator;
 
-public class WingardiumLeviosa extends CommandBase {
-  private Levitation levitation;
-  /** Creates a new WingardiumLeviosa. */
-  public WingardiumLeviosa(Levitation levitation) {
-    this.levitation = levitation;
-    addRequirements(levitation);
+public class ElevatorCommand extends CommandBase {
+  private Elevator Elevator;
+  /** Creates a new ElevatorCommand. */
+  public ElevatorCommand(Elevator Elevator) {
+    this.Elevator = Elevator;
+    addRequirements(Elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,7 +26,7 @@ public class WingardiumLeviosa extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    levitation.set(Controller.Drive.get_secondary_vertical_stick() * 0.6);
+    Elevator.set(Controller.Drive.get_secondary_vertical_stick() * 0.6);
     
   }
 

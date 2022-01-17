@@ -10,7 +10,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lombok.Getter;
 
-public class LemonLamp extends SubsystemBase {
+public class Limelight extends SubsystemBase {
 
   @Getter
   private NetworkTableEntry hasValidTargets;
@@ -18,8 +18,8 @@ public class LemonLamp extends SubsystemBase {
   @Getter
   private NetworkTableEntry horizontalOffsetAngle;
   
-  /** Creates a new LemonLamp. */
-  public LemonLamp() {
+  /** Creates a new Limelight. */
+  public Limelight() {
     NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
 
     hasValidTargets = networkTableInstance.getEntry("tv");
