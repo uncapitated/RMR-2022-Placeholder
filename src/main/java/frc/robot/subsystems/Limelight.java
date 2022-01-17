@@ -12,18 +12,27 @@ import lombok.Getter;
 
 public class Limelight extends SubsystemBase {
 
+
   @Getter
   private NetworkTableEntry hasValidTargets;
 
   @Getter
   private NetworkTableEntry horizontalOffsetAngle;
   
+  @Getter
+  private NetworkTableEntry verticalOffsetAngle;
+
+  @Getter
+  private NetworkTableEntry targetArea;
+
   /** Creates a new Limelight. */
   public Limelight() {
-    NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
+    NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-    hasValidTargets = networkTableInstance.getEntry("tv");
-    hasValidTargets = networkTableInstance.getEntry("tx");
+    hasValidTargets = networkTable.getEntry("tv");
+    horizontalOffsetAngle = networkTable.getEntry("tx");
+    verticalOffsetAngle = networkTable.getEntry("ty");
+    targetArea = networkTable.getEntry("ta");
   }
 
   @Override

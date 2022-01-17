@@ -59,8 +59,6 @@ public class DriveCommand extends CommandBase {
       acceleration = 10;
     }
 
-    System.out.println(acceleration);
-
     // if close enough set them equal
     if (Math.abs(targetForwardPower - forwardPower) < Math.max(acceleration, deceleration) * Robot.period) {
       forwardPower = targetForwardPower;

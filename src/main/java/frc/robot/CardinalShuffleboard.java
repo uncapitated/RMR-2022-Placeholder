@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.LaunchWheels;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Levitation;
+import frc.robot.subsystems.Elevator;
 
 /**
  * Interface for populating Shuffleboard with the Robot state All new widgets
@@ -56,7 +56,7 @@ public class CardinalShuffleboard {
     }
 
     public static void setupErrorsLayout() {
-        errorsLayout.add("Current Limit Exceded", false).withWidget(BuiltInWidgets.kBooleanBox)
+        errorsLayout.add("Current Limit Exceeded", false).withWidget(BuiltInWidgets.kBooleanBox)
                 .withProperties(Map.of("color when true", "FF0000", "color when false", "000000"));
     }
 
@@ -97,9 +97,9 @@ public class CardinalShuffleboard {
         }
     }
 
-    public static void setupElevatorLayout(Levitation levitations)
+    public static void setupElevatorLayout(Elevator Elevators)
     {
-        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Elevator Speed", levitations.get_levitation())
+        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Elevator Speed", Elevators.get_Elevator())
                 .withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -1, "max", 1)).getEntry();
     }
 }

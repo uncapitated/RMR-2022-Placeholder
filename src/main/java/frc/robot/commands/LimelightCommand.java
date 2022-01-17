@@ -4,21 +4,32 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Limelight;
 
-public class GreenMeansGo extends CommandBase {
-  /** Creates a new GreenMeansGo. */
-  public GreenMeansGo() {
+public class LimelightCommand extends CommandBase {
+  private Limelight Limelight;
+
+  /** Creates a new LimelightCommand. */
+  public LimelightCommand(Limelight Limelight) {
+    this.Limelight = Limelight;
+    addRequirements(Limelight);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    NetworkTableInstance.getDefault().getTable("Limelight").getEntry("ledMode").setNumber(3);
+    System.out.println(NetworkTableInstance.getDefault().getTable("Limelight").getEntry("ledMode"));
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
