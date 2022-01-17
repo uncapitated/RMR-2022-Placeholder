@@ -65,11 +65,6 @@ public class DriveCommand extends CommandBase {
     if (Math.abs(targetForwardPower - forwardPower) < Math.max(ACCELERATION, DECCELERATION) * Robot.period) {
       forwardPower = targetForwardPower;
     }
-    // if accelerating
-    /* 0 changed to 0.5 - this should allow the robot to run
-       normally until it hits half power, in which the robot
-       will then use acceleration to hit max speed
-    */
     else if ((forwardPower > 0 && targetForwardPower > forwardPower) || (forwardPower < 0 && targetForwardPower < forwardPower))
     {
       forwardPower += Math.copySign(ACCELERATION, forwardPower) * Robot.period;

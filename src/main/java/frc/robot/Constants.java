@@ -74,7 +74,7 @@ public final class Constants
 
 
     /**
-     * Class with constant DI/O channels for limmit switches
+     * Class with constant DI/O channels for limit switches
      */
     public static final class LimitSwitches
     {

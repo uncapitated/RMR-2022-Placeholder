@@ -57,7 +57,7 @@ public class Controller
             return controller.getLeftX() * multiplier;
         }
 
-        public static double get_secondary_vertical_stick(){
+        public static double get_secondary_vertical_stick() {
             return controller.getRightY();
         }
 

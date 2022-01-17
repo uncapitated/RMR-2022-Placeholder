@@ -12,12 +12,14 @@ import frc.robot.Constants;
 public class Levitation extends SubsystemBase {
   private WPI_TalonSRX levitationTalonSRX;
   private double speed;
-  private DigitalInput top;
-  private DigitalInput bottom;
+  public DigitalInput top;
+  public DigitalInput bottom;
+
   /** Creates a new Levitation. */
   public Levitation() {
     levitationTalonSRX = new WPI_TalonSRX(Constants.Grabber.ELEVATOR);
     top = new DigitalInput(Constants.LimitSwitches.TOP);
+    bottom = new DigitalInput(Constants.LimitSwitches.BOTTOM);
   }
 
   @Override
