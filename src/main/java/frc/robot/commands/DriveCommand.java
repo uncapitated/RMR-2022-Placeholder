@@ -13,7 +13,7 @@ import frc.robot.subsystems.DriveTrain;
 public class DriveCommand extends CommandBase {
   private DriveTrain driveTrainSubsystem;
 
-  private double maxForward = Math.sqrt(0.7);
+  private double maxForward = Math.sqrt(0.7); 
   private double maxTurn = Math.sqrt(0.5);
 
   // percent per seccond
@@ -57,7 +57,11 @@ public class DriveCommand extends CommandBase {
       forwardPower = targetForwardPower;
     }
     // if accelerating
-    else if ((forwardPower > 0 && targetForwardPower > forwardPower) || (forwardPower < 0 && targetForwardPower < forwardPower))
+    /* 0 changed to 0.5 - this should allow the robot to run
+       normally until it hits half power, in which the robot
+       will then use acceleration to hit max speed
+    */
+    else if ((forwardPower > 0.5 && targetForwardPower > forwardPower) || (forwardPower < -0.5 && targetForwardPower < forwardPower))
     {
       forwardPower += Math.copySign(ACCELERATION, forwardPower) * Robot.period;
     }

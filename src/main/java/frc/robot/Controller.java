@@ -29,12 +29,15 @@ public class Controller
         public static double get_forward()
         {
             // can be from -1.0 to 1.0
-            double trigger = Math.max(controller.getLeftTriggerAxis(), controller.getLeftTriggerAxis());
+            // Calling Math.max is unnecessary here - results in same thing
+            // as just calling controller.getLeftTriggerAxis()
+            // double trigger = Math.max(controller.getLeftTriggerAxis(), controller.getLeftTriggerAxis());
+            double trigger = controller.getLeftTriggerAxis();
 
             // scales the trigger value to 1 -> sqrt(0.5) and -1 -> 1
             double multiplier = 1 - (1 - Math.sqrt(0.5)) * (1 + trigger) / 2;
 
-            // controller should be invered forward is negative
+            // controller should be inverted forward is negative
             return -controller.getLeftY() * multiplier;
         }
 
