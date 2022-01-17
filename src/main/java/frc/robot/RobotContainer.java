@@ -25,11 +25,14 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator Elevator = new Elevator();
   private final LaunchWheels launchWheels = new LaunchWheels();
-  private final DriveCommand driveCommand = new DriveCommand(driveTrain);
-  private final ElevatorCommand wingardiumLeviosa = new ElevatorCommand(Elevator);
-  private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   private final SpinnyThing spinnyThing = new SpinnyThing();
+  private final Limelight Limelight = new Limelight();
+
+  private final DriveCommand driveCommand = new DriveCommand(driveTrain);
+  private final ElevatorCommand elevatorCommand = new ElevatorCommand(Elevator);
+  private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   private final SpinTheSpinner spinTheSpinner = new SpinTheSpinner(spinnyThing);
+  private final LimelightCommand limelightCommand = new LimelightCommand(Limelight);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,9 +67,10 @@ public class RobotContainer {
   public void scheduleTeleOpCommands() {
     // command that will run on drive train when no other commands are running
     driveTrain.setDefaultCommand(driveCommand);
-    Elevator.setDefaultCommand(wingardiumLeviosa);
+    Elevator.setDefaultCommand(elevatorCommand);
     launchWheels.setDefaultCommand(wheelsCommand);
     spinnyThing.setDefaultCommand(spinTheSpinner);
+    Limelight.setDefaultCommand(limelightCommand);
 
     // command responsible for checking PDP
 

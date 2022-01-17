@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 
 public class LimelightCommand extends CommandBase {
-  private Limelight Limelight;
+  private Limelight limelight;
 
   /** Creates a new LimelightCommand. */
   public LimelightCommand(Limelight Limelight) {
-    this.Limelight = Limelight;
+    this.limelight = Limelight;
     addRequirements(Limelight);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -21,14 +21,12 @@ public class LimelightCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    NetworkTableInstance.getDefault().getTable("Limelight").getEntry("ledMode").setNumber(3);
-    System.out.println(NetworkTableInstance.getDefault().getTable("Limelight").getEntry("ledMode"));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    System.out.println(limelight.getLightOn());
   }
 
   // Called once the command ends or is interrupted.

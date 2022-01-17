@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Limelight extends SubsystemBase {
 
@@ -25,14 +26,18 @@ public class Limelight extends SubsystemBase {
   @Getter
   private NetworkTableEntry targetArea;
 
+  @Setter
+  private NetworkTableEntry lightOn;
+
   /** Creates a new Limelight. */
   public Limelight() {
-    NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
 
-    hasValidTargets = networkTable.getEntry("tv");
-    horizontalOffsetAngle = networkTable.getEntry("tx");
-    verticalOffsetAngle = networkTable.getEntry("ty");
-    targetArea = networkTable.getEntry("ta");
+    hasValidTargets = limelight.getEntry("tv");
+    horizontalOffsetAngle = limelight.getEntry("tx");
+    verticalOffsetAngle = limelight.getEntry("ty");
+    targetArea = limelight.getEntry("ta");
+    limelight.getEntry("ledMode").setNumber(3);
   }
 
   @Override
