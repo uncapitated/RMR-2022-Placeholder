@@ -35,7 +35,7 @@ public class DriveInteruptCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // motors conform to the set power
+    // motors will attempt to hold their position
     driveTrainSubsystem.setBreak();
     Controller.Drive.setRumble(false);
   }

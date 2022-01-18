@@ -63,7 +63,7 @@ public class CardinalShuffleboard {
         maxTurnPowerEntry = driveTrainLayout.addPersistent("Max Turn Power", maxTurnPower)
                 .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
 
-        currentProtectionEnabledEntry = driveTrainLayout.add("Disable Current Protection", false)
+        currentProtectionEnabledEntry = driveTrainLayout.add("Enable Current Protection", false)
                 .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
     }
 
@@ -78,10 +78,10 @@ public class CardinalShuffleboard {
     public static void setCurrentProtectionCommand(CommandBase currentMoniterCommand) {
         currentProtectionEnabledEntry.addListener(event -> {
             if (event.value.getBoolean()) { // if the switch is turned on then the current moniter command is disabled
-                currentMoniterCommand.cancel();
+                currentMoniterCommand.schedule();
             }
             else {
-                currentMoniterCommand.schedule();
+                currentMoniterCommand.cancel();
             }
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
