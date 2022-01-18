@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.*;
+import frc.robot.Controller.Drive;
 import frc.robot.commands.*;
 
 /**
@@ -28,11 +29,10 @@ public class RobotContainer {
   private final SpinnyThing spinnyThing = new SpinnyThing();
   private final Limelight Limelight = new Limelight();
 
-  private final DriveCommand driveCommand = new DriveCommand(driveTrain);
+  private final DriveCommand driveCommand = new DriveCommand(driveTrain, Limelight);
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(Elevator);
   private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   private final SpinTheSpinner spinTheSpinner = new SpinTheSpinner(spinnyThing);
-  private final LimelightCommand limelightCommand = new LimelightCommand(Limelight);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -70,7 +70,7 @@ public class RobotContainer {
     Elevator.setDefaultCommand(elevatorCommand);
     launchWheels.setDefaultCommand(wheelsCommand);
     spinnyThing.setDefaultCommand(spinTheSpinner);
-    Limelight.setDefaultCommand(limelightCommand);
+    Limelight.setDefaultCommand(driveCommand);
 
     // command responsible for checking PDP
 

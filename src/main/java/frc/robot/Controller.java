@@ -69,6 +69,10 @@ public class Controller
             return controller.getBButton();
         }
 
+        public static boolean get_x_button(){
+            return controller.getXButton();
+        }
+
         public static double get_right_stick_horizontal(){
             return controller.getRightX();
         }

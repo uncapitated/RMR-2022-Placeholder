@@ -3,10 +3,13 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain": "Subsystem",
+      "/LiveWindow/Elevator": "Subsystem",
       "/LiveWindow/LaunchWheels": "Subsystem",
       "/LiveWindow/Levitation": "Subsystem",
+      "/LiveWindow/Limelight": "Subsystem",
       "/LiveWindow/SpinnyThing": "Subsystem",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/DigitalInput[2]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[3]": "Digital Input",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/Shuffleboard/Cardinal/Commands/DriveCommand": "Command",

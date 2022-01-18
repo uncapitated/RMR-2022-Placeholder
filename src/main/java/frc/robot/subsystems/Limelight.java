@@ -26,8 +26,8 @@ public class Limelight extends SubsystemBase {
   @Getter
   private NetworkTableEntry targetArea;
 
-  @Setter
-  private NetworkTableEntry lightOn;
+  @Getter
+  private NetworkTableEntry lightValue;
 
   /** Creates a new Limelight. */
   public Limelight() {
@@ -37,7 +37,7 @@ public class Limelight extends SubsystemBase {
     horizontalOffsetAngle = limelight.getEntry("tx");
     verticalOffsetAngle = limelight.getEntry("ty");
     targetArea = limelight.getEntry("ta");
-    limelight.getEntry("ledMode").setNumber(3);
+    lightValue = limelight.getEntry("ledMode");
   }
 
   @Override

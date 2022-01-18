@@ -9,9 +9,11 @@ import frc.robot.CardinalShuffleboard;
 import frc.robot.Controller;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Limelight;
 
 public class DriveCommand extends CommandBase {
   private DriveTrain driveTrainSubsystem;
+  private Limelight limelight;
 
   private double maxForward = Math.sqrt(0.7); 
   private double maxTurn = Math.sqrt(0.5);
@@ -27,9 +29,11 @@ public class DriveCommand extends CommandBase {
   private double turnPower;
 
   /** Creates a new Drive. */
-  public DriveCommand(DriveTrain in_driveTrainSubsystem) {
+  public DriveCommand(DriveTrain in_driveTrainSubsystem, Limelight Limelight) {
+    this.limelight = Limelight;
     driveTrainSubsystem = in_driveTrainSubsystem;
     
+    addRequirements(limelight);
     addRequirements(driveTrainSubsystem);
   }
 
@@ -38,6 +42,7 @@ public class DriveCommand extends CommandBase {
   public void initialize() {
     forwardPower = 0.0;
     turnPower = 0.0;
+    limelight.getLightValue().setNumber(3);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,6 +55,7 @@ public class DriveCommand extends CommandBase {
 
     double targetForwardPower = Controller.Drive.get_forward();
     double targetTurnPower = Controller.Drive.get_turn();
+    boolean xButton = Controller.Drive.get_x_button();
 
     // adjust forward power based on the target
 
@@ -90,14 +96,30 @@ public class DriveCommand extends CommandBase {
     else {
       turnPower += Math.copySign(ANGULAR_ACCELERATION, targetTurnPower-turnPower) * Robot.period;
     }
-
-    // command subsystem
-    driveTrainSubsystem.set(forwardPower * maxForward, turnPower * maxTurn);
+    
+    if(xButton)
+    {
+      if(limelight.getHorizontalOffsetAngle().getDouble(0) > 3)
+      {
+        driveTrainSubsystem.set(0, -0.7);
+      }
+      if(limelight.getHorizontalOffsetAngle().getDouble(0) < -3)
+      {
+        driveTrainSubsystem.set(0, 0.7);
+      }
+    }
+    else
+    {
+      //command subsystem
+      driveTrainSubsystem.set(forwardPower * maxForward, turnPower * maxTurn);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    limelight.getLightValue().setNumber(0);
+  }
 
   // Returns true when the command should end.
   @Override
