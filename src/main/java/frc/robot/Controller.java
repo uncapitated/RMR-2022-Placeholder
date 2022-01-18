@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
@@ -23,19 +24,23 @@ public class Controller
         private static XboxController controller = new XboxController(0);
 
         /**
+         * Link to WPILib for using slew rate limiters
+         * https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/slew-rate-limiter.html
+         * Link to API
+         * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/filter/SlewRateLimiter.html
+         * defines the maximum change in forward and turn (acceleration)
+         */
+        private static SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(1.5);
+        private static SlewRateLimiter turnRateLimiter = new SlewRateLimiter(1.5);
+
+        /**
          * @return raw forwards value between -1.0 and 1.0
          * with 1.0 being full forwards and -1.0 being full reverse
          */
         public static double get_forward()
         {
-            // can be from -1.0 to 1.0
-            double trigger = Math.max(controller.getLeftTriggerAxis(), controller.getLeftTriggerAxis());
-
-            // scales the trigger value to 1 -> sqrt(0.5) and -1 -> 1
-            double multiplier = 1 - (1 - Math.sqrt(0.5)) * (1 + trigger) / 2;
-
-            // controller should be invered forward is negative
-            return -controller.getLeftY() * multiplier;
+            // controller should be inverted because forward is negative
+            return forwardRateLimiter.calculate(-controller.getLeftY());
         }
 
         /**
@@ -45,13 +50,7 @@ public class Controller
          */
         public static double get_turn()
         {
-            // can be from -1.0 to 1.0
-            double trigger = Math.max(controller.getLeftTriggerAxis(), controller.getRightTriggerAxis());
-
-            // scales the trigger value to 1 -> sqrt(0.5) and -1 -> 1
-            double multiplier = 1 - (1 - Math.sqrt(0.5)) * (1 + trigger) / 2;
-
-            return controller.getLeftX() * multiplier;
+            return turnRateLimiter.calculate(controller.getLeftX());
         }
 
         public static double get_secondary_vertical_stick(){
@@ -72,6 +71,9 @@ public class Controller
 
         public static void setRumble(boolean hasRumble)
         {
+            /**
+             * Link to API
+             */
             if (hasRumble)
             {
                 controller.setRumble(RumbleType.kLeftRumble, 1.0);

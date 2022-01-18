@@ -3,10 +3,14 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain": "Subsystem",
+      "/LiveWindow/LaunchWheels": "Subsystem",
+      "/LiveWindow/Levitation": "Subsystem",
+      "/LiveWindow/SpinnyThing": "Subsystem",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/DigitalInput[3]": "Digital Input",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/Shuffleboard/Cardinal/Commands/DriveCommand": "Command",
-      "/Shuffleboard/Cardinal/Commands/ParallelDeadlineGroup": "Command",
+      "/Shuffleboard/Cardinal/Commands/DriveCurrentMoniter": "Command",
       "/Shuffleboard/Cardinal/Drive Train/DriveTrain": "Subsystem",
       "/Shuffleboard/Cardinal/Main/DifferentialDrive[1]": "DifferentialDrive"
     }
