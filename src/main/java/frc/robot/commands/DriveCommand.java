@@ -53,7 +53,22 @@ public class DriveCommand extends CommandBase {
     boolean xButton = Controller.Drive.get_x_button();
 
     // command subsystem
-    driveTrainSubsystem.set(targetForwardPower * maxForward, targetTurnPower * maxTurn);
+    if(xButton)
+    {
+      if(limelight.getHorizontalOffsetAngle().getDouble(0) > 3)
+      {
+        driveTrainSubsystem.set(0, -0.7);
+      }
+      if(limelight.getHorizontalOffsetAngle().getDouble(0) < -3)
+      {
+        driveTrainSubsystem.set(0, 0.7);
+      }
+    }
+    else
+    {
+      //command subsystem
+      driveTrainSubsystem.set(targetForwardPower * maxForward, targetTurnPower * maxTurn);
+    }
   }
 
   // Called once the command ends or is interrupted.

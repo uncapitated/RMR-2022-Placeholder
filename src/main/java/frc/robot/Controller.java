@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /** Add your docs here. */
 public class Controller
@@ -51,6 +52,12 @@ public class Controller
         public static double get_turn()
         {
             return turnRateLimiter.calculate(controller.getLeftX());
+        }
+
+        // button to activate the align command
+        public static JoystickButton getAlignTrigger()
+        {
+            return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
         public static double get_secondary_vertical_stick(){

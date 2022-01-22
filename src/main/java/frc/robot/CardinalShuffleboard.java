@@ -12,15 +12,18 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.subsystems.LaunchWheels;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Elevator;
 
 /**
  * Interface for populating Shuffleboard with the Robot state All new widgets
  * will be found in the Cardinal Tab in Shuffleboard
  */
 public class CardinalShuffleboard {
+
+    private static NetworkTableEntry maxForwardPowerEntry;
+    private static NetworkTableEntry maxTurnPowerEntry;
+    private static NetworkTableEntry currentProtectionEnabledEntry;
+
     private static ShuffleboardTab cardinalTab = Shuffleboard.getTab("Cardinal");
 
     // block for active commands
@@ -34,20 +37,6 @@ public class CardinalShuffleboard {
     // block for Driver
     private static ShuffleboardLayout driveTrainLayout = cardinalTab.getLayout("Drive Train", BuiltInLayouts.kList)
             .withSize(3, 6).withPosition(8, 0);
-    
-    private static NetworkTableEntry maxForwardPowerEntry;
-    private static NetworkTableEntry maxTurnPowerEntry;
-    private static NetworkTableEntry currentProtectionEnabledEntry;
-
-    //block for Arm Wheels
-    private static ShuffleboardLayout wheelsLayout = cardinalTab.getLayout("Arm Wheels", BuiltInLayouts.kList)
-            .withSize(2, 3).withPosition(0, 0);
-    private static NetworkTableEntry currentPowerEntry;
-
-    // block for elevator
-    private static ShuffleboardLayout elevatorShuffleboardLayout = cardinalTab.getLayout("Elevator", BuiltInLayouts.kList)
-            .withSize(1,4).withPosition(8, 0);
-    private static NetworkTableEntry maxRotationSpeed;
 
     // Main block
     private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList)
@@ -65,12 +54,6 @@ public class CardinalShuffleboard {
 
     public static void setError(String name, boolean value) {
         errorsLayout.add(name, value);
-    }
-
-    public static void setupArmWheelsLayout(LaunchWheels launchWheels, boolean aPress) {
-        wheelsLayout.add(launchWheels);
-        currentPowerEntry = wheelsLayout.addPersistent("Current Power", aPress).withWidget(BuiltInWidgets.kBooleanBox)
-            .getEntry();
     }
 
     public static void setupDriveTrainLayout(DriveTrain driveTrain, double maxForwardPower, double maxTurnPower) {
@@ -108,11 +91,5 @@ public class CardinalShuffleboard {
         for (CommandBase command : commands) {
             commandsLayout.add(command).withWidget(BuiltInWidgets.kCommand);
         }
-    }
-
-    public static void setupElevatorLayout(Elevator Elevators)
-    {
-        maxRotationSpeed = elevatorShuffleboardLayout.addPersistent("Current Elevator Speed", Elevators.get_Elevator())
-                .withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -1, "max", 1)).getEntry();
     }
 }
