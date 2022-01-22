@@ -9,6 +9,6 @@ and adjusts the output power to avoid staling and burnouts
 Velocity is smoothed between inputs by an acceleration constant and a decceleration constant
 
 3) Shuffleboard is now is fully populated with options for 
-controlling and viewing the robot under the Yellow Cardinal tab in Shuffleboard
+controlling and viewing the robot under the yellow "Cardinal" tab in Shuffleboard
 for a better experiance click the ellipses in the top right of WPILib-VScode
 then select the option to "start tool" then select Shuffleboard

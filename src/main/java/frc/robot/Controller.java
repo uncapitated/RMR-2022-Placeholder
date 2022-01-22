@@ -31,8 +31,8 @@ public class Controller
          * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/filter/SlewRateLimiter.html
          * defines the maximum change in forward and turn (acceleration)
          */
-        private static SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(1.5);
-        private static SlewRateLimiter turnRateLimiter = new SlewRateLimiter(1.5);
+        private static SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(3.0);
+        private static SlewRateLimiter turnRateLimiter = new SlewRateLimiter(3.0);
 
         /**
          * @return raw forwards value between -1.0 and 1.0
@@ -60,23 +60,23 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
-        public static double get_secondary_vertical_stick(){
+        public static double getSeccondaryVerticalStick(){
             return controller.getRightY();
         }
 
-        public static boolean get_a_button() {
+        public static boolean getAButton() {
             return controller.getAButton();
         }
 
-        public static boolean get_b_button() {
+        public static boolean getBButton() {
             return controller.getBButton();
         }
 
-        public static boolean get_x_button(){
+        public static boolean getXButton(){
             return controller.getXButton();
         }
 
-        public static double get_right_stick_horizontal(){
+        public static double getRightStickHorizontal(){
             return controller.getRightX();
         }
 

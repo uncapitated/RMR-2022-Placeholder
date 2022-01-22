@@ -50,7 +50,7 @@ public class DriveCommand extends CommandBase {
     // smoothing of the forward and turn power is handled in controller
     double targetForwardPower = Controller.Drive.get_forward();
     double targetTurnPower = Controller.Drive.get_turn();
-    boolean xButton = Controller.Drive.get_x_button();
+    boolean xButton = Controller.Drive.getXButton();
 
     // command subsystem
     if(xButton)

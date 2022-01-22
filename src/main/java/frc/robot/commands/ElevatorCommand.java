@@ -26,7 +26,7 @@ public class ElevatorCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Elevator.set(Controller.Drive.get_secondary_vertical_stick() * 0.6);
+    Elevator.set(Controller.Drive.getSeccondaryVerticalStick() * 0.6);
     
   }
 

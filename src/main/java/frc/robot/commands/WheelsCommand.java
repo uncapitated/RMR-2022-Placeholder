@@ -25,9 +25,9 @@ public class WheelsCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Controller.Drive.get_a_button()) {
+    if (Controller.Drive.getAButton()) {
       launchWheels.set(1);
-    } else if (Controller.Drive.get_b_button()) {
+    } else if (Controller.Drive.getBButton()) {
       launchWheels.set(-1);
     } else {
       launchWheels.set(0);
