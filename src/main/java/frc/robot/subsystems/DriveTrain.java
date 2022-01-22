@@ -15,15 +15,31 @@ import frc.robot.Constants.Drive;;
 
 public class DriveTrain extends SubsystemBase {
   
+  /**
+   * Link to the CTRE Pheonix Documentation
+   * https://store.ctr-electronics.com/content/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_w_p_i___victor_s_p_x.html
+   * Class privided by ctre pheonix for controlling their motor controllers
+   */
+
   private WPI_VictorSPX frontLeft;
   private WPI_VictorSPX backLeft;
 
   private WPI_VictorSPX frontRight;
   private WPI_VictorSPX backRight;
 
+  /**
+   * These objects combine MotorControllers
+   */
+  
   private MotorControllerGroup left;
   private MotorControllerGroup right;
 
+  /**
+   * Link to WPILib for drive objects
+   * https://docs.wpilib.org/en/stable/docs/software/hardware-apis/motors/wpi-drive-classes.html
+   * Link to API
+   * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html
+   */
   private DifferentialDrive drive;
 
   /** Creates a new DriveTrain. */
@@ -39,32 +55,30 @@ public class DriveTrain extends SubsystemBase {
     left = new MotorControllerGroup(frontLeft, backLeft);
     left.setInverted(true);
 
+
+
+
+
     // setup right drive
     frontRight = new WPI_VictorSPX(Drive.FRONT_RIGHT);
     backRight = new WPI_VictorSPX(Drive.BACK_RIGHT);
 
     right = new MotorControllerGroup(frontRight, backRight);
 
+
+
+
+
+    left.setInverted(true);
+
     drive = new DifferentialDrive(left, right);
   }
 
+  // main meathod of the drivetrain
   public void set(double speed, double rotation)
   {
-    drive.arcadeDrive(speed, rotation);
-  }
-
-  /**
-   * @return the current percent output of the right side of the robot
-   */
-  public double getRightPercent() {
-    return left.get();
-  }
-
-  /**
-   * @return the current percent output of the left side of the robot
-   */
-  public double getLeftPercent() {
-    return left.get();
+    // the last parameter asks if the inputs should be squared in this case it is set to false
+    drive.arcadeDrive(speed, rotation, false);
   }
 
   /**

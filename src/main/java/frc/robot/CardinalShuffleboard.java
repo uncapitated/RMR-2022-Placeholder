@@ -8,7 +8,7 @@ import java.util.Map;
 
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
-
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -33,9 +33,11 @@ public class CardinalShuffleboard {
 
     // block for Driver
     private static ShuffleboardLayout driveTrainLayout = cardinalTab.getLayout("Drive Train", BuiltInLayouts.kList)
-            .withSize(2, 4).withPosition(6, 0);
+            .withSize(3, 6).withPosition(8, 0);
+    
     private static NetworkTableEntry maxForwardPowerEntry;
     private static NetworkTableEntry maxTurnPowerEntry;
+    private static NetworkTableEntry currentProtectionEnabledEntry;
 
     //block for Arm Wheels
     private static ShuffleboardLayout wheelsLayout = cardinalTab.getLayout("Arm Wheels", BuiltInLayouts.kList)
@@ -49,10 +51,11 @@ public class CardinalShuffleboard {
 
     // Main block
     private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList)
-            .withSize(4, 4).withPosition(2, 0);
+            .withSize(6, 6).withPosition(2, 0);
 
-    public static void setupMainLayout(DifferentialDrive drive) {
+    public static void setupMainLayout(DifferentialDrive drive, PowerDistribution powerDistributionPanel) {
         mainLayout.add(drive).withWidget(BuiltInWidgets.kDifferentialDrive);
+        mainLayout.add(powerDistributionPanel).withWidget(BuiltInWidgets.kPowerDistribution);
     }
 
     public static void setupErrorsLayout() {
@@ -77,7 +80,8 @@ public class CardinalShuffleboard {
         maxTurnPowerEntry = driveTrainLayout.addPersistent("Max Turn Power", maxTurnPower)
                 .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
 
-
+        currentProtectionEnabledEntry = driveTrainLayout.add("Enable Current Protection", false)
+                .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
     }
 
     public static double getMaxForwardPowerEntry() {
@@ -88,7 +92,16 @@ public class CardinalShuffleboard {
         return maxTurnPowerEntry.getDouble(1.0);
     }
 
- 
+    public static void setCurrentProtectionCommand(CommandBase currentMoniterCommand) {
+        currentProtectionEnabledEntry.addListener(event -> {
+            if (event.value.getBoolean()) { // if the switch is turned on then the current moniter command is disabled
+                currentMoniterCommand.schedule();
+            }
+            else {
+                currentMoniterCommand.cancel();
+            }
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    }
 
     public static void setupCommandsLayout(CommandBase... commands)
     {

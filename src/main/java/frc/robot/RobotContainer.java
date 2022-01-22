@@ -33,6 +33,8 @@ public class RobotContainer {
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(Elevator);
   private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   private final SpinTheSpinner spinTheSpinner = new SpinTheSpinner(spinnyThing);
+  private final DriveCurrentMoniter driveCurrentMoniter = new DriveCurrentMoniter();
+  private final CommandBase driveInteruptCommand = (new WaitCommand(1.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,8 +42,8 @@ public class RobotContainer {
     configureButtonBindings();
 
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
-    CardinalShuffleboard.setupElevatorLayout(Elevator);
-    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive());
+    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMoniter.getPowerDistribution());
+    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMoniter); // note that the drive interupt command is not here becuase it does not show up correctly
     CardinalShuffleboard.setupErrorsLayout();
     // CardinalShuffleboard.setupArmWheelsLayout(launchWheels, Controller.Drive.get_a_button());
 
@@ -78,5 +80,8 @@ public class RobotContainer {
 
   public void checkForCommandsToSchedule()
   {
+    if (driveCurrentMoniter.isStalled()) {
+      
+    }
   }
 }
