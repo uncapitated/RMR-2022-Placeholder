@@ -5,13 +5,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.Drive;;
+import frc.robot.Constants.Drive;
 
 public class DriveTrain extends SubsystemBase {
   
@@ -21,18 +24,17 @@ public class DriveTrain extends SubsystemBase {
    * Class privided by ctre pheonix for controlling their motor controllers
    */
 
-  private WPI_VictorSPX frontLeft;
-  private WPI_VictorSPX backLeft;
+  private WPI_TalonSRX frontLeft;
 
-  private WPI_VictorSPX frontRight;
-  private WPI_VictorSPX backRight;
+  private WPI_TalonSRX frontRight;
+  private WPI_TalonSRX backRight;
 
   /**
    * These objects combine MotorControllers
    */
   
   private MotorControllerGroup left;
-  private MotorControllerGroup right;
+  private CANSparkMax right;
 
   /**
    * Link to WPILib for drive objects
@@ -47,29 +49,22 @@ public class DriveTrain extends SubsystemBase {
   {
     // setup left drive
 
-    frontLeft = new WPI_VictorSPX(Drive.FRONT_LEFT);
-    backLeft = new WPI_VictorSPX(Drive.BACK_LEFT);
+   frontLeft = new WPI_TalonSRX(Drive.FIRST_MOTOR);
+    right = new CANSparkMax(Drive.SECOND_MOTOR, MotorType.kBrushless);
 
     // must be inverted
-    backLeft.setInverted(true);
 
-    left = new MotorControllerGroup(frontLeft, backLeft);
+    left = new MotorControllerGroup(frontLeft);
 
 
 
 
 
     // setup right drive
-    frontRight = new WPI_VictorSPX(Drive.FRONT_RIGHT);
-    backRight = new WPI_VictorSPX(Drive.BACK_RIGHT);
-
-    right = new MotorControllerGroup(frontRight, backRight);
+    //frontRight = new WPI_TalonSRX(Drive.FRONT_RIGHT);
+    //backRight = new WPI_TalonSRX(Drive.BACK_RIGHT);
 
 
-
-
-
-    left.setInverted(true);
     drive = new DifferentialDrive(left, right);
 
     setBreak();
@@ -87,8 +82,8 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setCoast()
   {
-    VictorSPX[] motors = {frontLeft, frontRight, backLeft, backRight};
-    for (VictorSPX motor : motors) {
+    TalonSRX[] motors = {frontLeft};
+    for (TalonSRX motor : motors) {
       motor.setNeutralMode(NeutralMode.Coast);
     }
 
@@ -100,8 +95,8 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setBreak()
   {
-    VictorSPX[] motors = {frontLeft, frontRight, backLeft, backRight};
-    for (VictorSPX motor : motors) {
+    TalonSRX[] motors = {frontLeft};
+    for (TalonSRX motor : motors) {
       motor.setNeutralMode(NeutralMode.Brake);
     }
   }

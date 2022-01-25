@@ -22,23 +22,11 @@ import frc.robot.commands.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
-  private final Limelight limelight = new Limelight();
-
-  private final Elevator elevator = new Elevator();
-
-  private final LaunchWheels launchWheels = new LaunchWheels();
-  
 
 
   // commands
-  private final DriveCommand driveCommand = new DriveCommand(driveTrain, limelight);
-  private final DriveCurrentMoniter driveCurrentMoniter = new DriveCurrentMoniter();
-  private final CommandBase driveInteruptCommand = (new WaitCommand(1.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
-  private final LimelightCommand limelightCommand = new LimelightCommand(limelight, driveTrain);
+  private final DriveCommand driveCommand = new DriveCommand(driveTrain);
 
-  private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
-
-  private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,8 +34,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
-    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMoniter.getPowerDistribution());
-    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMoniter); // note that the drive interupt command is not here becuase it does not show up correctly
+ // note that the drive interupt command is not here becuase it does not show up correctly
     CardinalShuffleboard.setupErrorsLayout();
     // CardinalShuffleboard.setupArmWheelsLayout(launchWheels, Controller.Drive.get_a_button());
 
@@ -60,7 +47,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Drive.getAlignTrigger().whenPressed(limelightCommand);
   }
 
   /**
@@ -75,18 +61,11 @@ public class RobotContainer {
   public void scheduleTeleOpCommands() {
     // command that will run on drive train when no other commands are running
     driveTrain.setDefaultCommand(driveCommand);
-    elevator.setDefaultCommand(elevatorCommand);
-    launchWheels.setDefaultCommand(wheelsCommand);
-    limelight.setDefaultCommand(driveCommand);
-
     // command responsible for checking PDP
 
   }
 
   public void checkForCommandsToSchedule()
   {
-    if (driveCurrentMoniter.isStalled()) {
-      driveInteruptCommand.schedule();
-    }
   }
 }
