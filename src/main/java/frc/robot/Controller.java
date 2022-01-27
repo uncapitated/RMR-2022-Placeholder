@@ -80,6 +80,10 @@ public class Controller
             return controller.getRightX();
         }
 
+        public static JoystickButton getPneuButton() {
+            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             /**

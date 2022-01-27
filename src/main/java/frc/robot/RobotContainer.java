@@ -22,10 +22,12 @@ import frc.robot.commands.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
+  private final Pneumatics pneumatics = new Pneumatics();
 
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
+  private final PneumaticCommand pneumaticCommand = new PneumaticCommand(pneumatics);
 
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -47,6 +49,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    Controller.Drive.getPneuButton().whenPressed(pneumaticCommand);
   }
 
   /**

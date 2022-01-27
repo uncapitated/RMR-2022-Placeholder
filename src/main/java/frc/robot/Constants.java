@@ -22,4 +22,10 @@ public final class Constants
         public static final int FIRST_MOTOR = 6;
         public static final int SECOND_MOTOR = 10;
     }
+
+    public static final class Pneumatic 
+    {
+        public static final int FORWARD = 6;
+        public static final int BACKWARD = 7;
+    }
 }

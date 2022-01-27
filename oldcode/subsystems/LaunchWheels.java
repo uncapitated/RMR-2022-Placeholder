@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class LaunchWheels extends SubsystemBase {
+public class LaunchWheels extends SubsystemBase { 
   private WPI_VictorSPX wheelsSRXLeft;
   private WPI_VictorSPX wheelsSRXRight;
 
