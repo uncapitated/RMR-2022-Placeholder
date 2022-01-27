@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.*;
@@ -49,7 +50,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Drive.getPneuButton().whenPressed(pneumaticCommand);
+    Controller.Drive.getPneuForward().whenPressed(pneumaticCommand);
+    Controller.Drive.getPneuBackward().whenPressed(new InstantCommand(pneumatics::setBackward, pneumatics));
   }
 
   /**
