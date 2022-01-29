@@ -60,7 +60,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Drive.getAlignTrigger().whenPressed(limelightCommand);
+    Controller.Drive.getXAlignButton().whenPressed(limelightCommand);
   }
 
   /**
