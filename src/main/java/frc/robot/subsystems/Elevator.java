@@ -11,7 +11,6 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
   private WPI_TalonSRX ElevatorMotor;
-  private double speed;
   private DigitalInput top;
   private DigitalInput bottom;
 
@@ -36,10 +35,5 @@ public class Elevator extends SubsystemBase {
     }
     ElevatorMotor.set(d);
     ElevatorMotor.setInverted(true);
-  }
-
-  public double get_Elevator()
-  {
-    return speed;
   }
 }
