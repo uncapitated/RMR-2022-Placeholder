@@ -15,7 +15,7 @@ package frc.robot;
 public final class Constants
 {
     /**
-     * Current chanels on the Power distribution pannel which can be used to enforce current restrictions
+     * Current channels on the Power distribution panel which can be used to enforce current restrictions
      */
     public static final class Current
     {

@@ -8,11 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Controller;
 import frc.robot.subsystems.DriveTrain;
 
-public class DriveInteruptCommand extends CommandBase {
+public class DriveInterruptCommand extends CommandBase {
   private DriveTrain driveTrainSubsystem;
 
-  /** Creates a new InteruptDriveCommand. */
-  public DriveInteruptCommand(DriveTrain driveTrainSubsystem) {
+  /** Creates a new DriveInterruptCommand. */
+  public DriveInterruptCommand(DriveTrain driveTrainSubsystem) {
+    
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
     addRequirements(driveTrainSubsystem);

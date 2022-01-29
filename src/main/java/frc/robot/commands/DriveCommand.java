@@ -50,25 +50,9 @@ public class DriveCommand extends CommandBase {
     // smoothing of the forward and turn power is handled in controller
     double targetForwardPower = Controller.Drive.get_forward();
     double targetTurnPower = Controller.Drive.get_turn();
-    boolean xButton = Controller.Drive.getXButton();
 
-    // command subsystem
-    if(xButton)
-    {
-      if(limelight.getHorizontalOffsetAngle().getDouble(0) > 3)
-      {
-        driveTrainSubsystem.set(0, -0.7);
-      }
-      if(limelight.getHorizontalOffsetAngle().getDouble(0) < -3)
-      {
-        driveTrainSubsystem.set(0, 0.7);
-      }
-    }
-    else
-    {
-      //command subsystem
-      driveTrainSubsystem.set(targetForwardPower * maxForward, targetTurnPower * maxTurn);
-    }
+    //command subsystem
+    driveTrainSubsystem.set(targetForwardPower * maxForward, targetTurnPower * maxTurn);
   }
 
   // Called once the command ends or is interrupted.

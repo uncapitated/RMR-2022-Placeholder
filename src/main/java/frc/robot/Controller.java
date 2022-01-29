@@ -18,7 +18,7 @@ public class Controller
          * Drive Controller Mapping
          * Left Joystick -> controls both speed and direction
          * 
-         * Either Trigger -> controls slow mode (pressing down either bumber will slow the robot)
+         * Either Trigger -> controls slow mode (pressing down either one will slow the robot)
          * Currently cuts the power output in half
          */
 
@@ -70,10 +70,6 @@ public class Controller
 
         public static boolean getBButton() {
             return controller.getBButton();
-        }
-
-        public static boolean getXButton(){
-            return controller.getXButton();
         }
 
         public static double getRightStickHorizontal(){

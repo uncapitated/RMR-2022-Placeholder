@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Controller;
-import frc.robot.subsystems.LaunchWheels;
+import frc.robot.subsystems.ArmWheels;
 
 public class WheelsCommand extends CommandBase {
-  private LaunchWheels launchWheels;
+  private ArmWheels launchWheels;
 
   /** Creates a new WheelsCommand. */
-  public WheelsCommand(LaunchWheels launchWheels) {
+  public WheelsCommand(ArmWheels launchWheels) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.launchWheels = launchWheels;
     addRequirements(launchWheels);

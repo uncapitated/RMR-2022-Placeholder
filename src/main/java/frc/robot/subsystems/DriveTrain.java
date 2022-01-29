@@ -16,9 +16,9 @@ import frc.robot.Constants.Drive;;
 public class DriveTrain extends SubsystemBase {
   
   /**
-   * Link to the CTRE Pheonix Documentation
+   * Link to the CTRE Phoenix Documentation
    * https://store.ctr-electronics.com/content/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_w_p_i___victor_s_p_x.html
-   * Class privided by ctre pheonix for controlling their motor controllers
+   * Class provided by CTRE Phoenix  for controlling their motor controllers
    */
 
   private WPI_VictorSPX frontLeft;
@@ -52,30 +52,25 @@ public class DriveTrain extends SubsystemBase {
 
     // must be inverted
     backLeft.setInverted(true);
-
-    left = new MotorControllerGroup(frontLeft, backLeft);
-
-
-
-
+  
 
     // setup right drive
     frontRight = new WPI_VictorSPX(Drive.FRONT_RIGHT);
     backRight = new WPI_VictorSPX(Drive.BACK_RIGHT);
 
+
+    // create motor groups
+    left = new MotorControllerGroup(frontLeft, backLeft);
     right = new MotorControllerGroup(frontRight, backRight);
 
-
-
-
-
     left.setInverted(true);
+
     drive = new DifferentialDrive(left, right);
 
     setBreak();
   }
 
-  // main meathod of the drivetrain
+  // main method of the DriveTrain
   public void set(double speed, double rotation)
   {
     // the last parameter asks if the inputs should be squared in this case it is set to false

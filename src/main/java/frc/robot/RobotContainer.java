@@ -26,14 +26,14 @@ public class RobotContainer {
 
   private final Elevator elevator = new Elevator();
 
-  private final LaunchWheels launchWheels = new LaunchWheels();
+  private final ArmWheels launchWheels = new ArmWheels();
   
 
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrain, limelight);
-  private final DriveCurrentMoniter driveCurrentMoniter = new DriveCurrentMoniter();
-  private final CommandBase driveInteruptCommand = (new WaitCommand(1.5)).deadlineWith(new DriveInteruptCommand(driveTrain));
+  private final DriveCurrentMonitor driveCurrentMonitor = new DriveCurrentMonitor();
+  private final CommandBase driveInterruptCommand = (new WaitCommand(1.5)).deadlineWith(new DriveInterruptCommand(driveTrain));
   private final LimelightCommand limelightCommand = new LimelightCommand(limelight, driveTrain);
 
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
@@ -46,10 +46,9 @@ public class RobotContainer {
     configureButtonBindings();
 
     CardinalShuffleboard.setupDriveTrainLayout(driveTrain, driveCommand.getMaxForward(), driveCommand.getMaxTurn());
-    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMoniter.getPowerDistribution());
-    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMoniter); // note that the drive interupt command is not here becuase it does not show up correctly
+    CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMonitor.getPowerDistribution());
+    CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMonitor); // note that the drive interrupt command is not here because it does not show up correctly
     CardinalShuffleboard.setupErrorsLayout();
-    // CardinalShuffleboard.setupArmWheelsLayout(launchWheels, Controller.Drive.get_a_button());
 
   }
 
@@ -73,20 +72,19 @@ public class RobotContainer {
   }
 
   public void scheduleTeleOpCommands() {
-    // command that will run on drive train when no other commands are running
+    // commands that will run on respective subsystems if no other commands are running
     driveTrain.setDefaultCommand(driveCommand);
     elevator.setDefaultCommand(elevatorCommand);
-    launchWheels.setDefaultCommand(wheelsCommand);
-    limelight.setDefaultCommand(driveCommand);
+    launchWheels.setDefaultCommand(wheelsCommand); 
 
-    // command responsible for checking PDP
+
 
   }
 
   public void checkForCommandsToSchedule()
   {
-    if (driveCurrentMoniter.isStalled()) {
-      driveInteruptCommand.schedule();
+    if (driveCurrentMonitor.isStalled()) {
+      driveInterruptCommand.schedule();
     }
   }
 }

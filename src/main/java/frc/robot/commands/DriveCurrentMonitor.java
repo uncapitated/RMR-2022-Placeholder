@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants.Current;
 
-public class DriveCurrentMoniter extends CommandBase {
+public class DriveCurrentMonitor extends CommandBase {
   /**
    * Link to WPI for using power distribution class
    * https://docs.wpilib.org/en/stable/docs/software/hardware-apis/motors/wpi-drive-classes.html
@@ -20,7 +20,7 @@ public class DriveCurrentMoniter extends CommandBase {
    */
   private PowerDistribution powerDistribution = new PowerDistribution();
 
-  // set this to the max current at full throtle
+  // set this to the max current at full throttle
   private final double maxCurrent = 20.0;
 
   /**
@@ -37,8 +37,8 @@ public class DriveCurrentMoniter extends CommandBase {
   // the state of the DriveTrain
   private boolean isStalled;
 
-  /** Creates a new DriveCurrentMoniter. */
-  public DriveCurrentMoniter() {
+  /** Creates a new DriveCurrentMonitor. */
+  public DriveCurrentMonitor() {
     // Use addRequirements() here to declare subsystem dependencies.
 
     // Do not addRequirements(driveTrainSubsystem)
@@ -51,6 +51,7 @@ public class DriveCurrentMoniter extends CommandBase {
   @Override
   public void initialize() {}
 
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

@@ -9,7 +9,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lombok.Getter;
-import lombok.Setter;
 
 public class Limelight extends SubsystemBase {
 
@@ -33,6 +32,8 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
 
+
+    // Get information from the limelight, and store it
     hasValidTargets = limelight.getEntry("tv");
     horizontalOffsetAngle = limelight.getEntry("tx");
     verticalOffsetAngle = limelight.getEntry("ty");
