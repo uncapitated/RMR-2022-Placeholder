@@ -29,6 +29,7 @@ public class Elevator extends SubsystemBase {
 
   public void set(double d) {
 
+    // bottom limit switch is not triggered by elevator at the moment--talk to someone to fix this.
     if((!top.get() && d < 0.0) || (!bottom.get() && d > 0.0))
     {
       d = 0.0;
