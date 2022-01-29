@@ -28,7 +28,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public void set(double d) {
-    speed = d;
+    if(top.get() || bottom.get())
+    {
+      d = 0.0;
+    }
     ElevatorMotor.set(d);
     ElevatorMotor.setInverted(true);
   }
