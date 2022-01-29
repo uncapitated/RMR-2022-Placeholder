@@ -24,17 +24,14 @@ public class DriveTrain extends SubsystemBase {
    * Class privided by ctre pheonix for controlling their motor controllers
    */
 
-  private WPI_TalonSRX frontLeft;
-
-  private WPI_TalonSRX frontRight;
-  private WPI_TalonSRX backRight;
+  private WPI_TalonSRX rightMotor;
 
   /**
    * These objects combine MotorControllers
    */
   
-  private MotorControllerGroup left;
-  private CANSparkMax right;
+  private MotorControllerGroup right;
+  private CANSparkMax left;
 
   /**
    * Link to WPILib for drive objects
@@ -49,28 +46,17 @@ public class DriveTrain extends SubsystemBase {
   {
     // setup left drive
 
-   frontLeft = new WPI_TalonSRX(Drive.FIRST_MOTOR);
-    right = new CANSparkMax(Drive.SECOND_MOTOR, MotorType.kBrushless);
+    rightMotor = new WPI_TalonSRX(Drive.FIRST_MOTOR);
+    left = new CANSparkMax(Drive.SECOND_MOTOR, MotorType.kBrushless);
 
-    // must be inverted
-
-    left = new MotorControllerGroup(frontLeft);
-
-
-
-
-
-    // setup right drive
-    //frontRight = new WPI_TalonSRX(Drive.FRONT_RIGHT);
-    //backRight = new WPI_TalonSRX(Drive.BACK_RIGHT);
-
+    right = new MotorControllerGroup(leftMotor);
 
     drive = new DifferentialDrive(left, right);
 
     setBreak();
   }
 
-  // main meathod of the drivetrain
+  // main method for drivetrain
   public void set(double speed, double rotation)
   {
     // the last parameter asks if the inputs should be squared in this case it is set to false
@@ -82,10 +68,7 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setCoast()
   {
-    TalonSRX[] motors = {frontLeft};
-    for (TalonSRX motor : motors) {
-      motor.setNeutralMode(NeutralMode.Coast);
-    }
+      rightMotor.setNeutralMode(NeutralMode.Coast);
 
     set(0, 0);
   }
@@ -95,10 +78,7 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setBreak()
   {
-    TalonSRX[] motors = {frontLeft};
-    for (TalonSRX motor : motors) {
-      motor.setNeutralMode(NeutralMode.Brake);
-    }
+      rightMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public DifferentialDrive getDrive() {

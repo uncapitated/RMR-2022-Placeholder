@@ -66,7 +66,6 @@ public class RobotContainer {
   public void scheduleTeleOpCommands() {
     // command that will run on drive train when no other commands are running
     driveTrain.setDefaultCommand(driveCommand);
-    // command responsible for checking PDP
 
   }
 

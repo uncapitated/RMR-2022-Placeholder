@@ -75,13 +75,13 @@ public class CardinalShuffleboard {
         return maxTurnPowerEntry.getDouble(1.0);
     }
 
-    public static void setCurrentProtectionCommand(CommandBase currentMoniterCommand) {
+    public static void setCurrentProtectionCommand(CommandBase currentMonitorCommand) {
         currentProtectionEnabledEntry.addListener(event -> {
-            if (event.value.getBoolean()) { // if the switch is turned on then the current moniter command is disabled
-                currentMoniterCommand.schedule();
+            if (event.value.getBoolean()) { // if the switch is turned on then the current monitor command is disabled
+                currentMonitorCommand.schedule();
             }
             else {
-                currentMoniterCommand.cancel();
+                currentMonitorCommand.cancel();
             }
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }

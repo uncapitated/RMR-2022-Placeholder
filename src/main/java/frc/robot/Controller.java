@@ -55,12 +55,12 @@ public class Controller
         }
 
         // button to activate the align command
-        public static JoystickButton getAlignTrigger()
+        public static JoystickButton getXAlignTrigger()
         {
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
-        public static double getSeccondaryVerticalStick(){
+        public static double getSecondaryVerticalStick(){
             return controller.getRightY();
         }
 
