@@ -28,7 +28,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public void set(double d) {
-    if(top.get() || bottom.get())
+
+    if((!top.get() && d < 0.0) || (!bottom.get() && d > 0.0))
     {
       d = 0.0;
     }
