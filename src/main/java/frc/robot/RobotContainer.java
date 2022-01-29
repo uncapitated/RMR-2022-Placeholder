@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.*;
@@ -23,10 +24,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
   private final Limelight limelight = new Limelight();
-
   private final Elevator elevator = new Elevator();
-
   private final ArmWheels launchWheels = new ArmWheels();
+  private final Pneumatics pneumatics = new Pneumatics();
   
 
 
@@ -35,10 +35,9 @@ public class RobotContainer {
   private final DriveCurrentMonitor driveCurrentMonitor = new DriveCurrentMonitor();
   private final CommandBase driveInterruptCommand = (new WaitCommand(1.5)).deadlineWith(new DriveInterruptCommand(driveTrain));
   private final LimelightCommand limelightCommand = new LimelightCommand(limelight, driveTrain);
-
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
-
   private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
+  private final PneumaticsCommand pneumaticsCommand = new PneumaticsCommand(pneumatics);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -60,6 +59,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     Controller.Drive.getXAlignButton().whenPressed(limelightCommand);
+    Controller.Drive.getTriggerLeft().whenPressed(pneumaticsCommand);
+    Controller.Drive.getTriggerRight().whenPressed(new InstantCommand(pneumatics::shiftLow, pneumatics));
   }
 
   /**

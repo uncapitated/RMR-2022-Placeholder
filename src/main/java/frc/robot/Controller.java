@@ -76,6 +76,14 @@ public class Controller
             return controller.getRightX();
         }
 
+        public static JoystickButton getTriggerLeft()  {
+            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        }
+
+        public static JoystickButton getTriggerRight()  {
+            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             /**
