@@ -147,9 +147,9 @@ public class DriveTrain extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity(1) + backLeft.getSelectedSensorVelocity(1)) / 2; 
-    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity(1) + backRight.getSelectedSensorPosition(1)) / 2;
+    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity(1) + backRight.getSelectedSensorVelocity(1)) / 2;
     // anticipating encoder positions desyncing
-    double leftEncoder = frontLeft.getSelectedSensorVelocity(1);
+    double leftEncoder = frontLeft.getSelectedSensorPosition(1);
     double rightEncoder = frontRight.getSelectedSensorPosition(1);
 
     // In rotations per second
@@ -159,7 +159,7 @@ public class DriveTrain extends SubsystemBase {
     rightEncoder *= Constants.Motor.DRIVE_SPR;
 
     // In rotations per second
-    if (shifterPosition == ShifterPosition.LOW) {
+    if (shifterPosition == ShifterPosition.HIGH) {
       leftWheelSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
       rightWheelSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
       leftEncoder *= Constants.Drive.HIGH_GEAR_RATIO;
