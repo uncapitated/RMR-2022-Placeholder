@@ -23,11 +23,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
   private final Limelight limelight = new Limelight();
+  private final Escalator escalator = new Escalator();
 
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrain, limelight);
   private final LimelightAlignCommand limelightCommand = new LimelightAlignCommand(limelight, driveTrain);
+  private final EscalatorCommand escalatorCommand = new EscalatorCommand(escalator);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

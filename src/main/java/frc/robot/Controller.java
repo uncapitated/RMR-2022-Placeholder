@@ -72,6 +72,12 @@ public class Controller
             return controller.getBButton();
         }
 
+        public static double getYButton() {
+            if(controller.getYButton())
+                return 1;
+            return 0;
+        }
+
         public static double getRightStickHorizontal(){
             return controller.getRightX();
         }

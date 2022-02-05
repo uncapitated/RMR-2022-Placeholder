@@ -51,6 +51,14 @@ public final class Constants
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
     }
 
+    /*
+    Constants for escalator stuff
+    */
+    public static final class Esc
+    {
+        public static final int deviceId = 0;
+    }
+
     /**
      * Class with constant PCM channels for the shifter
      */
