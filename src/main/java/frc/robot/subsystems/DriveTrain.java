@@ -9,16 +9,19 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Autonomous;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.Drive;;
 
 public class DriveTrain extends SubsystemBase {
@@ -47,6 +50,8 @@ public class DriveTrain extends SubsystemBase {
   
   private MotorControllerGroup left;
   private MotorControllerGroup right;
+
+  private double startTime;
 
   private double leftPos = 0;
   private double rightPos = 0;
@@ -86,6 +91,8 @@ public class DriveTrain extends SubsystemBase {
     frontLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
+
+    startTime = Timer.getFPGATimestamp();
 
     shifterPosition = ShifterPosition.LOW;
     shifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shifter.LOW, Constants.Shifter.HIGH);
@@ -139,25 +146,46 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity(1) * backLeft.getSelectedSensorVelocity(1)) / 2; 
-    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity(1) * backRight.getSelectedSensorPosition(1)) / 2;
+    double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity(1) + backLeft.getSelectedSensorVelocity(1)) / 2; 
+    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity(1) + backRight.getSelectedSensorPosition(1)) / 2;
+    // anticipating encoder positions desyncing
+    double leftEncoder = frontLeft.getSelectedSensorVelocity(1);
+    double rightEncoder = frontRight.getSelectedSensorPosition(1);
 
     // In rotations per second
     leftWheelSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
     rightWheelSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+    leftEncoder *= Constants.Motor.DRIVE_SPR;
+    rightEncoder *= Constants.Motor.DRIVE_SPR;
 
     // In rotations per second
     if (shifterPosition == ShifterPosition.LOW) {
       leftWheelSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
       rightWheelSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
+      leftEncoder *= Constants.Drive.HIGH_GEAR_RATIO;
+      rightEncoder *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       leftWheelSpeed *= Constants.Drive.LOW_GEAR_RATIO;
       rightWheelSpeed *= Constants.Drive.LOW_GEAR_RATIO;
+      leftEncoder *= Constants.Drive.LOW_GEAR_RATIO;
+      rightEncoder *= Constants.Drive.LOW_GEAR_RATIO;
     }
 
     leftWheelSpeed *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
     rightWheelSpeed *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+    leftEncoder *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+    rightEncoder *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+
+    double leftDistanceMeters = leftEncoder - leftPos;
+    double rightDistanceMeters = rightEncoder - rightPos;
+
+    leftPos = leftEncoder;
+    rightPos = rightEncoder;
 
     DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftWheelSpeed, rightWheelSpeed);
+    ChassisSpeeds chassisSpeeds = Constants.Drive.KINEMATICS.toChassisSpeeds(wheelSpeeds);
+    rotation.rotateBy(new Rotation2d(chassisSpeeds.omegaRadiansPerSecond).times(Robot.period));
+
+    odometry.update(rotation, leftDistanceMeters, rightDistanceMeters);
   }
 }

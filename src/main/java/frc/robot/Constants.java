@@ -20,7 +20,6 @@ public final class Constants
     {
         public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
-        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
     }
 
     /**
@@ -48,6 +47,8 @@ public final class Constants
         public static final double HIGH_GEAR_RATIO = 51/153;
         public static final double LOW_GEAR_RATIO = 51/231;
         public static final double WHEEL_RADIUS = 0.10000000001;
+        
+        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
     }
 
     /**

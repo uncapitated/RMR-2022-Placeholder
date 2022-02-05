@@ -18,7 +18,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
-
+import frc.robot.Constants;
 import frc.robot.Constants.Autonomous;
 
 public class TestAutomatedDriving extends CommandBase {
@@ -41,7 +41,7 @@ public class TestAutomatedDriving extends CommandBase {
 
     // setup trajectory
     TrajectoryConfig config = new TrajectoryConfig(Autonomous.MAX_SPEED_METERS_PER_SECOND, 
-      Autonomous.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED).setKinematics(Autonomous.KINEMATICS);
+      Autonomous.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED).setKinematics(Constants.Drive.KINEMATICS);
 
     currentTrajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
@@ -76,7 +76,7 @@ public class TestAutomatedDriving extends CommandBase {
     ChassisSpeeds chassisSpeeds = controller.calculate(robotPosition, currentTrajectory.sample(Timer.getFPGATimestamp() - startTime));
     robotPosition = currentTrajectory.sample(Timer.getFPGATimestamp() - startTime).poseMeters;
 
-    DifferentialDriveWheelSpeeds wheelSpeeds = Autonomous.KINEMATICS.toWheelSpeeds(chassisSpeeds);
+    DifferentialDriveWheelSpeeds wheelSpeeds = Constants.Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds);
 
     driveTrainSubsystem.setLeftAndRight(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
   }
