@@ -44,24 +44,10 @@ public final class Constants
         public static final int BACK_RIGHT = 5;
         public static final int FRONT_LEFT = 1;
         public static final int BACK_LEFT = 2;
-    }
-    public static final class Grabber
-    {
-        public static final int LEFT = 3;
-        public static final int RIGHT = 6;
-        public static final int PIVOT = 7;
-        public static final int ELEVATOR = 8;
-    }
 
-    //solenoid PCM (Pneumatic Control Module) ID Classes
-
-    /**
-     * Class with constant PCM channels for controlling the beak
-     */
-    public static final class Beak
-    {
-        public static final int IN = 3;
-        public static final int OUT = 2;
+        public static final double HIGH_GEAR_RATIO = 51/153;
+        public static final double LOW_GEAR_RATIO = 51/231;
+        public static final double WHEEL_RADIUS = 0.10000000001;
     }
 
     /**
@@ -72,25 +58,12 @@ public final class Constants
         public static final int LOW = 4;
         public static final int HIGH = 5;
     }
-    /**
-     * Class with constant PCM channels for miscellaneous solenoids
-     */
-    public static final class Solenoid
+
+    public static final class Motor
     {
-        public static final int LIFTER = 6;
-        public static final int TRACK = 0;
+        /** The steps per revolution of a TalonFX */
+        public static final int DRIVE_SPR = 2048;
+        /** Conversion factor to convert SPR to rotations per second */
+        public static final double DRIVE_VELOCITY_FACTOR = 10 / DRIVE_SPR;
     }
-
-
-    /**
-     * Class with constant DI/O channels for limit switches
-     */
-    public static final class LimitSwitches
-    {
-        public static final int TOP = 3;
-        public static final int BOTTOM = 2;
-        public static final int BACK = 8;
-        public static final int TOP_ARM = 1;
-    }
-
 }

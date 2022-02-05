@@ -18,6 +18,8 @@ import frc.robot.commands.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private Autonomous auto = new Autonomous();
+
   // The robot's subsystems and commands are defined here...
   private final DriveTrain driveTrain = new DriveTrain();
   private final Limelight limelight = new Limelight();
