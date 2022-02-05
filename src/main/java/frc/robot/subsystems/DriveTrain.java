@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;;
 
@@ -34,6 +35,8 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup left;
   private MotorControllerGroup right;
 
+
+  private Field2d m_field = new Field2d();
   /**
    * Link to WPILib for drive objects
    * https://docs.wpilib.org/en/stable/docs/software/hardware-apis/motors/wpi-drive-classes.html

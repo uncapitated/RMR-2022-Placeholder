@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,7 +28,7 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator();
   private final ArmWheels launchWheels = new ArmWheels();
   private final Pneumatics pneumatics = new Pneumatics();
-  
+  private final Gyroscope gyroscope = new Gyroscope();
 
 
   // commands
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
   private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   private final PneumaticsCommand pneumaticsCommand = new PneumaticsCommand(pneumatics);
+  private final TestAutomatedDriving testAutomatedDriving = new TestAutomatedDriving(gyroscope);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,6 +50,7 @@ public class RobotContainer {
     CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMonitor.getPowerDistribution());
     CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMonitor); // note that the drive interrupt command is not here because it does not show up correctly
     CardinalShuffleboard.setupErrorsLayout();
+    Shuffleboard.getTab("Gyro").add(Gyroscope.getGyro());
 
   }
 

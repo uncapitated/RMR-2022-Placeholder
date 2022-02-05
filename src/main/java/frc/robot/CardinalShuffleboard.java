@@ -36,11 +36,14 @@ public class CardinalShuffleboard {
 
     // block for Driver
     private static ShuffleboardLayout driveTrainLayout = cardinalTab.getLayout("Drive Train", BuiltInLayouts.kList)
-            .withSize(3, 6).withPosition(8, 0);
+            .withSize(3, 3).withPosition(6, 0);
 
     // Main block
     private static ShuffleboardLayout mainLayout = cardinalTab.getLayout("Main", BuiltInLayouts.kList)
-            .withSize(6, 6).withPosition(2, 0);
+            .withSize(4, 3).withPosition(2, 0);
+
+    private static ShuffleboardLayout fieldLayout = cardinalTab.getLayout("Field", BuiltInLayouts.kList)
+            .withSize(7, 3).withPosition(2, 3);
 
     public static void setupMainLayout(DifferentialDrive drive, PowerDistribution powerDistributionPanel) {
         mainLayout.add(drive).withWidget(BuiltInWidgets.kDifferentialDrive);
@@ -54,6 +57,9 @@ public class CardinalShuffleboard {
 
     public static void setError(String name, boolean value) {
         errorsLayout.add(name, value);
+    }
+
+    public static void setupFieldLayout(){
     }
 
     public static void setupDriveTrainLayout(DriveTrain driveTrain, double maxForwardPower, double maxTurnPower) {
