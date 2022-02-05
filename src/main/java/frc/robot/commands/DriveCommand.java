@@ -7,8 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.CardinalShuffleboard;
 import frc.robot.Controller;
+import frc.robot.Limelight;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Limelight;
 
 /**
  * Link to WPILib Command Based Programming
@@ -26,8 +26,6 @@ public class DriveCommand extends CommandBase {
   public DriveCommand(DriveTrain in_driveTrainSubsystem, Limelight Limelight) {
     this.limelight = Limelight;
     driveTrainSubsystem = in_driveTrainSubsystem;
-    
-    addRequirements(limelight);
     // always add requirements for subsystems which are controlled
     addRequirements(driveTrainSubsystem);
   }

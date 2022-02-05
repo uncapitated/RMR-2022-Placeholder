@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Limelight;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Limelight;
 
-public class LimelightCommand extends CommandBase {
+public class LimelightAlignCommand extends CommandBase {
   private Limelight limelight;
   private DriveTrain driveTrain;
 
   /** Creates a new LimelightCommand. */
-  public LimelightCommand(Limelight Limelight, DriveTrain DriveTrain) {
+  public LimelightAlignCommand(Limelight Limelight, DriveTrain DriveTrain) {
     // do not add the requirement of the limelight because multiple things can use it at the same time
     this.limelight = Limelight;
 

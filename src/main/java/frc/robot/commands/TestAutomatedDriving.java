@@ -18,12 +18,10 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Gyroscope;
 
 import frc.robot.Constants.Autonomous;
 
 public class TestAutomatedDriving extends CommandBase {
-  private Gyroscope gyroscope;
   private DriveTrain driveTrainSubsystem;
 
   private Trajectory currentTrajectory;
@@ -33,10 +31,9 @@ public class TestAutomatedDriving extends CommandBase {
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public TestAutomatedDriving(DriveTrain driveTrainSubsystem, Gyroscope gyroscope) {
+  public TestAutomatedDriving(DriveTrain driveTrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.gyroscope = gyroscope;
 
     addRequirements(driveTrainSubsystem);
 
