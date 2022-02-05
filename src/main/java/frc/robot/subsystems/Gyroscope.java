@@ -10,12 +10,12 @@ import lombok.Getter;
 
 public class Gyroscope extends SubsystemBase {
   
-  @Getter
-  private static ADIS16448_IMU gyro;
+  //@Getter
+  //private static ADIS16448_IMU gyro;
 
   /** Creates a new Gyroscope. */
   public Gyroscope() {
-    gyro = new ADIS16448_IMU();
+    //gyro = new ADIS16448_IMU();
 
   }
 

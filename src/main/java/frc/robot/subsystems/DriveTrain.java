@@ -80,6 +80,11 @@ public class DriveTrain extends SubsystemBase {
     drive.arcadeDrive(speed, rotation, false);
   }
 
+  public void setLeftAndRight(double leftSpeed, double rightSpeed)
+  {
+    drive.tankDrive(leftSpeed, rightSpeed);
+  }
+
   /**
    * sets the motors to coast mode to prevent current usage
    */

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.*;
@@ -39,7 +40,7 @@ public class RobotContainer {
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
   private final WheelsCommand wheelsCommand = new WheelsCommand(launchWheels);
   private final PneumaticsCommand pneumaticsCommand = new PneumaticsCommand(pneumatics);
-  private final TestAutomatedDriving testAutomatedDriving = new TestAutomatedDriving(gyroscope);
+  private final TestAutomatedDriving testAutomatedDriving = new TestAutomatedDriving(driveTrain, gyroscope);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -50,8 +51,6 @@ public class RobotContainer {
     CardinalShuffleboard.setupMainLayout(driveTrain.getDrive(), driveCurrentMonitor.getPowerDistribution());
     CardinalShuffleboard.setupCommandsLayout(driveCommand, driveCurrentMonitor); // note that the drive interrupt command is not here because it does not show up correctly
     CardinalShuffleboard.setupErrorsLayout();
-    Shuffleboard.getTab("Gyro").add(Gyroscope.getGyro());
-
   }
 
   /**
@@ -72,7 +71,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return testAutomatedDriving;
   }
 
   public void scheduleTeleOpCommands() {
@@ -80,9 +79,6 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(driveCommand);
     elevator.setDefaultCommand(elevatorCommand);
     launchWheels.setDefaultCommand(wheelsCommand); 
-
-
-
   }
 
   public void checkForCommandsToSchedule()
