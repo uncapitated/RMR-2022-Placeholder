@@ -27,7 +27,7 @@ public class RobotContainer {
 
 
   // commands
-  private final DriveCommand driveCommand = new DriveCommand(driveTrain, limelight);
+  private final DriveCommand driveCommand = new DriveCommand(driveTrain);
   private final LimelightAlignCommand limelightCommand = new LimelightAlignCommand(limelight, driveTrain);
   private final EscalatorCommand escalatorCommand = new EscalatorCommand(escalator);
   

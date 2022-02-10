@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -14,10 +15,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Autonomous;
 import frc.robot.Constants;
@@ -44,27 +42,11 @@ public class DriveTrain extends SubsystemBase {
   private enum ShifterPosition {LOW, HIGH}
   private ShifterPosition shifterPosition;
 
-  /**
-   * These objects combine MotorControllers
-   */
-  
-  private MotorControllerGroup left;
-  private MotorControllerGroup right;
-
-  private double startTime;
-
+  // position of the left and right encoders
   private double leftPos = 0;
   private double rightPos = 0;
 
   private Rotation2d rotation;
-
-  /**
-   * Link to WPILib for drive objects
-   * https://docs.wpilib.org/en/stable/docs/software/hardware-apis/motors/wpi-drive-classes.html
-   * Link to API
-   * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html
-   */
-  private DifferentialDrive drive;
 
   /** Creates a new DriveTrain. */
   public DriveTrain()
@@ -76,43 +58,48 @@ public class DriveTrain extends SubsystemBase {
     frontLeft = new WPI_TalonFX(Drive.FRONT_LEFT);
     backLeft = new WPI_TalonFX(Drive.BACK_LEFT); 
 
+    backLeft.follow(frontLeft);
+
     // setup right drive
     frontRight = new WPI_TalonFX(Drive.FRONT_RIGHT);
     backRight = new WPI_TalonFX(Drive.BACK_RIGHT);
 
+    backRight.follow(frontRight);
 
-    // create motor groups
-    left = new MotorControllerGroup(frontLeft, backLeft);
-    right = new MotorControllerGroup(frontRight, backRight);
+    frontLeft.setInverted(true);
 
-    left.setInverted(true);
+    // make sure that the back motors follow the front motors
 
     frontRight.setSelectedSensorPosition(0);
     frontLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
 
-    startTime = Timer.getFPGATimestamp();
-
+    // setup shifter
     shifterPosition = ShifterPosition.LOW;
     shifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shifter.LOW, Constants.Shifter.HIGH);
     shifter.set(Value.kForward);
 
-    drive = new DifferentialDrive(left, right);
-
     setBreak();
   }
 
-  // main method of the DriveTrain
-  public void set(double speed, double rotation)
+  public void stop()
   {
-    // the last parameter asks if the inputs should be squared in this case it is set to false
-    drive.arcadeDrive(speed, rotation, false);
+    set(new DifferentialDriveWheelSpeeds(0, 0));
   }
 
-  public void setLeftAndRight(double leftSpeed, double rightSpeed)
+  public void set(DifferentialDriveWheelSpeeds wheelSpeeds)
   {
-    drive.tankDrive(leftSpeed, rightSpeed);
+    // convert wheelSpeeds to motor speeds
+    double leftVelocity = wheelSpeeds.leftMetersPerSecond;
+    double rightVelocity = wheelSpeeds.rightMetersPerSecond;
+
+    // convert to motor velocity
+    leftVelocity = toMotorSpeed(leftVelocity);
+    rightVelocity = toMotorSpeed(rightVelocity);
+
+    frontLeft.set(TalonFXControlMode.Velocity, leftVelocity);
+    frontRight.set(TalonFXControlMode.Velocity, rightVelocity);
   }
 
   /**
@@ -124,8 +111,6 @@ public class DriveTrain extends SubsystemBase {
     for (TalonFX motor : motors) {
       motor.setNeutralMode(NeutralMode.Coast);
     }
-
-    set(0, 0);
   }
 
   /**
@@ -139,42 +124,22 @@ public class DriveTrain extends SubsystemBase {
     }
   }
 
-  public DifferentialDrive getDrive() {
-    return drive;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // update odomitry
     double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity(1) + backLeft.getSelectedSensorVelocity(1)) / 2; 
     double rightWheelSpeed = (frontRight.getSelectedSensorVelocity(1) + backRight.getSelectedSensorVelocity(1)) / 2;
     // anticipating encoder positions desyncing
     double leftEncoder = frontLeft.getSelectedSensorPosition(1);
     double rightEncoder = frontRight.getSelectedSensorPosition(1);
 
-    // In rotations per second
-    leftWheelSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
-    rightWheelSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
-    leftEncoder *= Constants.Motor.DRIVE_SPR;
-    rightEncoder *= Constants.Motor.DRIVE_SPR;
+    leftWheelSpeed = toRobotSpeed(leftWheelSpeed);
+    rightWheelSpeed = toRobotSpeed(rightWheelSpeed);
 
-    // In rotations per second
-    if (shifterPosition == ShifterPosition.HIGH) {
-      leftWheelSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
-      rightWheelSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
-      leftEncoder *= Constants.Drive.HIGH_GEAR_RATIO;
-      rightEncoder *= Constants.Drive.HIGH_GEAR_RATIO;
-    } else {
-      leftWheelSpeed *= Constants.Drive.LOW_GEAR_RATIO;
-      rightWheelSpeed *= Constants.Drive.LOW_GEAR_RATIO;
-      leftEncoder *= Constants.Drive.LOW_GEAR_RATIO;
-      rightEncoder *= Constants.Drive.LOW_GEAR_RATIO;
-    }
-
-    leftWheelSpeed *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
-    rightWheelSpeed *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
-    leftEncoder *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
-    rightEncoder *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+    leftEncoder = toRobotPosition(leftEncoder);
+    rightEncoder = toRobotPosition(rightEncoder);
 
     double leftDistanceMeters = leftEncoder - leftPos;
     double rightDistanceMeters = rightEncoder - rightPos;
@@ -187,5 +152,77 @@ public class DriveTrain extends SubsystemBase {
     rotation.rotateBy(new Rotation2d(chassisSpeeds.omegaRadiansPerSecond).times(Robot.period));
 
     odometry.update(rotation, leftDistanceMeters, rightDistanceMeters);
+  }
+
+  private double toRobotSpeed(double motorSpeed)
+  {
+    // In rotations per second
+    motorSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+
+    // In rotations per second
+    if (shifterPosition == ShifterPosition.HIGH) {
+      motorSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
+    } else {
+      motorSpeed *= Constants.Drive.LOW_GEAR_RATIO;
+    }
+
+    // In Meters Per Second
+    motorSpeed *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+
+    return motorSpeed;
+  }
+
+  private double toRobotPosition(double motorPosition)
+  {
+    // In rotations
+    motorPosition *= Constants.Motor.DRIVE_SPR;
+
+    // In rotations
+    if (shifterPosition == ShifterPosition.HIGH) {
+      motorPosition *= Constants.Drive.HIGH_GEAR_RATIO;
+    } else {
+      motorPosition *= Constants.Drive.LOW_GEAR_RATIO;
+    }
+
+    // In positions
+    motorPosition *= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+
+    return motorPosition;
+  }
+
+  private double toMotorSpeed(double robotSpeed)
+  {
+    // In Meters Per Second
+    robotSpeed /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+
+    // In rotations per second
+    if (shifterPosition == ShifterPosition.HIGH) {
+      robotSpeed /= Constants.Drive.HIGH_GEAR_RATIO;
+    } else {
+      robotSpeed /= Constants.Drive.LOW_GEAR_RATIO;
+    }
+
+    // In rotations per second
+    robotSpeed /= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+
+    return robotSpeed;
+  }
+
+  private double toMotorPosition(double robotPosition)
+  {
+    // In Meters Per Second
+    robotPosition /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
+
+    // In rotations per second
+    if (shifterPosition == ShifterPosition.HIGH) {
+      robotPosition /= Constants.Drive.HIGH_GEAR_RATIO;
+    } else {
+      robotPosition /= Constants.Drive.LOW_GEAR_RATIO;
+    }
+
+    // In rotations per second
+    robotPosition /= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+
+    return robotPosition;
   }
 }

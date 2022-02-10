@@ -27,6 +27,8 @@ public class LimelightAlignCommand extends CommandBase {
   public void initialize() {
     // set the light to be on
     limelight.getLightValue().setNumber(3);
+
+    driveTrain.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,16 +36,16 @@ public class LimelightAlignCommand extends CommandBase {
   public void execute() {
     if(limelight.getHorizontalOffsetAngle().getDouble(0) > 3)
     {
-      driveTrain.set(0, -0.7);
+      
     }
     else if(limelight.getHorizontalOffsetAngle().getDouble(0) < -3)
     {
-      driveTrain.set(0, 0.7);
+      
     }
     else
     {
       //smoothly land in the middle
-      driveTrain.set(0, -0.233 * limelight.getHorizontalOffsetAngle().getDouble(0));
+      
     }
   }
 

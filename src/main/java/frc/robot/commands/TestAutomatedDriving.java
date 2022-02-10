@@ -66,7 +66,7 @@ public class TestAutomatedDriving extends CommandBase {
     robotPosition = currentTrajectory.getInitialPose();
     startTime = Timer.getFPGATimestamp();
 
-    driveTrainSubsystem.setLeftAndRight(0, 0);
+    driveTrainSubsystem.stop();
     driveTrainSubsystem.setBreak();
   }
 
@@ -78,13 +78,13 @@ public class TestAutomatedDriving extends CommandBase {
 
     DifferentialDriveWheelSpeeds wheelSpeeds = Constants.Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds);
 
-    driveTrainSubsystem.setLeftAndRight(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    driveTrainSubsystem.set(wheelSpeeds);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrainSubsystem.setLeftAndRight(0, 0);
+    driveTrainSubsystem.stop();
   }
 
   // Returns true when the command should end.

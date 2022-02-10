@@ -4,10 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.CardinalShuffleboard;
+import frc.robot.Constants;
 import frc.robot.Controller;
-import frc.robot.Limelight;
 import frc.robot.subsystems.DriveTrain;
 
 /**
@@ -17,14 +19,14 @@ import frc.robot.subsystems.DriveTrain;
 
 public class DriveCommand extends CommandBase {
   private DriveTrain driveTrainSubsystem;
-  private Limelight limelight;
 
-  private double maxForward = Math.sqrt(0.7); 
-  private double maxTurn = Math.sqrt(0.5);
+  // in m/s
+  private double maxForward = 0.7;
+  // in rad/s
+  private double maxTurn = 0.1;
 
   /** Creates a new Drive. */
-  public DriveCommand(DriveTrain in_driveTrainSubsystem, Limelight Limelight) {
-    this.limelight = Limelight;
+  public DriveCommand(DriveTrain in_driveTrainSubsystem) {
     driveTrainSubsystem = in_driveTrainSubsystem;
     // always add requirements for subsystems which are controlled
     addRequirements(driveTrainSubsystem);
@@ -33,30 +35,25 @@ public class DriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    limelight.getLightValue().setNumber(3);
     // stop the robot from moving
-    driveTrainSubsystem.set(0, 0);
+    driveTrainSubsystem.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // grab entries from the shuffleboard
-    maxForward = CardinalShuffleboard.getMaxForwardPowerEntry();
-    maxTurn = CardinalShuffleboard.getMaxTurnPowerEntry();
-
     // smoothing of the forward and turn power is handled in controller
     double targetForwardPower = Controller.Drive.get_forward();
     double targetTurnPower = Controller.Drive.get_turn();
 
     //command subsystem
-    driveTrainSubsystem.set(targetForwardPower * maxForward, targetTurnPower * maxTurn);
+    ChassisSpeeds robotSpeeds = new ChassisSpeeds(targetForwardPower * maxForward, 0, targetTurnPower * maxTurn);
+    driveTrainSubsystem.set(Constants.Drive.KINEMATICS.toWheelSpeeds(robotSpeeds));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    limelight.getLightValue().setNumber(0);
   }
 
   // Returns true when the command should end.
