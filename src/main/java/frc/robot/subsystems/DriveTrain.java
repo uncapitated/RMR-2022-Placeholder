@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -15,6 +16,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Autonomous;
@@ -24,20 +26,27 @@ import frc.robot.Constants.Drive;;
 
 public class DriveTrain extends SubsystemBase {
   
-  /**
-   * Link to the CTRE Phoenix Documentation
-   * https://store.ctr-electronics.com/content/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_w_p_i___victor_s_p_x.html
-   * Class provided by CTRE Phoenix  for controlling their motor controllers
-   */
-   
+  // class for getting robot position
   private DifferentialDriveOdometry odometry;
 
+  /**
+   * Link to the CTRE Phoenix Documentation
+   * https://store.ctr-electronics.com/content/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_w_p_i___talon_f_x.html
+   * Class provided by CTRE Phoenix  for controlling their motor controllers
+   */
+
+  // motors
   private WPI_TalonFX frontLeft;
   private WPI_TalonFX backLeft;
 
   private WPI_TalonFX frontRight;
   private WPI_TalonFX backRight;
 
+  // motor encoder simulation devices
+  private TalonFXSimCollection frontLeftSim;
+  private TalonFXSimCollection frontRightSim;
+
+  // shifter
   private DoubleSolenoid shifter;
   private enum ShifterPosition {LOW, HIGH}
   private ShifterPosition shifterPosition;
@@ -46,6 +55,7 @@ public class DriveTrain extends SubsystemBase {
   private double leftPos = 0;
   private double rightPos = 0;
 
+  // rotation of drive - should be changed to rely on Gyro
   private Rotation2d rotation;
 
   /** Creates a new DriveTrain. */
@@ -69,11 +79,14 @@ public class DriveTrain extends SubsystemBase {
     frontLeft.setInverted(true);
 
     // make sure that the back motors follow the front motors
-
     frontRight.setSelectedSensorPosition(0);
     frontLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
+
+    // setup sim devices
+    frontLeftSim = new TalonFXSimCollection(frontLeft);
+    frontRightSim = new TalonFXSimCollection(frontRight);
 
     // setup shifter
     shifterPosition = ShifterPosition.LOW;
@@ -152,6 +165,35 @@ public class DriveTrain extends SubsystemBase {
     rotation.rotateBy(new Rotation2d(chassisSpeeds.omegaRadiansPerSecond).times(Robot.period));
 
     odometry.update(rotation, leftDistanceMeters, rightDistanceMeters);
+  }
+
+  // code for simulation (does not run when this isn't a simulation)
+  @Override
+  public void simulationPeriodic()
+  {
+    double maxVelocityChange = 100.0;
+
+    // update frontleft drive 
+    if (frontLeft.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity() < maxVelocityChange)
+    {
+      frontLeftSim.setIntegratedSensorVelocity((int) frontLeft.getActiveTrajectoryVelocity());
+    }
+    else
+    {
+      frontLeftSim.setIntegratedSensorVelocity((int) (frontLeft.getSelectedSensorVelocity() +
+        Math.copySign(maxVelocityChange, frontLeft.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity())));
+    }
+
+    // update backleft drive 
+    if (frontRight.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity() < maxVelocityChange)
+    {
+      frontRightSim.setIntegratedSensorVelocity((int) frontLeft.getActiveTrajectoryVelocity());
+    }
+    else
+    {
+      frontRightSim.setIntegratedSensorVelocity((int) (frontLeft.getSelectedSensorVelocity() +
+        Math.copySign(maxVelocityChange, frontLeft.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity())));
+    }
   }
 
   private double toRobotSpeed(double motorSpeed)
