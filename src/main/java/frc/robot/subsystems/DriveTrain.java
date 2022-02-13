@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -22,7 +22,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Autonomous;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.Drive;;
+import frc.robot.Constants.Drive;
+import frc.robot.sim.PhysicsSim;
+import frc.robot.sim.Simulation;;
 
 public class DriveTrain extends SubsystemBase {
   
@@ -42,18 +44,15 @@ public class DriveTrain extends SubsystemBase {
   private WPI_TalonFX frontRight;
   private WPI_TalonFX backRight;
 
-  // motor encoder simulation devices
-  private TalonFXSimCollection frontLeftSim;
-  private TalonFXSimCollection frontRightSim;
+  // Simulation
+  // Simulation object
+  private Simulation sim;
+
 
   // shifter
   private DoubleSolenoid shifter;
   private enum ShifterPosition {LOW, HIGH}
   private ShifterPosition shifterPosition;
-
-  // position of the left and right encoders
-  private double leftPos = 0;
-  private double rightPos = 0;
 
   // rotation of drive - should be changed to rely on Gyro
   private Rotation2d rotation;
@@ -77,16 +76,19 @@ public class DriveTrain extends SubsystemBase {
     backRight.follow(frontRight);
 
     frontLeft.setInverted(true);
+    backLeft.setInverted(true);
+
+    // reset motors
+    configTalon(frontLeft);
+    configTalon(frontRight);
+    configTalon(backLeft);
+    configTalon(backRight);
 
     // make sure that the back motors follow the front motors
-    frontRight.setSelectedSensorPosition(0);
     frontLeft.setSelectedSensorPosition(0);
-    backRight.setSelectedSensorPosition(0);
+    frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
-
-    // setup sim devices
-    frontLeftSim = new TalonFXSimCollection(frontLeft);
-    frontRightSim = new TalonFXSimCollection(frontRight);
+    backRight.setSelectedSensorPosition(0);
 
     // setup shifter
     shifterPosition = ShifterPosition.LOW;
@@ -94,6 +96,21 @@ public class DriveTrain extends SubsystemBase {
     shifter.set(Value.kForward);
 
     setBreak();
+  }
+
+  public DriveTrain(Simulation sim)
+  {
+    this();
+    if (RobotBase.isSimulation())
+    {
+      this.sim = sim;
+
+      // add physics sim
+      PhysicsSim.getInstance().addTalonFX(frontLeft, 0.75, 20660);
+      PhysicsSim.getInstance().addTalonFX(frontRight, 0.75, 20660);
+      PhysicsSim.getInstance().addTalonFX(backLeft, 0.75, 20660);
+      PhysicsSim.getInstance().addTalonFX(backRight, 0.75, 20660);
+    }
   }
 
   public void stop()
@@ -141,12 +158,14 @@ public class DriveTrain extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
+    
+
     // update odomitry
-    double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity(1) + backLeft.getSelectedSensorVelocity(1)) / 2; 
-    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity(1) + backRight.getSelectedSensorVelocity(1)) / 2;
+    double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity() + backLeft.getSelectedSensorVelocity()) / 2; 
+    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity() + backRight.getSelectedSensorVelocity()) / 2;
     // anticipating encoder positions desyncing
-    double leftEncoder = frontLeft.getSelectedSensorPosition(1);
-    double rightEncoder = frontRight.getSelectedSensorPosition(1);
+    double leftEncoder = frontLeft.getSelectedSensorPosition();
+    double rightEncoder = frontRight.getSelectedSensorPosition();
 
     leftWheelSpeed = toRobotSpeed(leftWheelSpeed);
     rightWheelSpeed = toRobotSpeed(rightWheelSpeed);
@@ -154,46 +173,56 @@ public class DriveTrain extends SubsystemBase {
     leftEncoder = toRobotPosition(leftEncoder);
     rightEncoder = toRobotPosition(rightEncoder);
 
-    double leftDistanceMeters = leftEncoder - leftPos;
-    double rightDistanceMeters = rightEncoder - rightPos;
-
-    leftPos = leftEncoder;
-    rightPos = rightEncoder;
-
     DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftWheelSpeed, rightWheelSpeed);
     ChassisSpeeds chassisSpeeds = Constants.Drive.KINEMATICS.toChassisSpeeds(wheelSpeeds);
-    rotation.rotateBy(new Rotation2d(chassisSpeeds.omegaRadiansPerSecond).times(Robot.period));
+    rotation = rotation.rotateBy(new Rotation2d(chassisSpeeds.omegaRadiansPerSecond).times(Robot.period));
 
-    odometry.update(rotation, leftDistanceMeters, rightDistanceMeters);
+    odometry.update(rotation, leftEncoder, rightEncoder);
   }
 
   // code for simulation (does not run when this isn't a simulation)
   @Override
   public void simulationPeriodic()
   {
-    double maxVelocityChange = 100.0;
+    PhysicsSim.getInstance().run();
 
-    // update frontleft drive 
-    if (frontLeft.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity() < maxVelocityChange)
-    {
-      frontLeftSim.setIntegratedSensorVelocity((int) frontLeft.getActiveTrajectoryVelocity());
-    }
-    else
-    {
-      frontLeftSim.setIntegratedSensorVelocity((int) (frontLeft.getSelectedSensorVelocity() +
-        Math.copySign(maxVelocityChange, frontLeft.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity())));
-    }
+    // update sim
+    sim.updateRobotPos(odometry.getPoseMeters());
+  }
 
-    // update backleft drive 
-    if (frontRight.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity() < maxVelocityChange)
-    {
-      frontRightSim.setIntegratedSensorVelocity((int) frontLeft.getActiveTrajectoryVelocity());
-    }
-    else
-    {
-      frontRightSim.setIntegratedSensorVelocity((int) (frontLeft.getSelectedSensorVelocity() +
-        Math.copySign(maxVelocityChange, frontLeft.getActiveTrajectoryVelocity() - frontLeft.getSelectedSensorVelocity())));
-    }
+  private void configTalon(WPI_TalonFX talon)
+  {
+    /* Factory Default all hardware to prevent unexpected behaviour */
+		talon.configFactoryDefault();
+		
+		/* Config neutral deadband to be the smallest possible */
+		talon.configNeutralDeadband(0.001);
+
+		/* Config sensor used for Primary PID [Velocity] */
+        talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
+                                            Constants.PID.kPIDLoopIdx, 
+											Constants.PID.kTimeoutMs);
+											
+
+		/* Config the peak and nominal outputs */
+		talon.configNominalOutputForward(0, Constants.PID.kTimeoutMs);
+		talon.configNominalOutputReverse(0, Constants.PID.kTimeoutMs);
+		talon.configPeakOutputForward(1, Constants.PID.kTimeoutMs);
+		talon.configPeakOutputReverse(-1, Constants.PID.kTimeoutMs);
+
+		/* Config the Velocity closed loop gains in slot0 */
+		talon.config_kF(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kF, Constants.PID.kTimeoutMs);
+		talon.config_kP(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kP, Constants.PID.kTimeoutMs);
+		talon.config_kI(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kI, Constants.PID.kTimeoutMs);
+		talon.config_kD(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kD, Constants.PID.kTimeoutMs);
+		/*
+		 * Talon FX does not need sensor phase set for its integrated sensor
+		 * This is because it will always be correct if the selected feedback device is integrated sensor (default value)
+		 * and the user calls getSelectedSensor* to get the sensor's position/velocity.
+		 * 
+		 * https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#sensor-phase
+		 */
+        // _talon.setSensorPhase(true);
   }
 
   private double toRobotSpeed(double motorSpeed)
@@ -217,7 +246,7 @@ public class DriveTrain extends SubsystemBase {
   private double toRobotPosition(double motorPosition)
   {
     // In rotations
-    motorPosition *= Constants.Motor.DRIVE_SPR;
+    motorPosition /= Constants.Motor.DRIVE_SPR;
 
     // In rotations
     if (shifterPosition == ShifterPosition.HIGH) {
@@ -252,18 +281,18 @@ public class DriveTrain extends SubsystemBase {
 
   private double toMotorPosition(double robotPosition)
   {
-    // In Meters Per Second
+    // In Meters
     robotPosition /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
-    // In rotations per second
+    // In rotations
     if (shifterPosition == ShifterPosition.HIGH) {
       robotPosition /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotPosition /= Constants.Drive.LOW_GEAR_RATIO;
     }
 
-    // In rotations per second
-    robotPosition /= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+    // In steps
+    robotPosition *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
 
     return robotPosition;
   }

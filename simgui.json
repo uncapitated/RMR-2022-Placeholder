@@ -1,9 +1,34 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[1]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[2]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[4]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[5]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain": "Subsystem",
       "/LiveWindow/Elevator": "Subsystem",
+      "/LiveWindow/Escalator": "Subsystem",
       "/LiveWindow/LaunchWheels": "Subsystem",
       "/LiveWindow/Levitation": "Subsystem",
       "/LiveWindow/Limelight": "Subsystem",
@@ -12,11 +37,17 @@
       "/LiveWindow/Ungrouped/DigitalInput[2]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[3]": "Digital Input",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/Talon FX [1]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [2]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [4]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [5]": "Motor Controller",
       "/Shuffleboard/Cardinal/Commands/DriveCommand": "Command",
       "/Shuffleboard/Cardinal/Commands/DriveCurrentMoniter": "Command",
       "/Shuffleboard/Cardinal/Drive Train/DriveTrain": "Subsystem",
       "/Shuffleboard/Cardinal/Elevator/Levitation": "Subsystem",
-      "/Shuffleboard/Cardinal/Main/DifferentialDrive[1]": "DifferentialDrive"
+      "/Shuffleboard/Cardinal/Main/DifferentialDrive[1]": "DifferentialDrive",
+      "/Shuffleboard/Shuffleboard/Field": "Field2d",
+      "/Shuffleboard/Simulation/Field": "Field2d"
     }
   }
 }

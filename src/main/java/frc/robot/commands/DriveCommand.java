@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Controller;
@@ -20,9 +19,9 @@ public class DriveCommand extends CommandBase {
   private DriveTrain driveTrainSubsystem;
 
   // in m/s
-  private double maxForward = 0.7;
+  private double maxForward = 1;
   // in rad/s
-  private double maxTurn = 0.1;
+  private double maxTurn = 1.4;
 
   /** Creates a new Drive. */
   public DriveCommand(DriveTrain in_driveTrainSubsystem) {

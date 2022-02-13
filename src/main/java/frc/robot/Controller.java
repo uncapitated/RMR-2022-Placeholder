@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
+//import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -31,8 +31,8 @@ public class Controller
          * https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/filter/SlewRateLimiter.html
          * defines the maximum change in forward and turn (acceleration)
          */
-        private static SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(3.0);
-        private static SlewRateLimiter turnRateLimiter = new SlewRateLimiter(3.0);
+        //private static SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(3.0);
+        //private static SlewRateLimiter turnRateLimiter = new SlewRateLimiter(3.0);
 
         /**
          * @return raw forwards value between -1.0 and 1.0
@@ -41,7 +41,7 @@ public class Controller
         public static double get_forward()
         {
             // controller should be inverted because forward is negative
-            return forwardRateLimiter.calculate(-controller.getLeftY());
+            return -controller.getLeftY();
         }
 
         /**
@@ -51,7 +51,7 @@ public class Controller
          */
         public static double get_turn()
         {
-            return turnRateLimiter.calculate(controller.getLeftX());
+            return controller.getLeftX();
         }
 
         // button to activate the align command

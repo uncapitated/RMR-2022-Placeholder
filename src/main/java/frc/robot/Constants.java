@@ -16,6 +16,33 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants
 {
+    public static final class PID {
+        /**
+         * Which PID slot to pull gains from. Starting 2018, you can choose from
+         * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
+         * configuration.
+         */
+        public static final int kSlotIdx = 0;
+
+        /**
+         * Talon FX supports multiple (cascaded) PID loops. For
+         * now we just want the primary one.
+         */
+        public static final int kPIDLoopIdx = 0;
+
+        /**
+         * Set to zero to skip waiting for confirmation, set to nonzero to wait and
+         * report to DS if action fails.
+         */
+        public static final int kTimeoutMs = 30;
+
+        /**
+         * PID Gains may have to be adjusted based on the responsiveness of control loop.
+         * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
+         * 
+         * 	                                    			  kP   	 kI    kD      kF          Iz    PeakOut */
+        public final static Gains kGains_Velocity  = new Gains( 0.1, 0.000, 5, 1023.0/20660.0,  300,  1.00);
+    }
     public static final class Autonomous
     {
         public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
@@ -44,8 +71,8 @@ public final class Constants
         public static final int FRONT_LEFT = 1;
         public static final int BACK_LEFT = 2;
 
-        public static final double HIGH_GEAR_RATIO = 51/153;
-        public static final double LOW_GEAR_RATIO = 51/231;
+        public static final double HIGH_GEAR_RATIO = 51.0/153;
+        public static final double LOW_GEAR_RATIO = 51.0/231;
         public static final double WHEEL_RADIUS = 0.10000000001;
         
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
@@ -73,6 +100,6 @@ public final class Constants
         /** The steps per revolution of a TalonFX */
         public static final int DRIVE_SPR = 2048;
         /** Conversion factor to convert SPR to rotations per second */
-        public static final double DRIVE_VELOCITY_FACTOR = 10 / DRIVE_SPR;
+        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
     }
 }

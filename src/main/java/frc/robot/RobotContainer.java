@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.sim.Simulation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,8 +21,10 @@ import frc.robot.commands.*;
 public class RobotContainer {
   private Autonomous auto = new Autonomous();
 
+  private Simulation sim = new Simulation();
+
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain driveTrain = new DriveTrain();
+  private final DriveTrain driveTrain = new DriveTrain(sim);
   private final Limelight limelight = new Limelight();
   private final Escalator escalator = new Escalator();
 
