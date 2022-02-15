@@ -75,8 +75,9 @@ public class DriveTrain extends SubsystemBase {
 
     backRight.follow(frontRight);
 
-    frontLeft.setInverted(true);
-    backLeft.setInverted(true);
+    backRight.setInverted(true);
+    frontRight.setInverted(true);
+
 
     // reset motors
     configTalon(frontLeft);

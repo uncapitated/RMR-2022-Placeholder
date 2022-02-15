@@ -55,10 +55,10 @@ public final class Constants
     public static final class Current
     {
         // values not confirmed (currently doesn't matter)
-        public static final int FRONT_RIGHT_DRIVE = 0;
-        public static final int BACK_RIGHT_DRIVE = 1;
-        public static final int FRONT_LEFT_DRIVE = 14;
-        public static final int BACK_LEFT_DRIVE = 15;
+        public static final int FRONT_RIGHT_DRIVE = 19;
+        public static final int BACK_RIGHT_DRIVE = 18;
+        public static final int FRONT_LEFT_DRIVE = 16;
+        public static final int BACK_LEFT_DRIVE = 17;
     }
 
     /**
@@ -66,10 +66,10 @@ public final class Constants
      */
     public static final class Drive
     {
-        public static final int FRONT_RIGHT = 4;
-        public static final int BACK_RIGHT = 5;
-        public static final int FRONT_LEFT = 1;
-        public static final int BACK_LEFT = 2;
+        public static final int FRONT_RIGHT = 9;
+        public static final int BACK_RIGHT = 8;
+        public static final int FRONT_LEFT = 6;
+        public static final int BACK_LEFT = 7;
 
         public static final double HIGH_GEAR_RATIO = 51.0/153;
         public static final double LOW_GEAR_RATIO = 51.0/231;
