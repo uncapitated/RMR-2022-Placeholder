@@ -78,6 +78,18 @@ public final class Constants
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
     }
 
+
+    /*
+    Constants for winch stuff
+    */
+    public static final class winch 
+    {
+        public static final int TOP_LIMIT_WINCH = 45;
+        public static final int MIDDLE_LIMIT_WINCH = 48;
+        public static final int BOTTOM_LIMIT_WINCH = 46;
+        public static final int WINCH_MOTOR = 47;
+    }
+
     /*
     Constants for escalator stuff
     */
