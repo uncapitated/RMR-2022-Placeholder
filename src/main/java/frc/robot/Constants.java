@@ -154,6 +154,6 @@ public final class Constants
 
     public static final class CameraConstants
     {
-        public static final String instanceName = "re box";
+        public static final String[] label = {"Re", "Blu"};
     }
 }
