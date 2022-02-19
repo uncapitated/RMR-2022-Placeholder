@@ -159,4 +159,12 @@ public final class Constants
         public static final double maxX = 100;
         public static final double maxY = 100;
     }
+
+    public static final class Pneumatics {
+        public static final int COMPRESSOR_CAN_ID = 2;
+    }
+    public static final class CameraConstants
+    {
+        public static final String[] label = {"Re", "Blu"};
+    }
 }

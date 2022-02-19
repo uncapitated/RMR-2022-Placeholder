@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import org.json.JSONObject;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -11,8 +12,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DrivePID;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
+
+import org.json.*;
 
 public class TargetBallCommand extends CommandBase {
   NetworkTable table, ck;
@@ -21,19 +25,20 @@ public class TargetBallCommand extends CommandBase {
 
   private PIDController tpid;
 
-  double xmin, ymin, xmax, ymax, avX, degrees;
+  double xmin, ymin, xmax, ymax, avX, degrees, confidence;
 
   private double turnSpeed;
-  private double forwardSpeed;
-  /** Creates a new TargetBallCommand. */
-  public TargetBallCommand(DriveTrainSubsystem DriveTrain) {
 
-    this.driveTrain = DriveTrain;
+  private JSONObject jsObj;
+  /** Creates a new TargetBallCommand. */
+  public TargetBallCommand(DriveTrainSubsystem driveTrain) {
+
+    this.driveTrain = driveTrain;
 
     tpid = new PIDController(LimelightConstants.akP, LimelightConstants.akI, LimelightConstants.akD);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(DriveTrain);
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -50,18 +55,28 @@ public class TargetBallCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    xmin = table.getEntry("xmin").getDouble(0);
-    ymin = table.getEntry("ymin").getDouble(0);
-    xmax = table.getEntry("xmax").getDouble(0);
-    ymax = table.getEntry("ymax").getDouble(0);
+    
+    if(table.getEntry("label").getString("").equals(CameraConstants.label[0])) {
+      
+      jsObj = new JSONObject(table.getEntry("box").getString(""));
 
-    avX = (xmin+xmax)/2;
+      System.out.println(jsObj);
 
-    degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
+      xmin = jsObj.getDouble("xmin");
+      ymin = jsObj.getDouble("ymin");
+      xmax = jsObj.getDouble("xmax");
+      ymax = jsObj.getDouble("ymax");
+      confidence = table.getEntry("confidence").getDouble(0);
 
-    turnSpeed = -1*tpid.calculate(degrees, 0);
+      avX = (xmin+xmax)/2;
 
-    driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
+      degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
+
+      turnSpeed = -1*tpid.calculate(degrees, 0);
+
+      System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
+      //driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
+    }
   }
 
   // Called once the command ends or is interrupted.

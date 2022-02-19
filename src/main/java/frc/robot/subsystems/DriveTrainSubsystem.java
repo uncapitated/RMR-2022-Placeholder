@@ -27,7 +27,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Drive;
 import frc.robot.sim.PhysicsSim;
-import frc.robot.sim.Simulation;;
+import frc.robot.sim.Simulation;
 
 public class DriveTrainSubsystem extends SubsystemBase {
   
