@@ -54,8 +54,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
-    Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+    //Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
+    //Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
   }
 
   private void configureDefaultCommands(){
@@ -73,6 +73,6 @@ public class RobotContainer {
 
   public void scheduleTeleOpCommands() {
     // commands that will run on respective subsystems if no other commands are running
-    driveTrain.setDefaultCommand(driveCommand);
+    //driveTrain.setDefaultCommand(driveCommand);
   }
 }
