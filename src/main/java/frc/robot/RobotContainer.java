@@ -28,7 +28,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(sim);
   private final BeltSubsystem belt = new BeltSubsystem();
-
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
@@ -38,6 +38,7 @@ public class RobotContainer {
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(belt);
 
   private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
+  private final WinchCommand winchCommand = new WinchCommand(climberSubsystem);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -60,6 +61,7 @@ public class RobotContainer {
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
+    climberSubsystem.setDefaultCommand(winchCommand);
   }
 
   /**

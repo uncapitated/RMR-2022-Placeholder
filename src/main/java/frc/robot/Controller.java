@@ -121,5 +121,9 @@ public class Controller
         {
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
+
+        public static JoystickButton getWinchButton(){
+            return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
     }
 }

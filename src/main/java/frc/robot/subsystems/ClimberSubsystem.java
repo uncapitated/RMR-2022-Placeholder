@@ -15,7 +15,7 @@ import lombok.Getter;
 
 import frc.robot.Constants.Climber;
 
-public class ClimberSubstystem extends SubsystemBase {
+public class ClimberSubsystem extends SubsystemBase {
   public enum CLIMBER_STATE {UP, ANGLED};
 
   // declare SparkMax motor
@@ -25,7 +25,7 @@ public class ClimberSubstystem extends SubsystemBase {
   private DoubleSolenoid climberSolenoid;
  
   /** Creates a new Winch. */
-  public ClimberSubstystem() {
+  public ClimberSubsystem() {
     // Use addRequirements() here to declare subsystem dependencies.
     winch = new CANSparkMax(Climber.WINCH_MOTOR, MotorType.kBrushless);
     winch.restoreFactoryDefaults();
