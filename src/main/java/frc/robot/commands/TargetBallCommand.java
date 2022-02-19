@@ -57,24 +57,28 @@ public class TargetBallCommand extends CommandBase {
   @Override
   public void execute() {
     
-    jsObj = new JSONObject(table.getEntry("box").getString(""));
+    if(table.getEntry("label").getString("").equals(CameraConstants.label[0]))
+    {
+      jsObj = new JSONObject(table.getEntry("box").getString(""));
 
-    System.out.println(jsObj);
+      System.out.println(jsObj);
 
-    xmin = jsObj.getDouble("xmin");
-    ymin = jsObj.getDouble("ymin");
-    xmax = jsObj.getDouble("xmax");
-    ymax = jsObj.getDouble("ymax");
-    confidence = table.getEntry("confidence").getDouble(0);
+      xmin = jsObj.getDouble("xmin");
+      ymin = jsObj.getDouble("ymin");
+      xmax = jsObj.getDouble("xmax");
+      ymax = jsObj.getDouble("ymax");
+      confidence = table.getEntry("confidence").getDouble(0);
 
-    avX = (xmin+xmax)/2;
+      avX = (xmin+xmax)/2;
 
-    degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
+      degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
 
-    turnSpeed = -1*tpid.calculate(degrees, 0);
+      turnSpeed = -1*tpid.calculate(degrees, 0);
 
-    System.out.println(xmin + " " + xmax + " " + degrees);
-    //driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
+      System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
+      //driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
+    }
+    else{}
   }
 
   // Called once the command ends or is interrupted.
