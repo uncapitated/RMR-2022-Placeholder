@@ -81,19 +81,28 @@ public final class Constants
      */
     public static final class Drive
     {
+        /** CAN */
         public static final int FRONT_RIGHT = 9;
         public static final int BACK_RIGHT = 8;
         public static final int FRONT_LEFT = 6;
         public static final int BACK_LEFT = 7;
 
+        /** solenoid Pneumatic Hub port*/
         public static final int SHIFTER_HIGH = 0;
+        /** solenoid Pneumatic Hub port*/
         public static final int SHIFTER_LOW = 0;
 
         public static final double HIGH_GEAR_RATIO = 51.0/153;
         public static final double LOW_GEAR_RATIO = 51.0/231;
         public static final double WHEEL_RADIUS = 0.10000000001;
         
+        /** converts chassis speeds to wheel speeds */
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
+
+        /** The steps per revolution of a TalonFX */
+        public static final int DRIVE_SPR = 2048;
+        /** Conversion factor to convert SPR to rotations per second */
+        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
     }
 
 
@@ -125,9 +134,6 @@ public final class Constants
 
     public static final class Motor
     {
-        /** The steps per revolution of a TalonFX */
-        public static final int DRIVE_SPR = 2048;
-        /** Conversion factor to convert SPR to rotations per second */
-        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
+        
     }
 }
