@@ -5,17 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Controller;
-import frc.robot.subsystems.Escalator;
+import frc.robot.subsystems.BeltSubsystem;
 
-public class EscalatorCommand extends CommandBase {
-  private Escalator Escalator;
+public class BeltIntakeCommand extends CommandBase {
+  private BeltSubsystem ballBelt;
 
   /** Creates a new Escalator. */
-  public EscalatorCommand(Escalator Escalator) {
-    this.Escalator = Escalator;
-    addRequirements(Escalator);
+  public BeltIntakeCommand(BeltSubsystem ballBelt) {
+    this.ballBelt = ballBelt;
+    
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(ballBelt);
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +25,7 @@ public class EscalatorCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Escalator.set(Controller.Drive.getYButton()*.3);
+    ballBelt.intake();
   }
 
   // Called once the command ends or is interrupted.

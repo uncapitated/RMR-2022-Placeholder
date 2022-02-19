@@ -24,15 +24,15 @@ public class RobotContainer {
   private Simulation sim = new Simulation();
 
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain driveTrain = new DriveTrain(sim);
+  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(sim);
   private final Limelight limelight = new Limelight();
-  private final Escalator escalator = new Escalator();
+  private final BeltSubsystem escalator = new BeltSubsystem();
 
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
   private final LimelightAlignCommand limelightCommand = new LimelightAlignCommand(limelight, driveTrain);
-  private final EscalatorCommand escalatorCommand = new EscalatorCommand(escalator);
+  private final BeltIntakeCommand escalatorCommand = new BeltIntakeCommand(escalator);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

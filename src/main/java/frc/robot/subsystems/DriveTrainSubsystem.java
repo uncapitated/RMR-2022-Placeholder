@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -26,7 +27,7 @@ import frc.robot.Constants.Drive;
 import frc.robot.sim.PhysicsSim;
 import frc.robot.sim.Simulation;;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveTrainSubsystem extends SubsystemBase {
   
   // class for getting robot position
   private DifferentialDriveOdometry odometry;
@@ -51,14 +52,14 @@ public class DriveTrain extends SubsystemBase {
 
   // shifter
   private DoubleSolenoid shifter;
-  private enum ShifterPosition {LOW, HIGH}
-  private ShifterPosition shifterPosition;
+  private enum SHIFTER_POSITION {LOW, HIGH}
+  private SHIFTER_POSITION shifterPosition;
 
   // rotation of drive - should be changed to rely on Gyro
   private Rotation2d rotation;
 
   /** Creates a new DriveTrain. */
-  public DriveTrain()
+  public DriveTrainSubsystem()
   {
     rotation = Autonomous.getAutonomous().getStartingRotation();
     odometry = new DifferentialDriveOdometry(rotation, Autonomous.getAutonomous().getStartingPos());
@@ -92,14 +93,14 @@ public class DriveTrain extends SubsystemBase {
     backRight.setSelectedSensorPosition(0);
 
     // setup shifter
-    shifterPosition = ShifterPosition.LOW;
-    shifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shifter.LOW, Constants.Shifter.HIGH);
-    shifter.set(Value.kForward);
+    shifterPosition = SHIFTER_POSITION.LOW;
+    shifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Drive.SHIFTER_HIGH, Constants.Drive.SHIFTER_LOW);
+    shifter.set(Value.kReverse);
 
     setBreak();
   }
 
-  public DriveTrain(Simulation sim)
+  public DriveTrainSubsystem(Simulation sim)
   {
     this();
     if (RobotBase.isSimulation())
@@ -119,6 +120,20 @@ public class DriveTrain extends SubsystemBase {
     set(new DifferentialDriveWheelSpeeds(0, 0));
   }
 
+  /**
+   * set with chassis speeds 
+   */
+  public void set(ChassisSpeeds chassisSpeeds)
+  {
+    chassisSpeeds.vyMetersPerSecond = 0;
+    
+    // convert to wheel speeds
+    set(Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds));
+  }
+
+  /**
+   *  set drivetrain with wheel speeds
+   */
   public void set(DifferentialDriveWheelSpeeds wheelSpeeds)
   {
     // convert wheelSpeeds to motor speeds
@@ -131,6 +146,19 @@ public class DriveTrain extends SubsystemBase {
 
     frontLeft.set(TalonFXControlMode.Velocity, leftVelocity);
     frontRight.set(TalonFXControlMode.Velocity, rightVelocity);
+  }
+
+  // set shifter
+  public void setSifter(SHIFTER_POSITION position)
+  {
+    if(position == SHIFTER_POSITION.HIGH)
+    {
+      shifter.set(Value.kForward);
+    }
+    else if (position == SHIFTER_POSITION.LOW)
+    {
+      shifter.set(Value.kReverse);
+    }
   }
 
   /**
@@ -201,21 +229,21 @@ public class DriveTrain extends SubsystemBase {
 
 		/* Config sensor used for Primary PID [Velocity] */
         talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
-                                            Constants.PID.kPIDLoopIdx, 
-											Constants.PID.kTimeoutMs);
+                                            Constants.DrivePID.kPIDLoopIdx, 
+											Constants.DrivePID.kTimeoutMs);
 											
 
 		/* Config the peak and nominal outputs */
-		talon.configNominalOutputForward(0, Constants.PID.kTimeoutMs);
-		talon.configNominalOutputReverse(0, Constants.PID.kTimeoutMs);
-		talon.configPeakOutputForward(1, Constants.PID.kTimeoutMs);
-		talon.configPeakOutputReverse(-1, Constants.PID.kTimeoutMs);
+		talon.configNominalOutputForward(0, Constants.DrivePID.kTimeoutMs);
+		talon.configNominalOutputReverse(0, Constants.DrivePID.kTimeoutMs);
+		talon.configPeakOutputForward(1, Constants.DrivePID.kTimeoutMs);
+		talon.configPeakOutputReverse(-1, Constants.DrivePID.kTimeoutMs);
 
 		/* Config the Velocity closed loop gains in slot0 */
-		talon.config_kF(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kF, Constants.PID.kTimeoutMs);
-		talon.config_kP(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kP, Constants.PID.kTimeoutMs);
-		talon.config_kI(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kI, Constants.PID.kTimeoutMs);
-		talon.config_kD(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kD, Constants.PID.kTimeoutMs);
+		talon.config_kF(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kF, Constants.DrivePID.kTimeoutMs);
+		talon.config_kP(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kP, Constants.DrivePID.kTimeoutMs);
+		talon.config_kI(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kI, Constants.DrivePID.kTimeoutMs);
+		talon.config_kD(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kD, Constants.DrivePID.kTimeoutMs);
 		/*
 		 * Talon FX does not need sensor phase set for its integrated sensor
 		 * This is because it will always be correct if the selected feedback device is integrated sensor (default value)
@@ -232,7 +260,7 @@ public class DriveTrain extends SubsystemBase {
     motorSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
 
     // In rotations per second
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       motorSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       motorSpeed *= Constants.Drive.LOW_GEAR_RATIO;
@@ -250,7 +278,7 @@ public class DriveTrain extends SubsystemBase {
     motorPosition /= Constants.Motor.DRIVE_SPR;
 
     // In rotations
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       motorPosition *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       motorPosition *= Constants.Drive.LOW_GEAR_RATIO;
@@ -268,7 +296,7 @@ public class DriveTrain extends SubsystemBase {
     robotSpeed /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
     // In rotations per second
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       robotSpeed /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotSpeed /= Constants.Drive.LOW_GEAR_RATIO;
@@ -286,7 +314,7 @@ public class DriveTrain extends SubsystemBase {
     robotPosition /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
     // In rotations
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       robotPosition /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotPosition /= Constants.Drive.LOW_GEAR_RATIO;
