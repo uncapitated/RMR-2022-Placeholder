@@ -25,6 +25,14 @@ public final class Constants
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
     }
 
+    public static final class StatusSwitch
+    {
+        public static final int FIRST_INPUT = 81;
+        public static final int SECOND_INPUT = 82;
+        public static final int THIRD_INPUT = 83;
+        public static final int FOURTH_INPUT = 84;
+    }
+
     /**
      *  motor CAN ID class
      */
@@ -80,8 +88,8 @@ public final class Constants
          * PID Gains may have to be adjusted based on the responsiveness of control loop.
          * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
          * 
-         * 	                                    			  kP   	 kI    kD      kF          Iz    PeakOut */
-        public final static Gains kGains_Velocity  = new Gains( .1, .000, 5, 1023.0/20660.0,  300,  1.00);
+         * 	                                    			   kP    kI  kD        kF         Iz    PeakOut */
+        public final static Gains kGains_Velocity  = new Gains(.1, .001, 5,  1023.0/20660.0,  300,  1.00);
     }
 
 
@@ -100,6 +108,14 @@ public final class Constants
 
         // height restraints
 
+        /**
+         * PID Gains for the Elevator
+         * 
+         * PID Gains may have to be adjusted based on the responsiveness of control loop.
+         * 
+         * 
+         * 	                                    			  kP   	kI   kD kF Iz PeakOut */
+        public final static Gains kGains_Position = new Gains(0.1, 1e-4, 1, 0, 0, 1);
     }
 
     /**

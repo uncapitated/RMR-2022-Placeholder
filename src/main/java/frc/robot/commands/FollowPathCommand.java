@@ -21,7 +21,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.Autonomous;
 
-public class TestAutomatedDriving extends CommandBase {
+public class FollowPathCommand extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
 
   private Trajectory currentTrajectory;
@@ -31,7 +31,7 @@ public class TestAutomatedDriving extends CommandBase {
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public TestAutomatedDriving(DriveTrainSubsystem driveTrainSubsystem) {
+  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
 
