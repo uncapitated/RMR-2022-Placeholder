@@ -135,8 +135,4 @@ public final class Constants
         public static final int SOLENOID_OUT = 3;
     }
 
-    public static final class Motor
-    {
-        
-    }
 }
