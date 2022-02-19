@@ -41,7 +41,22 @@ public final class Constants
          * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
          * 
          * 	                                    			  kP   	 kI    kD      kF          Iz    PeakOut */
-        public final static Gains kGains_Velocity  = new Gains( 0.1, 0.000, 5, 1023.0/20660.0,  300,  1.00);
+        
+        //Linear constants; tune for robot
+         public static final double lkP = .1;
+        public static final double lkI = .000;
+        public static final int lkD = 5;
+
+        //Angular constants; tune for robot
+        public static final double akP = .1;
+        public static final double akI = .000;
+        public static final int akD = 5;
+
+        //Constants for the camera
+        public static final double maxX = 100;
+        public static final double maxY = 100;
+
+         public final static Gains kGains_Velocity  = new Gains( .1, .000, 5, 1023.0/20660.0,  300,  1.00);
     }
     public static final class Autonomous
     {
