@@ -41,7 +41,17 @@ public final class Constants
          * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
          * 
          * 	                                    			  kP   	 kI    kD      kF          Iz    PeakOut */
-        public final static Gains kGains_Velocity  = new Gains( 0.1, 0.000, 5, 1023.0/20660.0,  300,  1.00);
+
+        //Angular constants; tune for robot
+        public static final double akP = .1;
+        public static final double akI = .000;
+        public static final int akD = 5;
+
+        //Constants for the camera
+        public static final double maxX = 100;
+        public static final double maxY = 100;
+
+         public final static Gains kGains_Velocity  = new Gains( .1, .000, 5, 1023.0/20660.0,  300,  1.00);
     }
     public static final class Autonomous
     {
@@ -74,55 +84,59 @@ public final class Constants
      */
     public static final class Drive
     {
+        /** CAN */
         public static final int FRONT_RIGHT = 9;
         public static final int BACK_RIGHT = 8;
         public static final int FRONT_LEFT = 6;
         public static final int BACK_LEFT = 7;
 
+        /** solenoid Pneumatic Hub port*/
+        public static final int SHIFTER_HIGH = 0;
+        /** solenoid Pneumatic Hub port*/
+        public static final int SHIFTER_LOW = 0;
+
         public static final double HIGH_GEAR_RATIO = 51.0/153;
         public static final double LOW_GEAR_RATIO = 51.0/231;
         public static final double WHEEL_RADIUS = 0.10000000001;
         
+        /** converts chassis speeds to wheel speeds */
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
+
+        /** The steps per revolution of a TalonFX */
+        public static final int DRIVE_SPR = 2048;
+        /** Conversion factor to convert SPR to rotations per second */
+        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
     }
 
 
     /*
     Constants for winch stuff
     */
-    public static final class Winch 
+    public static final class Climber 
     {
-        public static final int TOP_LIMIT_WINCH = 45;
-        public static final int MIDDLE_LIMIT_WINCH = 48;
-        public static final int BOTTOM_LIMIT_WINCH = 46;
         public static final int WINCH_MOTOR = 47;
 
         public static final int SOLENOID_IN = 2;
         public static final int SOLENOID_OUT = 3;
+
+        // height restraints
+
     }
 
     /*
     Constants for escalator stuff
     */
-    public static final class Escalator
+    public static final class Belt
     {
-        public static final int deviceId = 0;
-    }
-
-    /**
-     * Class with constant PCM channels for the shifter
-     */
-    public static final class Shifter
-    {
-        public static final int LOW = 4;
-        public static final int HIGH = 5;
+        public static final int TOP_MOTOR_ID = 0;
+        public static final int BOTTOM_MOTOR_ID = 0;
+        
+        public static final int SOLENOID_IN = 2;
+        public static final int SOLENOID_OUT = 3;
     }
 
     public static final class Motor
     {
-        /** The steps per revolution of a TalonFX */
-        public static final int DRIVE_SPR = 2048;
-        /** Conversion factor to convert SPR to rotations per second */
-        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
+        
     }
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -51,8 +52,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   // shifter
   private DoubleSolenoid shifter;
-  private enum ShifterPosition {LOW, HIGH}
-  private ShifterPosition shifterPosition;
+  private enum SHIFTER_POSITION {LOW, HIGH}
+  private SHIFTER_POSITION shifterPosition;
 
   // rotation of drive - should be changed to rely on Gyro
   private Rotation2d rotation;
@@ -92,9 +93,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     backRight.setSelectedSensorPosition(0);
 
     // setup shifter
-    shifterPosition = ShifterPosition.LOW;
-    shifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shifter.LOW, Constants.Shifter.HIGH);
-    shifter.set(Value.kForward);
+    shifterPosition = SHIFTER_POSITION.LOW;
+    shifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Drive.SHIFTER_HIGH, Constants.Drive.SHIFTER_LOW);
+    shifter.set(Value.kReverse);
 
     setBreak();
   }
@@ -119,6 +120,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
     set(new DifferentialDriveWheelSpeeds(0, 0));
   }
 
+  /**
+   * set with chassis speeds 
+   */
+  public void set(ChassisSpeeds chassisSpeeds)
+  {
+    chassisSpeeds.vyMetersPerSecond = 0;
+    
+    // convert to wheel speeds
+    set(Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds));
+  }
+
+  /**
+   *  set drivetrain with wheel speeds
+   */
   public void set(DifferentialDriveWheelSpeeds wheelSpeeds)
   {
     // convert wheelSpeeds to motor speeds
@@ -131,6 +146,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     frontLeft.set(TalonFXControlMode.Velocity, leftVelocity);
     frontRight.set(TalonFXControlMode.Velocity, rightVelocity);
+  }
+
+  // set shifter
+  public void setSifter(SHIFTER_POSITION position)
+  {
+    if(position == SHIFTER_POSITION.HIGH)
+    {
+      shifter.set(Value.kForward);
+    }
+    else if (position == SHIFTER_POSITION.LOW)
+    {
+      shifter.set(Value.kReverse);
+    }
   }
 
   /**
@@ -232,7 +260,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     motorSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
 
     // In rotations per second
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       motorSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       motorSpeed *= Constants.Drive.LOW_GEAR_RATIO;
@@ -250,7 +278,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     motorPosition /= Constants.Motor.DRIVE_SPR;
 
     // In rotations
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       motorPosition *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       motorPosition *= Constants.Drive.LOW_GEAR_RATIO;
@@ -268,7 +296,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     robotSpeed /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
     // In rotations per second
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       robotSpeed /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotSpeed /= Constants.Drive.LOW_GEAR_RATIO;
@@ -286,7 +314,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     robotPosition /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
     // In rotations
-    if (shifterPosition == ShifterPosition.HIGH) {
+    if (shifterPosition == SHIFTER_POSITION.HIGH) {
       robotPosition /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotPosition /= Constants.Drive.LOW_GEAR_RATIO;
