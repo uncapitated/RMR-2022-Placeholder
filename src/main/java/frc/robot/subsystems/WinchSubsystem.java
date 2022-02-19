@@ -5,28 +5,36 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import lombok.Getter;
 
-import frc.robot.Constants.winch;;
+import frc.robot.Constants.Winch;
 
-public class Winch extends SubsystemBase {
-  //declare SparkMax motor
+public class WinchSubsystem extends SubsystemBase {
+  // declare SparkMax motor
   private CANSparkMax sparkMax;
+
+  // winch solenoid
+  private DoubleSolenoid winchSolenoid;
 
   //DigitalInputs for Limit/Hall Effect 
   @Getter
   private DigitalInput top, middle, bottom;
  
   /** Creates a new Winch. */
-  public Winch() {
+  public WinchSubsystem() {
     // Use addRequirements() here to declare subsystem dependencies.
-    sparkMax = new CANSparkMax(winch.WINCH_MOTOR, MotorType.kBrushless);
-    top = new DigitalInput(winch.TOP_LIMIT_WINCH);
-    middle = new DigitalInput(winch.MIDDLE_LIMIT_WINCH);
-    bottom = new DigitalInput(winch.BOTTOM_LIMIT_WINCH);
+    sparkMax = new CANSparkMax(Winch.WINCH_MOTOR, MotorType.kBrushless);
+
+    winchSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Winch.SOLENOID_IN, Winch.SOLENOID_OUT);
+
+    top = new DigitalInput(Winch.TOP_LIMIT_WINCH);
+    middle = new DigitalInput(Winch.MIDDLE_LIMIT_WINCH);
+    bottom = new DigitalInput(Winch.BOTTOM_LIMIT_WINCH);
     sparkMax.restoreFactoryDefaults();
   }
 

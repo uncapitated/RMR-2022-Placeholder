@@ -26,7 +26,7 @@ import frc.robot.Constants.Drive;
 import frc.robot.sim.PhysicsSim;
 import frc.robot.sim.Simulation;;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveTrainSubsystem extends SubsystemBase {
   
   // class for getting robot position
   private DifferentialDriveOdometry odometry;
@@ -58,7 +58,7 @@ public class DriveTrain extends SubsystemBase {
   private Rotation2d rotation;
 
   /** Creates a new DriveTrain. */
-  public DriveTrain()
+  public DriveTrainSubsystem()
   {
     rotation = Autonomous.getAutonomous().getStartingRotation();
     odometry = new DifferentialDriveOdometry(rotation, Autonomous.getAutonomous().getStartingPos());
@@ -99,7 +99,7 @@ public class DriveTrain extends SubsystemBase {
     setBreak();
   }
 
-  public DriveTrain(Simulation sim)
+  public DriveTrainSubsystem(Simulation sim)
   {
     this();
     if (RobotBase.isSimulation())
@@ -201,21 +201,21 @@ public class DriveTrain extends SubsystemBase {
 
 		/* Config sensor used for Primary PID [Velocity] */
         talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
-                                            Constants.PID.kPIDLoopIdx, 
-											Constants.PID.kTimeoutMs);
+                                            Constants.DrivePID.kPIDLoopIdx, 
+											Constants.DrivePID.kTimeoutMs);
 											
 
 		/* Config the peak and nominal outputs */
-		talon.configNominalOutputForward(0, Constants.PID.kTimeoutMs);
-		talon.configNominalOutputReverse(0, Constants.PID.kTimeoutMs);
-		talon.configPeakOutputForward(1, Constants.PID.kTimeoutMs);
-		talon.configPeakOutputReverse(-1, Constants.PID.kTimeoutMs);
+		talon.configNominalOutputForward(0, Constants.DrivePID.kTimeoutMs);
+		talon.configNominalOutputReverse(0, Constants.DrivePID.kTimeoutMs);
+		talon.configPeakOutputForward(1, Constants.DrivePID.kTimeoutMs);
+		talon.configPeakOutputReverse(-1, Constants.DrivePID.kTimeoutMs);
 
 		/* Config the Velocity closed loop gains in slot0 */
-		talon.config_kF(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kF, Constants.PID.kTimeoutMs);
-		talon.config_kP(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kP, Constants.PID.kTimeoutMs);
-		talon.config_kI(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kI, Constants.PID.kTimeoutMs);
-		talon.config_kD(Constants.PID.kPIDLoopIdx, Constants.PID.kGains_Velocity.kD, Constants.PID.kTimeoutMs);
+		talon.config_kF(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kF, Constants.DrivePID.kTimeoutMs);
+		talon.config_kP(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kP, Constants.DrivePID.kTimeoutMs);
+		talon.config_kI(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kI, Constants.DrivePID.kTimeoutMs);
+		talon.config_kD(Constants.DrivePID.kPIDLoopIdx, Constants.DrivePID.kGains_Velocity.kD, Constants.DrivePID.kTimeoutMs);
 		/*
 		 * Talon FX does not need sensor phase set for its integrated sensor
 		 * This is because it will always be correct if the selected feedback device is integrated sensor (default value)

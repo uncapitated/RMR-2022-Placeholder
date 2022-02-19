@@ -16,7 +16,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants
 {
-    public static final class PID {
+    public static final class DrivePID {
         /**
          * Which PID slot to pull gains from. Starting 2018, you can choose from
          * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
@@ -82,18 +82,21 @@ public final class Constants
     /*
     Constants for winch stuff
     */
-    public static final class winch 
+    public static final class Winch 
     {
         public static final int TOP_LIMIT_WINCH = 45;
         public static final int MIDDLE_LIMIT_WINCH = 48;
         public static final int BOTTOM_LIMIT_WINCH = 46;
         public static final int WINCH_MOTOR = 47;
+
+        public static final int SOLENOID_IN = 2;
+        public static final int SOLENOID_OUT = 3;
     }
 
     /*
     Constants for escalator stuff
     */
-    public static final class Esc
+    public static final class Escalator
     {
         public static final int deviceId = 0;
     }
