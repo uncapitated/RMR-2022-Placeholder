@@ -71,6 +71,9 @@ public final class Constants
         public static final int FRONT_LEFT = 6;
         public static final int BACK_LEFT = 7;
 
+        public static final int SHIFTER_HIGH = 0;
+        public static final int SHIFTER_LOW = 0;
+
         public static final double HIGH_GEAR_RATIO = 51.0/153;
         public static final double LOW_GEAR_RATIO = 51.0/231;
         public static final double WHEEL_RADIUS = 0.10000000001;
@@ -82,32 +85,27 @@ public final class Constants
     /*
     Constants for winch stuff
     */
-    public static final class Winch 
+    public static final class Climber 
     {
-        public static final int TOP_LIMIT_WINCH = 45;
-        public static final int MIDDLE_LIMIT_WINCH = 48;
-        public static final int BOTTOM_LIMIT_WINCH = 46;
         public static final int WINCH_MOTOR = 47;
 
         public static final int SOLENOID_IN = 2;
         public static final int SOLENOID_OUT = 3;
+
+        // height restraints
+
     }
 
     /*
     Constants for escalator stuff
     */
-    public static final class Escalator
+    public static final class Belt
     {
-        public static final int deviceId = 0;
-    }
-
-    /**
-     * Class with constant PCM channels for the shifter
-     */
-    public static final class Shifter
-    {
-        public static final int LOW = 4;
-        public static final int HIGH = 5;
+        public static final int TOP_MOTOR_ID = 0;
+        public static final int BOTTOM_MOTOR_ID = 0;
+        
+        public static final int SOLENOID_IN = 2;
+        public static final int SOLENOID_OUT = 3;
     }
 
     public static final class Motor
