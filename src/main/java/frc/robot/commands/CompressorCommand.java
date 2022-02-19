@@ -35,6 +35,7 @@ public class CompressorCommand extends CommandBase {
   @Override
   public void initialize() {
     compressorSubsystem.disableCompressor();
+    execute();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,7 +47,7 @@ public class CompressorCommand extends CommandBase {
     // if the compressor switch changes change the compressor state
     if (switchEnabled != lastState)
     {
-      if (compressorSwitch.get())
+      if (!compressorSwitch.get())
       {
         compressorSubsystem.enableCompressor();
       }
