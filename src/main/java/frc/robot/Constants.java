@@ -19,14 +19,12 @@ public final class Constants
     /**
      * Contains Autonomous Planning constants
      */
-    public static final class Autonomous
-    {
+    public static final class Autonomous {
         public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
     }
 
-    public static final class StatusSwitch
-    {
+    public static final class StatusSwitch {
         public static final int FIRST_INPUT = 0;
         public static final int SECOND_INPUT = 1;
         public static final int THIRD_INPUT = 2;
@@ -36,8 +34,7 @@ public final class Constants
     /**
      *  motor CAN ID class
      */
-    public static final class Drive
-    {
+    public static final class Drive {
         /** CAN ID */
         public static final int FRONT_RIGHT = 9;
         /** CAN ID */
@@ -96,8 +93,7 @@ public final class Constants
     /**
      *Constants for winch stuff
      */
-    public static final class Climber 
-    {
+    public static final class Climber {
         /** CAN ID */
         public static final int WINCH_MOTOR = 10;
 
@@ -106,7 +102,22 @@ public final class Constants
         /** solenoid Pneumatic Hub port */
         public static final int SOLENOID_OUT = 2;
 
-        // height restraints
+
+        /** Winch starting position in meters */
+        public static final double STARTING_POSITION = 0.10;
+
+        /** Gear ratio between the winch and the cable (m/rev) */
+        public static final double WINCH_RATIO = 1/48 * (0.027 * Math.PI);
+
+        // height restraints 
+        /** lowest the winch can go when it is angled (m) */
+        public static final double MIN_ANGLED = 0.10;
+        /** highest the winch can go when it is angled (m) */
+        public static final double MAX_ANGLED = 0.70;
+        /** lowest the winch can go when it is up (m) */
+        public static final double MIN_UP = 0.00;
+        /** highest the winch can go when it is up (m) */
+        public static final double MAX_UP = 0.60;
 
         /**
          * PID Gains for the Elevator
@@ -121,8 +132,7 @@ public final class Constants
     /**
      *Constants for escalator stuff
      */
-    public static final class Belt
-    {
+    public static final class Belt {
         /** CAN ID */
         public static final int TOP_MOTOR_ID = 12;
         /** CAN ID */
@@ -134,14 +144,12 @@ public final class Constants
         public static final int SOLENOID_OUT = 0;
     }
 
-    public static final class CompressorConstants
-    {
+    public static final class CompressorConstants {
         /** Digital Input Port */
         public static final int COMPRESSOR_SWITCH = 4;
     }
 
-    public static final class LimelightConstants
-    {
+    public static final class LimelightConstants {
         //Angular constants; tune for robot
         public static final double akP = .1;
         public static final double akI = .000;

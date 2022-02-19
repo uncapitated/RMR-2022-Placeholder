@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -49,10 +51,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   // Simulation object
   private Simulation sim;
 
-
   // shifter
   private DoubleSolenoid shifter;
-  private enum SHIFTER_POSITION {LOW, HIGH}
+  public enum SHIFTER_POSITION {LOW, HIGH}
   private SHIFTER_POSITION shifterPosition;
 
   // rotation of drive - should be changed to rely on Gyro
