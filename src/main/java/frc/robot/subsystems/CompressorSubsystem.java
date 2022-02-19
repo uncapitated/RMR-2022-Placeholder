@@ -13,7 +13,7 @@ public class CompressorSubsystem extends SubsystemBase {
 
   /** Creates a new Compressor. */
   public CompressorSubsystem() {
-    compressor = new Compressor(0, PneumaticsModuleType.REVPH);
+    compressor = new Compressor(2, PneumaticsModuleType.REVPH);
     // note that the compressor already enabled by default
 
     compressor.enableDigital();
