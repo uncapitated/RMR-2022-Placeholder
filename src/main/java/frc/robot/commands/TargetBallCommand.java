@@ -5,19 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.PID;
+import frc.robot.Constants.DrivePID;
 import frc.robot.Controller.Drive;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class TargetBallCommand extends CommandBase {
   NetworkTable table, ck;
 
-  private DriveTrain driveTrain;
+  private DriveTrainSubsystem driveTrain;
 
-  private PIDController fpid;
   private PIDController tpid;
 
   double xmin, ymin, xmax, ymax, avX, degrees;
@@ -25,12 +25,11 @@ public class TargetBallCommand extends CommandBase {
   private double turnSpeed;
   private double forwardSpeed;
   /** Creates a new TargetBallCommand. */
-  public TargetBallCommand(DriveTrain DriveTrain) {
+  public TargetBallCommand(DriveTrainSubsystem DriveTrain) {
 
     this.driveTrain = DriveTrain;
 
-    fpid = new PIDController(PID.lkP, PID.lkI, PID.lkD);
-    tpid = new PIDController(PID.akP, PID.akI, PID.akD);
+    tpid = new PIDController(DrivePID.akP,DrivePID.akI,DrivePID.akD);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveTrain);
@@ -57,11 +56,11 @@ public class TargetBallCommand extends CommandBase {
 
     avX = (xmin+xmax)/2;
 
-    degrees = (PID.maxX/2-avX)/(PID.maxX/2)*180;
+    degrees = (DrivePID.maxX/2-avX)/(DrivePID.maxX/2)*180;
 
-    turnSpeed = tpid.calculate(degrees, 0);
+    turnSpeed = -1*tpid.calculate(degrees, 0);
 
-
+    driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
   }
 
   // Called once the command ends or is interrupted.

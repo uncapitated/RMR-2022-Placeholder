@@ -41,11 +41,6 @@ public final class Constants
          * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
          * 
          * 	                                    			  kP   	 kI    kD      kF          Iz    PeakOut */
-        
-        //Linear constants; tune for robot
-         public static final double lkP = .1;
-        public static final double lkI = .000;
-        public static final int lkD = 5;
 
         //Angular constants; tune for robot
         public static final double akP = .1;
