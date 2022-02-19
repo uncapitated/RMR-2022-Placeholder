@@ -152,7 +152,13 @@ public final class Constants
         public static final double maxY = 100;
     }
 
+<<<<<<< HEAD
     public static final class Pneumatics {
         public static final int COMPRESSOR_CAN_ID = 2;
+=======
+    public static final class CameraConstants
+    {
+        public static final String instanceName = "re box";
+>>>>>>> 7f82d92285383b80832c35312bbd79d4cbb9bd51
     }
 }

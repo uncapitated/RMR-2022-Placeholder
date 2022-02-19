@@ -19,7 +19,6 @@ public class Simulation {
     private ShuffleboardTab simulationTab = Shuffleboard.getTab("Simulation");
     private ComplexWidget fieldComponent = simulationTab.add("Field", field).withWidget(BuiltInWidgets.kField)
         .withPosition(1, 0).withSize(6, 3);
-    ;
 
     public void updateRobotPos(Pose2d robotPose)
     {
