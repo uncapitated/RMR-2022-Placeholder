@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Controller;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
  * Link to WPILib Command Based Programming
@@ -16,7 +16,7 @@ import frc.robot.subsystems.DriveTrain;
  */
 
 public class DriveCommand extends CommandBase {
-  private DriveTrain driveTrainSubsystem;
+  private DriveTrainSubsystem driveTrainSubsystem;
 
   // in m/s
   private double maxForward = 1;
@@ -24,7 +24,7 @@ public class DriveCommand extends CommandBase {
   private double maxTurn = 1.4;
 
   /** Creates a new Drive. */
-  public DriveCommand(DriveTrain in_driveTrainSubsystem) {
+  public DriveCommand(DriveTrainSubsystem in_driveTrainSubsystem) {
     driveTrainSubsystem = in_driveTrainSubsystem;
     // always add requirements for subsystems which are controlled
     addRequirements(driveTrainSubsystem);

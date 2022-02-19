@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Controller;
-import frc.robot.subsystems.Escalator;
+import frc.robot.subsystems.EscalatorSubsystem;
 
 public class EscalatorCommand extends CommandBase {
-  private Escalator Escalator;
+  private EscalatorSubsystem Escalator;
 
   /** Creates a new Escalator. */
-  public EscalatorCommand(Escalator Escalator) {
+  public EscalatorCommand(EscalatorSubsystem Escalator) {
     this.Escalator = Escalator;
     addRequirements(Escalator);
     // Use addRequirements() here to declare subsystem dependencies.

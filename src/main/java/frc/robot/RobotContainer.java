@@ -24,9 +24,9 @@ public class RobotContainer {
   private Simulation sim = new Simulation();
 
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain driveTrain = new DriveTrain(sim);
+  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(sim);
   private final Limelight limelight = new Limelight();
-  private final Escalator escalator = new Escalator();
+  private final EscalatorSubsystem escalator = new EscalatorSubsystem();
 
 
   // commands

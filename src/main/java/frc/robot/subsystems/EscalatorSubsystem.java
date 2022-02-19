@@ -4,20 +4,23 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 
-import frc.robot.Constants.Esc;
+import frc.robot.Constants.Escalator;
 
-public class Escalator extends SubsystemBase {
+public class EscalatorSubsystem extends SubsystemBase {
   //declare SparkMax motor
   private CANSparkMax sparkMax;
+
+  private DoubleSolenoid escalatorSolenoid;
  
   /** Creates a new Escalator. */
-  public Escalator() {
+  public EscalatorSubsystem() {
     // Use addRequirements() here to declare subsystem dependencies.
-    sparkMax = new CANSparkMax(Esc.deviceId, MotorType.kBrushless);
+    sparkMax = new CANSparkMax(Escalator.deviceId, MotorType.kBrushless);
     sparkMax.restoreFactoryDefaults();
   }
 

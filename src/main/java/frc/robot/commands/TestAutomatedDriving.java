@@ -17,12 +17,12 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.Autonomous;
 
 public class TestAutomatedDriving extends CommandBase {
-  private DriveTrain driveTrainSubsystem;
+  private DriveTrainSubsystem driveTrainSubsystem;
 
   private Trajectory currentTrajectory;
   private RamseteController controller;
@@ -31,7 +31,7 @@ public class TestAutomatedDriving extends CommandBase {
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public TestAutomatedDriving(DriveTrain driveTrainSubsystem) {
+  public TestAutomatedDriving(DriveTrainSubsystem driveTrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
 
