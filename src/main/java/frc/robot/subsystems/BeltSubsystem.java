@@ -26,23 +26,24 @@ public class BeltSubsystem extends SubsystemBase {
  
   /** Creates a new Escalator. */
   public BeltSubsystem() {
-    // Use addRequirements() here to declare subsystem dependencies.
-    lowBelt = new CANSparkMax(Belt.TOP_MOTOR_ID, MotorType.kBrushless);
-    lowBelt.restoreFactoryDefaults();
+      // Use addRequirements() here to declare subsystem dependencies.
+      lowBelt = new CANSparkMax(Belt.TOP_MOTOR_ID, MotorType.kBrushless);
+      lowBelt.restoreFactoryDefaults();
 
-    lowBelt.set(0);
+      lowBelt.set(0);
 
-    highBelt = new CANSparkMax(Belt.BOTTOM_MOTOR_ID, MotorType.kBrushless);
-    highBelt.restoreFactoryDefaults();
-    highBelt.setInverted(true);
+      highBelt = new CANSparkMax(Belt.BOTTOM_MOTOR_ID, MotorType.kBrushless);
+      highBelt.restoreFactoryDefaults();
+      highBelt.setInverted(true);
 
-    highBelt.set(0);
+      highBelt.set(0);
 
-    escalatorSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Belt.SOLENOID_OUT, Belt.SOLENOID_IN);
-    escalatorSolenoid.set(Value.kReverse);
+      escalatorSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Belt.SOLENOID_OUT, Belt.SOLENOID_IN);
+      escalatorSolenoid.set(Value.kReverse);
 
-    isStopped = true;
-    lastUpdateTime = Timer.getFPGATimestamp();
+      isStopped = true;
+      lastUpdateTime = Timer.getFPGATimestamp();
+
   }
 
   public boolean getIsStopped()

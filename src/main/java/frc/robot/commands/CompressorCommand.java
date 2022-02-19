@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.CompressorConstants;
 import frc.robot.subsystems.CompressorSubsystem;
@@ -26,7 +28,7 @@ public class CompressorCommand extends CommandBase {
     addRequirements(compressorSubsystem);
 
     compressorSwitch = new DigitalInput(CompressorConstants.COMPRESSOR_SWITCH);
-    lastState = compressorSwitch.get();
+    lastState = !compressorSwitch.get();
   }
 
   // Called when the command is initially scheduled.
@@ -38,8 +40,11 @@ public class CompressorCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("Compressor", compressorSwitch.get());
+
+    boolean switchEnabled = !compressorSwitch.get();
     // if the compressor switch changes change the compressor state
-    if (compressorSwitch.get() != lastState)
+    if (switchEnabled != lastState)
     {
       if (compressorSwitch.get())
       {
@@ -50,6 +55,8 @@ public class CompressorCommand extends CommandBase {
         compressorSubsystem.disableCompressor();
       }
     }
+
+    lastState = switchEnabled;
   }
 
   // Called once the command ends or is interrupted.
