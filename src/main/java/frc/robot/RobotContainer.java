@@ -23,21 +23,28 @@ public class RobotContainer {
 
   private Simulation sim = new Simulation();
 
+  private final Limelight limelight = new Limelight();
+
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(sim);
-  private final Limelight limelight = new Limelight();
-  private final BeltSubsystem escalator = new BeltSubsystem();
+  private final BeltSubsystem belt = new BeltSubsystem();
 
+  private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrain);
-  private final LimelightAlignCommand limelightCommand = new LimelightAlignCommand(limelight, driveTrain);
-  private final BeltIntakeCommand escalatorCommand = new BeltIntakeCommand(escalator);
+  
+  private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(belt);
+  private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(belt);
+
+  private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    configureDefaultCommands();
   }
 
   /**
@@ -47,7 +54,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Drive.getXAlignButton().whenPressed(limelightCommand);
+    Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
+    Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+  }
+
+  private void configureDefaultCommands(){
+    compressorSubsystem.setDefaultCommand(compressorCommand);
   }
 
   /**

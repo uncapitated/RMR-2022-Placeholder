@@ -17,9 +17,6 @@ public class Controller
         /**
          * Drive Controller Mapping
          * Left Joystick -> controls both speed and direction
-         * 
-         * Either Trigger -> controls slow mode (pressing down either one will slow the robot)
-         * Currently cuts the power output in half
          */
 
         private static XboxController controller = new XboxController(0);
@@ -105,6 +102,24 @@ public class Controller
                 controller.setRumble(RumbleType.kLeftRumble, 0.0);
                 controller.setRumble(RumbleType.kRightRumble, 0.0);
             }
+        }
+    }
+
+    public static class Manipulator
+    {
+        // manipulator controller
+        private static XboxController controller = new XboxController(0);
+
+        /** Intake button is mapped to the A Button on the second controller */
+        public static JoystickButton getIntakeButton()
+        {
+            return new JoystickButton(controller, XboxController.Button.kA.value);
+        }
+
+        /** Dispense button is mapped to the B Button on the second controller */
+        public static JoystickButton getDispenseButton()
+        {
+            return new JoystickButton(controller, XboxController.Button.kB.value);
         }
     }
 }

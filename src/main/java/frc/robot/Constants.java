@@ -16,6 +16,46 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants
 {
+    /**
+     * Contains Autonomous Planning constants
+     */
+    public static final class Autonomous
+    {
+        public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+    }
+
+    /**
+     *  motor CAN ID class
+     */
+    public static final class Drive
+    {
+        /** CAN ID */
+        public static final int FRONT_RIGHT = 9;
+        /** CAN ID */
+        public static final int BACK_RIGHT = 8;
+        /** CAN ID */
+        public static final int FRONT_LEFT = 6;
+        /** CAN ID */
+        public static final int BACK_LEFT = 7;
+
+        /** solenoid Pneumatic Hub port */
+        public static final int SHIFTER_HIGH = 0;
+        /** solenoid Pneumatic Hub port */
+        public static final int SHIFTER_LOW = 0;
+
+        public static final double HIGH_GEAR_RATIO = 51.0/153;
+        public static final double LOW_GEAR_RATIO = 51.0/231;
+        public static final double WHEEL_RADIUS = 0.10000000001;
+        
+        /** converts chassis speeds to wheel speeds */
+        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
+
+        /** The steps per revolution of a TalonFX */
+        public static final int DRIVE_SPR = 2048;
+        /** Conversion factor to convert SPR to rotations per second */
+        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
+    }
     public static final class DrivePID {
         /**
          * Which PID slot to pull gains from. Starting 2018, you can choose from
@@ -41,7 +81,51 @@ public final class Constants
          * kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
          * 
          * 	                                    			  kP   	 kI    kD      kF          Iz    PeakOut */
+        public final static Gains kGains_Velocity  = new Gains( .1, .000, 5, 1023.0/20660.0,  300,  1.00);
+    }
 
+
+    /**
+     *Constants for winch stuff
+     */
+    public static final class Climber 
+    {
+        /** CAN ID */
+        public static final int WINCH_MOTOR = 47;
+
+        /** solenoid Pneumatic Hub port */
+        public static final int SOLENOID_IN = 2;
+        /** solenoid Pneumatic Hub port */
+        public static final int SOLENOID_OUT = 3;
+
+        // height restraints
+
+    }
+
+    /**
+     *Constants for escalator stuff
+     */
+    public static final class Belt
+    {
+        /** CAN ID */
+        public static final int TOP_MOTOR_ID = 0;
+        /** CAN ID */
+        public static final int BOTTOM_MOTOR_ID = 0;
+        
+        /** solenoid Pneumatic Hub port */
+        public static final int SOLENOID_IN = 2;
+        /** solenoid Pneumatic Hub port */
+        public static final int SOLENOID_OUT = 3;
+    }
+
+    public static final class CompressorConstants
+    {
+        /** Digital Input Port */
+        public static final int COMPRESSOR_SWITCH = 4;
+    }
+
+    public static final class LimelightConstants
+    {
         //Angular constants; tune for robot
         public static final double akP = .1;
         public static final double akI = .000;
@@ -50,85 +134,5 @@ public final class Constants
         //Constants for the camera
         public static final double maxX = 100;
         public static final double maxY = 100;
-
-         public final static Gains kGains_Velocity  = new Gains( .1, .000, 5, 1023.0/20660.0,  300,  1.00);
-    }
-    public static final class Autonomous
-    {
-        public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
-    }
-
-    /**
-     * Current channels on the Power distribution panel which can be used to enforce current restrictions
-     */
-    public static final class Current
-    {
-        // values not confirmed (currently doesn't matter)
-        public static final int FRONT_RIGHT_DRIVE = 19;
-        public static final int BACK_RIGHT_DRIVE = 18;
-        public static final int FRONT_LEFT_DRIVE = 16;
-        public static final int BACK_LEFT_DRIVE = 17;
-    }
-
-    /**
-     *  motor CAN ID class
-     */
-    public static final class Drive
-    {
-        /** CAN */
-        public static final int FRONT_RIGHT = 9;
-        public static final int BACK_RIGHT = 8;
-        public static final int FRONT_LEFT = 6;
-        public static final int BACK_LEFT = 7;
-
-        /** solenoid Pneumatic Hub port*/
-        public static final int SHIFTER_HIGH = 0;
-        /** solenoid Pneumatic Hub port*/
-        public static final int SHIFTER_LOW = 0;
-
-        public static final double HIGH_GEAR_RATIO = 51.0/153;
-        public static final double LOW_GEAR_RATIO = 51.0/231;
-        public static final double WHEEL_RADIUS = 0.10000000001;
-        
-        /** converts chassis speeds to wheel speeds */
-        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
-
-        /** The steps per revolution of a TalonFX */
-        public static final int DRIVE_SPR = 2048;
-        /** Conversion factor to convert SPR to rotations per second */
-        public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
-    }
-
-
-    /*
-    Constants for winch stuff
-    */
-    public static final class Climber 
-    {
-        public static final int WINCH_MOTOR = 47;
-
-        public static final int SOLENOID_IN = 2;
-        public static final int SOLENOID_OUT = 3;
-
-        // height restraints
-
-    }
-
-    /*
-    Constants for escalator stuff
-    */
-    public static final class Belt
-    {
-        public static final int TOP_MOTOR_ID = 0;
-        public static final int BOTTOM_MOTOR_ID = 0;
-        
-        public static final int SOLENOID_IN = 2;
-        public static final int SOLENOID_OUT = 3;
-    }
-
-    public static final class Motor
-    {
-        
     }
 }

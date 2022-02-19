@@ -6,14 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.CompressorConstants;
 import frc.robot.subsystems.CompressorSubsystem;
 
 public class CompressorCommand extends CommandBase {
   // subsystem for enabling and disabling the compressor
-  CompressorSubsystem compressorSubsystem;
+  private CompressorSubsystem compressorSubsystem;
 
   // switch for controlling the compressor
-  DigitalInput compressorSwitch;
+  private DigitalInput compressorSwitch;
+
+  private boolean lastState;
 
   /** Creates a new CompressorCommand. */
   public CompressorCommand(CompressorSubsystem compressorSubsystem) {
@@ -22,17 +25,32 @@ public class CompressorCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(compressorSubsystem);
 
-    // 
-    compressorSwitch = new DigitalInput(4);
+    compressorSwitch = new DigitalInput(CompressorConstants.COMPRESSOR_SWITCH);
+    lastState = compressorSwitch.get();
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    compressorSubsystem.disableCompressor();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // if the compressor switch changes change the compressor state
+    if (compressorSwitch.get() != lastState)
+    {
+      if (compressorSwitch.get())
+      {
+        compressorSubsystem.enableCompressor();
+      }
+      else
+      {
+        compressorSubsystem.disableCompressor();
+      }
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

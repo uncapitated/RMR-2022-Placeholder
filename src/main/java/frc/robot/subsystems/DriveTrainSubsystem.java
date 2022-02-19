@@ -257,7 +257,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private double toRobotSpeed(double motorSpeed)
   {
     // In rotations per second
-    motorSpeed *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+    motorSpeed *= Drive.DRIVE_VELOCITY_FACTOR;
 
     // In rotations per second
     if (shifterPosition == SHIFTER_POSITION.HIGH) {
@@ -275,7 +275,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private double toRobotPosition(double motorPosition)
   {
     // In rotations
-    motorPosition /= Constants.Motor.DRIVE_SPR;
+    motorPosition /= Drive.DRIVE_SPR;
 
     // In rotations
     if (shifterPosition == SHIFTER_POSITION.HIGH) {
@@ -303,7 +303,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     // In rotations per second
-    robotSpeed /= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+    robotSpeed /= Drive.DRIVE_VELOCITY_FACTOR;
 
     return robotSpeed;
   }
@@ -321,7 +321,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     // In steps
-    robotPosition *= Constants.Motor.DRIVE_VELOCITY_FACTOR;
+    robotPosition *= Drive.DRIVE_VELOCITY_FACTOR;
 
     return robotPosition;
   }

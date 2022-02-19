@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DrivePID;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
@@ -29,7 +30,7 @@ public class TargetBallCommand extends CommandBase {
 
     this.driveTrain = DriveTrain;
 
-    tpid = new PIDController(DrivePID.akP,DrivePID.akI,DrivePID.akD);
+    tpid = new PIDController(LimelightConstants.akP, LimelightConstants.akI, LimelightConstants.akD);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveTrain);
@@ -56,7 +57,7 @@ public class TargetBallCommand extends CommandBase {
 
     avX = (xmin+xmax)/2;
 
-    degrees = (DrivePID.maxX/2-avX)/(DrivePID.maxX/2)*180;
+    degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
 
     turnSpeed = -1*tpid.calculate(degrees, 0);
 
