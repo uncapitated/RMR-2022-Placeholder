@@ -151,4 +151,9 @@ public final class Constants
         public static final double maxX = 100;
         public static final double maxY = 100;
     }
+
+    public static final class CameraConstants
+    {
+        public static final String instanceName = "re box";
+    }
 }
