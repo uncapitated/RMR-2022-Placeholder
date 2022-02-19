@@ -57,7 +57,7 @@ public class TargetBallCommand extends CommandBase {
   @Override
   public void execute() {
     
-    jsObj = new JSONObject(table.getEntry(CameraConstants.label[0]).getString(""));
+    jsObj = new JSONObject(table.getEntry("box").getString(""));
 
     System.out.println(jsObj);
 
