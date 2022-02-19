@@ -28,7 +28,6 @@ public class TargetBallCommand extends CommandBase {
   double xmin, ymin, xmax, ymax, avX, degrees, confidence;
 
   private double turnSpeed;
-  private double forwardSpeed;
 
   private JSONObject jsObj;
   /** Creates a new TargetBallCommand. */
@@ -57,8 +56,8 @@ public class TargetBallCommand extends CommandBase {
   @Override
   public void execute() {
     
-    if(table.getEntry("label").getString("").equals(CameraConstants.label[0]))
-    {
+    if(table.getEntry("label").getString("").equals(CameraConstants.label[0])) {
+      
       jsObj = new JSONObject(table.getEntry("box").getString(""));
 
       System.out.println(jsObj);
@@ -78,7 +77,6 @@ public class TargetBallCommand extends CommandBase {
       System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
       //driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
     }
-    else{}
   }
 
   // Called once the command ends or is interrupted.
