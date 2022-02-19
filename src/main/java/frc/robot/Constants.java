@@ -61,6 +61,14 @@ public final class Constants
         public static final int BACK_LEFT_DRIVE = 17;
     }
 
+    public static final class StatusSwitch
+    {
+        public static final int FIRST_STATE = 81;
+        public static final int SECOND_STATE = 82;
+        public static final int THIRD_STATE = 83;
+        public static final int FOURTH_STATE = 84;
+    }
+
     /**
      *  motor CAN ID class
      */
