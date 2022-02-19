@@ -32,14 +32,14 @@ public class TargetBallCommand extends CommandBase {
 
   private JSONObject jsObj;
   /** Creates a new TargetBallCommand. */
-  public TargetBallCommand(DriveTrainSubsystem DriveTrain) {
+  public TargetBallCommand(DriveTrainSubsystem driveTrain) {
 
-    this.driveTrain = DriveTrain;
+    this.driveTrain = driveTrain;
 
     tpid = new PIDController(LimelightConstants.akP, LimelightConstants.akI, LimelightConstants.akD);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(DriveTrain);
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
