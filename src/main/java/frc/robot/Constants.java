@@ -27,10 +27,10 @@ public final class Constants
 
     public static final class StatusSwitch
     {
-        public static final int FIRST_INPUT = 81;
-        public static final int SECOND_INPUT = 82;
-        public static final int THIRD_INPUT = 83;
-        public static final int FOURTH_INPUT = 84;
+        public static final int FIRST_INPUT = 0;
+        public static final int SECOND_INPUT = 1;
+        public static final int THIRD_INPUT = 2;
+        public static final int FOURTH_INPUT = 3;
     }
 
     /**
@@ -48,9 +48,9 @@ public final class Constants
         public static final int BACK_LEFT = 7;
 
         /** solenoid Pneumatic Hub port */
-        public static final int SHIFTER_HIGH = 0;
+        public static final int SHIFTER_HIGH = 5;
         /** solenoid Pneumatic Hub port */
-        public static final int SHIFTER_LOW = 0;
+        public static final int SHIFTER_LOW = 4;
 
         public static final double HIGH_GEAR_RATIO = 51.0/153;
         public static final double LOW_GEAR_RATIO = 51.0/231;
@@ -99,12 +99,12 @@ public final class Constants
     public static final class Climber 
     {
         /** CAN ID */
-        public static final int WINCH_MOTOR = 47;
+        public static final int WINCH_MOTOR = 10;
 
         /** solenoid Pneumatic Hub port */
-        public static final int SOLENOID_IN = 2;
+        public static final int SOLENOID_IN = 3;
         /** solenoid Pneumatic Hub port */
-        public static final int SOLENOID_OUT = 3;
+        public static final int SOLENOID_OUT = 2;
 
         // height restraints
 
@@ -124,14 +124,14 @@ public final class Constants
     public static final class Belt
     {
         /** CAN ID */
-        public static final int TOP_MOTOR_ID = 0;
+        public static final int TOP_MOTOR_ID = 12;
         /** CAN ID */
-        public static final int BOTTOM_MOTOR_ID = 0;
+        public static final int BOTTOM_MOTOR_ID = 11;
         
         /** solenoid Pneumatic Hub port */
-        public static final int SOLENOID_IN = 2;
+        public static final int SOLENOID_IN = 1;
         /** solenoid Pneumatic Hub port */
-        public static final int SOLENOID_OUT = 3;
+        public static final int SOLENOID_OUT = 0;
     }
 
     public static final class CompressorConstants
