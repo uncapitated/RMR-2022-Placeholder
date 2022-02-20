@@ -10,8 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DrivePID;
-import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.CameraPIDConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -35,7 +34,7 @@ public class TargetBallCommand extends CommandBase {
 
     this.driveTrain = driveTrain;
 
-    tpid = new PIDController(LimelightConstants.akP, LimelightConstants.akI, LimelightConstants.akD);
+    tpid = new PIDController(CameraPIDConstants.akP, CameraPIDConstants.akI, CameraPIDConstants.akD);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
@@ -70,7 +69,7 @@ public class TargetBallCommand extends CommandBase {
 
       avX = (xmin+xmax)/2;
 
-      degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
+      degrees = (CameraConstants.maxX/2-avX)/(CameraConstants.maxX/2)*180;
 
       turnSpeed = -1*tpid.calculate(degrees, 0);
 
