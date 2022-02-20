@@ -20,7 +20,7 @@ public class Controller
      */
     private static double addDeadBand(double value, double deadBand)
     {
-        return (Math.abs(value) - deadBand / 2) / (1 - deadBand / 2);
+        return Math.copySign((Math.abs(value) - deadBand / 2) / (1 - deadBand / 2), value);
     }
 
 
