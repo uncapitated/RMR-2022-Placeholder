@@ -140,23 +140,23 @@ public final class Constants
         public static final int COMPRESSOR_SWITCH = 4;
     }
 
-    public static final class LimelightConstants
+    public static final class CameraConstants
     {
+        //Constants for the camera
+        public static final double maxX = 100;
+        public static final double maxY = 100;
+
+        public static final String[] label = {"Re", "Blu"};
+    }
+
+    public static final class CameraPIDConstants{
         //Angular constants; tune for robot
         public static final double akP = .1;
         public static final double akI = .000;
         public static final int akD = 5;
-
-        //Constants for the camera
-        public static final double maxX = 100;
-        public static final double maxY = 100;
     }
 
     public static final class Pneumatics {
         public static final int COMPRESSOR_CAN_ID = 2;
-    }
-    public static final class CameraConstants
-    {
-        public static final String[] label = {"Re", "Blu"};
     }
 }
