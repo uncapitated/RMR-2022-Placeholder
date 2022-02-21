@@ -10,8 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DrivePID;
-import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.CameraPIDConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -28,7 +27,6 @@ public class TargetBallCommand extends CommandBase {
   double xmin, ymin, xmax, ymax, avX, degrees, confidence;
 
   private double turnSpeed;
-  private double forwardSpeed;
 
   private JSONObject jsObj;
   /** Creates a new TargetBallCommand. */
@@ -36,7 +34,7 @@ public class TargetBallCommand extends CommandBase {
 
     this.driveTrain = driveTrain;
 
-    tpid = new PIDController(LimelightConstants.akP, LimelightConstants.akI, LimelightConstants.akD);
+    tpid = new PIDController(CameraPIDConstants.akP, CameraPIDConstants.akI, CameraPIDConstants.akD);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
@@ -57,8 +55,8 @@ public class TargetBallCommand extends CommandBase {
   @Override
   public void execute() {
     
-    if(table.getEntry("label").getString("").equals(CameraConstants.label[0]))
-    {
+    if(table.getEntry("label").getString("").equals(CameraConstants.label[0])) {
+      
       jsObj = new JSONObject(table.getEntry("box").getString(""));
 
       System.out.println(jsObj);
@@ -71,14 +69,13 @@ public class TargetBallCommand extends CommandBase {
 
       avX = (xmin+xmax)/2;
 
-      degrees = (LimelightConstants.maxX/2-avX)/(LimelightConstants.maxX/2)*180;
+      degrees = (CameraConstants.maxX/2-avX)/(CameraConstants.maxX/2)*180;
 
       turnSpeed = -1*tpid.calculate(degrees, 0);
 
       System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
       //driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
     }
-    else{}
   }
 
   // Called once the command ends or is interrupted.

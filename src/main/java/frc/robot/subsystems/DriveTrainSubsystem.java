@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -24,7 +26,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Drive;
 import frc.robot.sim.PhysicsSim;
-import frc.robot.sim.Simulation;;
+import frc.robot.sim.Simulation;
 
 public class DriveTrainSubsystem extends SubsystemBase {
   
@@ -47,7 +49,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   // Simulation
   // Simulation object
   private Simulation sim;
-
 
   // shifter
   private DoubleSolenoid shifter;

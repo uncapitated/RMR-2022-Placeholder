@@ -12,6 +12,18 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 /** Add your docs here. */
 public class Controller
 {
+    /**
+     * 
+     * @param value the value to apply the dead band
+     * @param deadBand the amount of dead band to add around the value
+     * @return the value with dead band applied
+     */
+    private static double addDeadBand(double value, double deadBand)
+    {
+        return Math.copySign((Math.abs(value) - deadBand / 2) / (1 - deadBand / 2), value);
+    }
+
+
     public static class Drive
     {
         /**
@@ -38,7 +50,7 @@ public class Controller
         public static double get_forward()
         {
             // controller should be inverted because forward is negative
-            return -controller.getLeftY();
+            return addDeadBand(-controller.getLeftY(), 0.1);
         }
 
         /**
@@ -48,31 +60,13 @@ public class Controller
          */
         public static double get_turn()
         {
-            return controller.getLeftX();
+            return addDeadBand(controller.getLeftX(), 0.1);
         }
 
         // button to activate the align command
         public static JoystickButton getXAlignButton()
         {
             return new JoystickButton(controller, XboxController.Button.kX.value);
-        }
-
-        public static double getSecondaryVerticalStick(){
-            return controller.getRightY();
-        }
-
-        public static boolean getAButton() {
-            return controller.getAButton();
-        }
-
-        public static boolean getBButton() {
-            return controller.getBButton();
-        }
-
-        public static double getYButton() {
-            if(controller.getYButton())
-                return 1;
-            return 0;
         }
 
         public static double getRightStickHorizontal(){
