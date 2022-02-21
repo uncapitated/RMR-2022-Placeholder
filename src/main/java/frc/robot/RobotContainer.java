@@ -62,13 +62,14 @@ public class RobotContainer {
     Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
     Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
 
-    Controller.Manipulator.getWinchInButton().whileHeld(new RunCommand(() -> {climberSubsystem.set(1);}, climberSubsystem));
-    Controller.Manipulator.getWinchOutButton().whileHeld(new RunCommand(() -> {climberSubsystem.set(-1);}, climberSubsystem));
+    Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.6);}, climberSubsystem));
+    Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.6);}, climberSubsystem));
   }
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
     driveTrainSubsystem.setDefaultCommand(driveCommand);
+    climberSubsystem.setDefaultCommand(new RunCommand(() -> {climberSubsystem.set(0);}, climberSubsystem));
   }
 
   /**

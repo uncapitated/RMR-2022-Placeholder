@@ -10,6 +10,9 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import org.ejml.simple.AutomaticSimpleMatrixConvert;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -57,10 +60,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private Rotation2d rotation;
 
   /** Creates a new DriveTrain. */
-  public DriveTrainSubsystem()
-  {
-    rotation = Autonomous.getAutonomous().getStartingRotation();
-    odometry = new DifferentialDriveOdometry(rotation, Autonomous.getAutonomous().getStartingPos());
+  public DriveTrainSubsystem(){
+    
+    if (Autonomous.getAutonomous() != null){
+      rotation = Autonomous.getAutonomous().getStartingRotation();
+      odometry = new DifferentialDriveOdometry(rotation, Autonomous.getAutonomous().getStartingPos());
+    } else {
+      rotation = new Rotation2d(0, 0);
+      odometry = new DifferentialDriveOdometry(rotation, new Pose2d());
+    }
 
     // setup left drive
     frontLeft = new WPI_TalonFX(Drive.FRONT_LEFT);
