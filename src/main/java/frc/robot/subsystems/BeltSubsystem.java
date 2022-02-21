@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import frc.robot.Constants;
 import frc.robot.Constants.Belt;
 
 public class BeltSubsystem extends SubsystemBase {
@@ -38,7 +39,7 @@ public class BeltSubsystem extends SubsystemBase {
 
       highBelt.set(0);
 
-      escalatorSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Belt.SOLENOID_OUT, Belt.SOLENOID_IN);
+      escalatorSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Belt.SOLENOID_OUT, Belt.SOLENOID_IN);
       escalatorSolenoid.set(Value.kReverse);
 
       isStopped = true;

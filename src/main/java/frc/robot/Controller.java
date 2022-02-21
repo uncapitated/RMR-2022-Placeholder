@@ -18,9 +18,9 @@ public class Controller
      * @param deadBand the amount of dead band to add around the value
      * @return the value with dead band applied
      */
-    private static double addDeadBand(double value, double deadBand)
-    {
-        return Math.copySign((Math.abs(value) - deadBand / 2) / (1 - deadBand / 2), value);
+    private static double addDeadBand(double value, double deadBand){
+        return Math.abs(value) > deadBand ? value : 0;
+        // return Math.copySign(Math.max(Math.abs(value) - deadBand, 0) / (1 - deadBand), value);
     }
 
 
@@ -64,7 +64,7 @@ public class Controller
         }
 
         // button to activate the align command
-        public static JoystickButton getXAlignButton()
+        public static JoystickButton getAlignButton()
         {
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
@@ -102,22 +102,51 @@ public class Controller
     public static class Manipulator
     {
         // manipulator controller
-        private static XboxController controller = new XboxController(0);
+        private static XboxController controller = new XboxController(1);
 
         /** Intake button is mapped to the A Button on the second controller */
-        public static JoystickButton getIntakeButton()
-        {
+        public static JoystickButton getIntakeButton() {
             return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
         /** Dispense button is mapped to the B Button on the second controller */
-        public static JoystickButton getDispenseButton()
-        {
+        public static JoystickButton getDispenseButton() {
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
 
-        public static JoystickButton getWinchButton(){
+        public static JoystickButton getWinchInButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
+
+        public static JoystickButton getWinchOutButton() {
+            return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
+
+        /** Climber Angle button is mapped to the left bumper */
+        public static JoystickButton getClimberAngleButton() {
+            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        }
+
+        /** Climber UP button is mapped to the left bumper */
+        public static JoystickButton getClimberUpButton() {
+            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+        }
+
+        public static void setRumble(boolean hasRumble)
+        {
+            /**
+             * Link to API
+             */
+            if (hasRumble)
+            {
+                controller.setRumble(RumbleType.kLeftRumble, 1.0);
+                controller.setRumble(RumbleType.kRightRumble, 1.0);
+            }
+            else
+            {
+                controller.setRumble(RumbleType.kLeftRumble, 0.0);
+                controller.setRumble(RumbleType.kRightRumble, 0.0);
+            }
         }
     }
 }

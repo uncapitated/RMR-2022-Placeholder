@@ -7,8 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.commands.*;
 import frc.robot.sim.Simulation;
 
@@ -19,11 +21,11 @@ import frc.robot.sim.Simulation;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private Autonomous auto = new Autonomous();
+  //private Autonomous auto = new Autonomous();
 
   private Simulation sim = new Simulation();
 
-  private final Limelight limelight = new Limelight();
+  //private final Limelight limelight = new Limelight();
 
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
@@ -38,7 +40,6 @@ public class RobotContainer {
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
 
   private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
-  private final WinchCommand winchCommand = new WinchCommand(climberSubsystem);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -57,11 +58,16 @@ public class RobotContainer {
   private void configureButtonBindings() {
     Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
     Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+
+    Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
+    Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
+
+    Controller.Manipulator.getWinchInButton().whileHeld(new RunCommand(() -> {climberSubsystem.set(1);}, climberSubsystem));
+    Controller.Manipulator.getWinchOutButton().whileHeld(new RunCommand(() -> {climberSubsystem.set(-1);}, climberSubsystem));
   }
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
-    climberSubsystem.setDefaultCommand(winchCommand);
     driveTrainSubsystem.setDefaultCommand(driveCommand);
   }
 

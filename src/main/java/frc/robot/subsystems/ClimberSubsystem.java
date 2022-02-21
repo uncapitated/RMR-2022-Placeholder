@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 
+import frc.robot.Constants;
 import frc.robot.Constants.Climber;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -53,7 +54,7 @@ public class ClimberSubsystem extends SubsystemBase {
     winchPID.setFF(Climber.kGains_Position.kF);
     winchPID.setOutputRange(-Climber.kGains_Position.kPeakOutput, Climber.kGains_Position.kPeakOutput);
 
-    climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Climber.SOLENOID_OUT, Climber.SOLENOID_IN);
+    climberSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Climber.SOLENOID_OUT, Climber.SOLENOID_IN);
 
     // climber starts angled
     setClimberState(CLIMBER_STATE.ANGLED);
@@ -110,6 +111,17 @@ public class ClimberSubsystem extends SubsystemBase {
     {
       climberSolenoid.set(Value.kReverse);
     }
+  }
+
+  /** helper function for setClimberState */
+  public void setClimberAngled()
+  {
+    setClimberState(CLIMBER_STATE.ANGLED);
+  }
+  /** helper function for setClimberState */
+  public void setClimberUP()
+  {
+    setClimberState(CLIMBER_STATE.UP);
   }
 
   @Override

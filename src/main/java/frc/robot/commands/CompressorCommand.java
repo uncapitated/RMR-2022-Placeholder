@@ -18,8 +18,6 @@ public class CompressorCommand extends CommandBase {
   // switch for controlling the compressor
   private DigitalInput compressorSwitch;
 
-  private boolean lastState;
-
   /** Creates a new CompressorCommand. */
   public CompressorCommand(CompressorSubsystem compressorSubsystem) {
     this.compressorSubsystem = compressorSubsystem;
@@ -28,24 +26,12 @@ public class CompressorCommand extends CommandBase {
     addRequirements(compressorSubsystem);
 
     compressorSwitch = new DigitalInput(CompressorConstants.COMPRESSOR_SWITCH);
-
-    // start the compressor in the correct state
-    lastState = !compressorSwitch.get();
-    if (lastState)
-    {
-      compressorSubsystem.enableCompressor();
-    }
-    else
-    {
-      compressorSubsystem.disableCompressor();
-    }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     compressorSubsystem.disableCompressor();
-    execute();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,18 +40,16 @@ public class CompressorCommand extends CommandBase {
     SmartDashboard.putBoolean("Compressor", compressorSwitch.get());
 
     boolean switchEnabled = !compressorSwitch.get();
-    // if the compressor switch changes change the compressor state
-
     if (switchEnabled)
     {
+      SmartDashboard.putBoolean("Test", true);
       compressorSubsystem.enableCompressor();
     }
     else
     {
+      SmartDashboard.putBoolean("Test", false);
       compressorSubsystem.disableCompressor();
     }
-
-    lastState = switchEnabled;
   }
 
   // Called once the command ends or is interrupted.
