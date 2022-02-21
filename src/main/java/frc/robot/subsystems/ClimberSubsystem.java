@@ -92,6 +92,10 @@ public class ClimberSubsystem extends SubsystemBase {
   {
     return toElevatorMeters(winch.getEncoder().getPosition());
   }
+
+  public void set(double val){
+    winch.set(val);
+  }
   
   // set the Climber to be in or out
   public void setClimberState(CLIMBER_STATE state)
@@ -113,7 +117,7 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // update the PID Controller
-    winchPID.setReference(toMotorRotations(setPoint), CANSparkMax.ControlType.kPosition);
+    // winchPID.setReference(toMotorRotations(setPoint), CANSparkMax.ControlType.kPosition);
   }
 
   
