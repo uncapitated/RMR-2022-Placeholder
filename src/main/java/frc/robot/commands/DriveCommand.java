@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Controller;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
 /**
  * Link to WPILib Command Based Programming
@@ -47,6 +48,12 @@ public class DriveCommand extends CommandBase {
     //command subsystem
     ChassisSpeeds robotSpeeds = new ChassisSpeeds(targetForwardPower * maxForward, 0, targetTurnPower * maxTurn);
     driveTrainSubsystem.set(Constants.Drive.KINEMATICS.toWheelSpeeds(robotSpeeds));
+
+    if(Controller.Drive.getTriggerLeft().get()){
+      driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.HIGH);
+    } else if (Controller.Drive.getTriggerRight().get()){
+      driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.LOW);
+    }
   }
 
   // Called once the command ends or is interrupted.

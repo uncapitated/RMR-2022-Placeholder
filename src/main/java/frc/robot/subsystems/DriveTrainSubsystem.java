@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -52,7 +51,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   // shifter
   private DoubleSolenoid shifter;
-  private enum SHIFTER_POSITION {LOW, HIGH}
+  public enum SHIFTER_POSITION {LOW, HIGH}
   private SHIFTER_POSITION shifterPosition;
 
   // rotation of drive - should be changed to rely on Gyro
@@ -149,8 +148,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   // set shifter
-  public void setSifter(SHIFTER_POSITION position)
+  public void setShifter(SHIFTER_POSITION position)
   {
+    shifterPosition = position;
+
     if(position == SHIFTER_POSITION.HIGH)
     {
       shifter.set(Value.kForward);

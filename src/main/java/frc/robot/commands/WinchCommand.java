@@ -24,8 +24,7 @@ public class WinchCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.climberSubsystem.set(Controller.Manipulator.getWinchButton().get() ? 0.01 : 0);
-    System.out.println(Controller.Manipulator.getWinchButton());
+    this.climberSubsystem.set(Controller.Manipulator.getWinchButton().get() ? 0.1 : 0);
   }
 
   // Called once the command ends or is interrupted.

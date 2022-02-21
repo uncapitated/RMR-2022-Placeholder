@@ -28,7 +28,17 @@ public class CompressorCommand extends CommandBase {
     addRequirements(compressorSubsystem);
 
     compressorSwitch = new DigitalInput(CompressorConstants.COMPRESSOR_SWITCH);
+
+    // start the compressor in the correct state
     lastState = !compressorSwitch.get();
+    if (lastState)
+    {
+      compressorSubsystem.enableCompressor();
+    }
+    else
+    {
+      compressorSubsystem.disableCompressor();
+    }
   }
 
   // Called when the command is initially scheduled.
@@ -45,16 +55,14 @@ public class CompressorCommand extends CommandBase {
 
     boolean switchEnabled = !compressorSwitch.get();
     // if the compressor switch changes change the compressor state
-    if (switchEnabled != lastState)
+
+    if (switchEnabled)
     {
-      if (!compressorSwitch.get())
-      {
-        compressorSubsystem.enableCompressor();
-      }
-      else
-      {
-        compressorSubsystem.disableCompressor();
-      }
+      compressorSubsystem.enableCompressor();
+    }
+    else
+    {
+      compressorSubsystem.disableCompressor();
     }
 
     lastState = switchEnabled;

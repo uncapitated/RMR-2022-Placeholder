@@ -26,16 +26,16 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight();
 
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(sim);
-  private final BeltSubsystem belt = new BeltSubsystem();
+  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
+  private final BeltSubsystem beltSubsystem = new BeltSubsystem();
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
-  private final DriveCommand driveCommand = new DriveCommand(driveTrain);
+  private final DriveCommand driveCommand = new DriveCommand(driveTrainSubsystem);
   
-  private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(belt);
-  private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(belt);
+  private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(beltSubsystem);
+  private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
 
   private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
   private final WinchCommand winchCommand = new WinchCommand(climberSubsystem);
@@ -55,13 +55,14 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
-    //Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+    Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
+    Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
   }
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
     climberSubsystem.setDefaultCommand(winchCommand);
+    driveTrainSubsystem.setDefaultCommand(driveCommand);
   }
 
   /**

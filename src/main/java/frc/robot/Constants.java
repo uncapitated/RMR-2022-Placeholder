@@ -99,7 +99,7 @@ public final class Constants
     public static final class Climber 
     {
         /** CAN ID */
-        public static final int WINCH_MOTOR = 10;
+        public static final int WINCH_MOTOR = 12;
 
         /** solenoid Pneumatic Hub port */
         public static final int SOLENOID_IN = 3;
@@ -124,7 +124,7 @@ public final class Constants
     public static final class Belt
     {
         /** CAN ID */
-        public static final int TOP_MOTOR_ID = 12;
+        public static final int TOP_MOTOR_ID = 10;
         /** CAN ID */
         public static final int BOTTOM_MOTOR_ID = 11;
         
