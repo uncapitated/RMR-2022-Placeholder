@@ -11,7 +11,6 @@ import frc.robot.Constants;
 import frc.robot.Controller;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
 /**
  * Link to WPILib Command Based Programming

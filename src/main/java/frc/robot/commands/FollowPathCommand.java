@@ -4,22 +4,15 @@
 
 package frc.robot.commands;
 
-import java.util.List;
-
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.Constants;
-import frc.robot.Constants.Autonomous;
 
 public class FollowPathCommand extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
@@ -31,7 +24,7 @@ public class FollowPathCommand extends CommandBase {
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem) {
+  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem, Trajectory to_follow) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
 
@@ -39,23 +32,7 @@ public class FollowPathCommand extends CommandBase {
 
     controller = new RamseteController();
 
-    // setup trajectory
-    TrajectoryConfig config = new TrajectoryConfig(Autonomous.MAX_SPEED_METERS_PER_SECOND, 
-      Autonomous.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED).setKinematics(Constants.Drive.KINEMATICS);
-
-    currentTrajectory = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(0, 0, new Rotation2d(0)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(
-          new Translation2d(1, 1),
-          new Translation2d(2, -1)
-      ),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(3, 0, new Rotation2d(0)),
-      // Pass config
-      config
-    );
+    currentTrajectory = to_follow;
 
     robotPosition = currentTrajectory.getInitialPose();
   }
