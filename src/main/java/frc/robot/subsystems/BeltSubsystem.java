@@ -92,7 +92,7 @@ public class BeltSubsystem extends SubsystemBase {
     {
       stop();
 
-      System.out.println();
+      System.out.println("Belt Stopped. Please Command Subsystem!!!");
     }
   }
 }
