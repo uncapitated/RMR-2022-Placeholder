@@ -98,7 +98,7 @@ public class TargetBallCommand extends CommandBase {
         if(degrees != 0)
           driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
         else 
-          driveTrain.set(new ChassisSpeeds(5,0,0));
+          driveTrain.set(new ChassisSpeeds(.3,0,0));
       //}
   }
 
