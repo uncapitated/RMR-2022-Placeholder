@@ -167,8 +167,8 @@ public final class Constants
     public static final class CameraConstants
     {
         //Constants for the camera
-        public static final double maxX = 100;
-        public static final double maxY = 100;
+        public static final double maxX = 1280;
+        public static final double maxY = 720;
 
         public static final String[] label = {"Re", "Blu"};
     }

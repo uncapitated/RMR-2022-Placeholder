@@ -76,8 +76,7 @@ public class RobotContainer {
 
     Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.7);}, climberSubsystem));
     Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.7);}, climberSubsystem));
-
-    Controller.Manipulator.getTargetBallButton().whenPressed(targetBallCommand);
+    Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
   }
 
   private void configureDefaultCommands(){
