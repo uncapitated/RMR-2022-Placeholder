@@ -4,18 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.CameraConstants;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,7 +19,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private Thread m_visionThread;
   // frequency at which robot calls are made
   public static double period;
 
@@ -43,29 +33,6 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     period = getPeriod();
-
-    m_visionThread = new Thread(
-      () -> {
-        UsbCamera camera = CameraServer.startAutomaticCapture();
-        camera.setResolution((int)CameraConstants.maxX, (int)CameraConstants.maxY);
-        CvSink cvSink = CameraServer.getVideo();
-        CvSource outputStream = CameraServer.putVideo("img", (int)CameraConstants.maxX, (int)CameraConstants.maxY);
-
-        Mat mat = new Mat();
-
-        while (!Thread.interrupted()){
-          if(cvSink.grabFrame(mat)==0){
-            outputStream.notifyError(cvSink.getError());
-            continue;
-          }
-          Imgproc.rectangle(mat, new Point(100, 100), new Point (400, 400), new Scalar(255, 255, 255), 5);
-          outputStream.putFrame(mat);
-        }
-      }
-    );
-
-    m_visionThread.setDaemon(true);
-    m_visionThread.start();
   }
 
   /**
@@ -82,8 +49,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
-    IMU.updateAngles();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
