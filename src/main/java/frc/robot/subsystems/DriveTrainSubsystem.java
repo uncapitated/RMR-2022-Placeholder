@@ -145,7 +145,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void set(ChassisSpeeds chassisSpeeds)
   {
     chassisSpeeds.vyMetersPerSecond = 0;
-    
+    chassisSpeeds.omegaRadiansPerSecond = -chassisSpeeds.omegaRadiansPerSecond;
     // convert to wheel speeds
     set(Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds));
   }
@@ -177,11 +177,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     if(position == SHIFTER_POSITION.HIGH)
     {
-      shifter.set(Value.kForward);
+      shifter.set(Value.kReverse);
     }
     else if (position == SHIFTER_POSITION.LOW)
     {
-      shifter.set(Value.kReverse);
+      shifter.set(Value.kForward);
     }
   }
 

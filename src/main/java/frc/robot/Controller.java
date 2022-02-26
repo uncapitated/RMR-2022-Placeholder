@@ -63,14 +63,8 @@ public class Controller
             return addDeadBand(controller.getLeftX(), 0.1);
         }
 
-        // button to activate the align command
-        public static JoystickButton getAlignButton()
-        {
-            return new JoystickButton(controller, XboxController.Button.kX.value);
-        }
-
-        public static double getRightStickHorizontal(){
-            return controller.getRightX();
+        public static boolean getSlowButton() {
+            return controller.getBButton();
         }
 
         public static JoystickButton getTriggerLeft()  {

@@ -11,6 +11,7 @@ import frc.robot.Constants;
 import frc.robot.Controller;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
 /**
  * Link to WPILib Command Based Programming
@@ -23,7 +24,7 @@ public class DriveCommand extends CommandBase {
   // in m/s
   private double maxForward = 3.0;
   // in rad/s
-  private double maxTurn = 2.8;
+  private double maxTurn = 3.5;
 
 
   private SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ACCEL);
@@ -54,14 +55,27 @@ public class DriveCommand extends CommandBase {
     double targetForwardPower = Controller.Drive.get_forward();
     double targetTurnPower = Controller.Drive.get_turn();
 
-    //command subsystem
-    driveTrainSubsystem.set(new ChassisSpeeds(forwardLimiter.calculate(targetForwardPower * maxForward), 0, turnLimiter.calculate(targetTurnPower * maxTurn)));
+    double forwardVelocity = targetForwardPower * maxForward;
+    double angularVelocity = targetTurnPower * maxTurn;
 
+    if (Controller.Drive.getSlowButton()) {
+      forwardVelocity /= 2;
+      angularVelocity /= 2;
+
+      driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
+    } else {
+      driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH);
+    }
+
+    //command subsystem
+    driveTrainSubsystem.set(new ChassisSpeeds(forwardLimiter.calculate(forwardVelocity), 0, turnLimiter.calculate(angularVelocity)));
+
+    /*
     if(Controller.Drive.getTriggerLeft().get()){
       driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.HIGH);
     } else if (Controller.Drive.getTriggerRight().get()){
       driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.LOW);
-    }
+    }/**/
   }
 
   // Called once the command ends or is interrupted.

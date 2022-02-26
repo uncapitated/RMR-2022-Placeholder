@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,19 +28,22 @@ public class Auto {
 
     public Auto(Pose2d startPos, Pose2d... nextPositions)
     {
+        positions = new ArrayList<Pose2d>();
         startingPosition = startPos;
 
         positions.add(startingPosition);
         positions.addAll(Arrays.asList(nextPositions));
     }
 
-    public Trajectory getTragectory(int index)
+    public Trajectory getTragectory(int index, boolean reversed)
     {
         // invalid index
         if (index >= positions.size() - 1)
         {
             throw(new IndexOutOfBoundsException("trajectory index out of bounds"));
         }
+
+        config.setReversed(reversed);
         return TrajectoryGenerator.generateTrajectory(List.of(positions.get(index), positions.get(index + 1)), config);
     }
 }
