@@ -35,7 +35,7 @@ public class RobotContainer {
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrainSubsystem);
-  
+  private final TargetBallCommand targetBallCommand = new TargetBallCommand(driveTrainSubsystem);
   private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(beltSubsystem);
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
 
@@ -64,6 +64,8 @@ public class RobotContainer {
 
     Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.7);}, climberSubsystem));
     Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.7);}, climberSubsystem));
+
+    Controller.Manipulator.getTargetBallButton().whenPressed(targetBallCommand);
   }
 
   private void configureDefaultCommands(){

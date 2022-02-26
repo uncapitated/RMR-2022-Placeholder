@@ -132,6 +132,10 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
+        public static JoystickButton getTargetBallButton() {
+            return new JoystickButton(controller, XboxController.Button.kLeftStick.value);
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             /**
