@@ -35,7 +35,7 @@ public class RobotContainer {
 
   // commands
   private final DriveCommand driveCommand = new DriveCommand(driveTrainSubsystem);
-  
+  private final TargetBallCommand targetBallCommand = new TargetBallCommand(driveTrainSubsystem);
   private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(beltSubsystem);
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
 
@@ -60,15 +60,18 @@ public class RobotContainer {
     Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
 
     Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
-    Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
+    Controller.Manipulator.getClimberUpButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
 
-    Controller.Manipulator.getWinchInButton().whileHeld(new RunCommand(() -> {climberSubsystem.set(1);}, climberSubsystem));
-    Controller.Manipulator.getWinchOutButton().whileHeld(new RunCommand(() -> {climberSubsystem.set(-1);}, climberSubsystem));
+    Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.7);}, climberSubsystem));
+    Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.7);}, climberSubsystem));
+
+    Controller.Manipulator.getTargetBallButton().whenPressed(targetBallCommand);
   }
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
     driveTrainSubsystem.setDefaultCommand(driveCommand);
+    climberSubsystem.setDefaultCommand(new RunCommand(() -> {climberSubsystem.set(0);}, climberSubsystem));
   }
 
   /**

@@ -11,15 +11,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //Currently not functional; check back later
 public class IMU {
-    public static final ADIS16448_IMU imu = new ADIS16448_IMU();
+    // public static final ADIS16448_IMU imu = new ADIS16448_IMU();
 
     //calibration constant
     private static final double kVoltsPerDegreePerSecond = 0.01;
     
     public static void updateAngles()
     {
-        SmartDashboard.putNumber("x-rotation", imu.getGyroAngleX());
-        SmartDashboard.putNumber("y-rotation", imu.getGyroAngleY());
-        SmartDashboard.putNumber("z-rotation", imu.getGyroAngleZ());
+        // SmartDashboard.putNumber("x-rotation", imu.getGyroAngleX());
+        // SmartDashboard.putNumber("y-rotation", imu.getGyroAngleY());
+        // SmartDashboard.putNumber("z-rotation", imu.getGyroAngleZ());
     }
 }
