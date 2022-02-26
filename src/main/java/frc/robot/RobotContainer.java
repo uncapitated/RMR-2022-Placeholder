@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +20,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.sensors.DistanceSensor;
 import frc.robot.sim.Simulation;
 
 /**
@@ -32,10 +37,13 @@ public class RobotContainer {
 
   //private final Limelight limelight = new Limelight();
 
-  // The robot's subsystems and commands are defined here...
+  // sensors
+  private final DistanceSensor distanceSensor = new DistanceSensor();
+
+  // subsystems
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
   private final BeltSubsystem beltSubsystem = new BeltSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor);
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
@@ -43,7 +51,6 @@ public class RobotContainer {
   private final TargetBallCommand targetBallCommand = new TargetBallCommand(driveTrainSubsystem);
   private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(beltSubsystem);
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
-
   private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -94,7 +101,7 @@ public class RobotContainer {
     // generate autonomous command
     return new SequentialCommandGroup(
       // go to the hub
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(0)),
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(0, false)),
 
       // dispense ball for 0.5 seconds
       new ParallelRaceGroup(
@@ -103,7 +110,7 @@ public class RobotContainer {
       ),
 
       // exit the inner terminal area
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(1))
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(1, true))
     );
   }
 

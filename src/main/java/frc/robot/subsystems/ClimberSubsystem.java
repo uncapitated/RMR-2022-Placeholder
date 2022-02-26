@@ -17,6 +17,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.Constants;
 import frc.robot.Constants.Climber;
+import frc.robot.sensors.DistanceSensor;
 
 public class ClimberSubsystem extends SubsystemBase {
   public enum CLIMBER_STATE {UP, ANGLED};
@@ -36,11 +37,15 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private ShuffleboardTab climberTab;
   private NetworkTableEntry positionEntry;
+
+  private DistanceSensor distanceSensor;
  
   /** Creates a new Winch. */
-  public ClimberSubsystem() {
+  public ClimberSubsystem(DistanceSensor distanceSensor) {
     // Use addRequirements() here to declare subsystem dependencies.
     winch = new CANSparkMax(Climber.WINCH_MOTOR, MotorType.kBrushless);
+
+    this.distanceSensor = distanceSensor;
 
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration parameters
@@ -104,6 +109,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void set(double val){
     winch.set(val);
+    System.out.println(distanceSensor.getDistance());
   }
   
   // set the Climber to be in or out
