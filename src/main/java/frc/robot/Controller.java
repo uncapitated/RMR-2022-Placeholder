@@ -19,8 +19,8 @@ public class Controller
      * @return the value with dead band applied
      */
     private static double addDeadBand(double value, double deadBand){
-        return Math.abs(value) > deadBand ? value : 0;
-        // return Math.copySign(Math.max(Math.abs(value) - deadBand, 0) / (1 - deadBand), value);
+        // return Math.abs(value) > deadBand ? value : 0;
+        return Math.copySign(Math.max(Math.abs(value) - deadBand, 0) / (1 - deadBand), value);
     }
 
 

@@ -8,9 +8,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
+import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
 import frc.robot.sim.Simulation;
 
@@ -21,7 +25,8 @@ import frc.robot.sim.Simulation;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  //private Autonomous auto = new Autonomous();
+  // used for selecting autonomous
+  private StatusSwitch statusSwitch = new StatusSwitch();
 
   private Simulation sim = new Simulation();
 
@@ -80,7 +85,26 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    // only run Autonomous when the status switch is at one
+    if (statusSwitch.GetSwitchValue() != 1)
+    {
+      return null;
+    }
+
+    // generate autonomous command
+    return new SequentialCommandGroup(
+      // go to the hub
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(0)),
+
+      // dispense ball for 0.5 seconds
+      new ParallelRaceGroup(
+        new BeltDispenseCommand(beltSubsystem),
+        new WaitCommand(0.5)
+      ),
+
+      // exit the inner terminal area
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(1))
+    );
   }
 
   public void scheduleTeleOpCommands() {

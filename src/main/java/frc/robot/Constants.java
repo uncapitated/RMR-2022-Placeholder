@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -22,6 +24,14 @@ public final class Constants
     public static final class Autonomous {
         public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+
+        public static final Auto[] AUTONOMOUS = 
+        {
+            // Auto 1
+            /** Simple Auto */
+            new Auto(new Pose2d(0, 0, new Rotation2d(0)), new Pose2d(2, 0, new Rotation2d(0)), new Pose2d(-1, 0, new Rotation2d(0)))
+        };
+
     }
 
     public static final class StatusSwitch {
@@ -35,6 +45,10 @@ public final class Constants
      *  motor CAN ID class
      */
     public static final class Drive {
+        // drive max accel meters per second
+        public static final double DRIVE_MAX_ACCEL = 5.0;
+        public static final double DRIVE_MAX_ANGLE_ACCEL = 5.0;
+
         /** CAN ID */
         public static final int FRONT_RIGHT = 9;
         /** CAN ID */
@@ -49,9 +63,9 @@ public final class Constants
         /** solenoid Pneumatic Hub port */
         public static final int SHIFTER_LOW = 4;
 
-        public static final double HIGH_GEAR_RATIO = 51.0/153;
-        public static final double LOW_GEAR_RATIO = 51.0/231;
-        public static final double WHEEL_RADIUS = 0.10000000001;
+        public static final double HIGH_GEAR_RATIO = 12.0/42.0 * 24.0/50.0;
+        public static final double LOW_GEAR_RATIO = 12.0/42.0 * 14.0/60.0;
+        public static final double WHEEL_RADIUS = 0.122237;
         
         /** converts chassis speeds to wheel speeds */
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
@@ -60,6 +74,7 @@ public final class Constants
         public static final int DRIVE_SPR = 2048;
         /** Conversion factor to convert SPR to rotations per second */
         public static final double DRIVE_VELOCITY_FACTOR = 10.0 / DRIVE_SPR;
+
     }
     public static final class DrivePID {
         /**

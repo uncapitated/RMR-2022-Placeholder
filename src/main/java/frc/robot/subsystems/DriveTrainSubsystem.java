@@ -10,24 +10,26 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import org.ejml.simple.AutomaticSimpleMatrixConvert;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Autonomous;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Drive;
 import frc.robot.sim.PhysicsSim;
 import frc.robot.sim.Simulation;
+
 
 public class DriveTrainSubsystem extends SubsystemBase {
   
@@ -59,16 +61,21 @@ public class DriveTrainSubsystem extends SubsystemBase {
   // rotation of drive - should be changed to rely on Gyro
   private Rotation2d rotation;
 
+  // timeout
+  private boolean isStopped;
+  private double lastUpdateTime;
+
+  // shuffleboard
+  ShuffleboardTab driveTab = Shuffleboard.getTab("Drive Train");
+  NetworkTableEntry leftSteps = driveTab.add("Left Motor", 0).getEntry();
+  NetworkTableEntry rightSteps = driveTab.add("Right Motor", 0).getEntry();
+  
+
   /** Creates a new DriveTrain. */
   public DriveTrainSubsystem(){
     
-    if (Autonomous.getAutonomous() != null){
-      rotation = Autonomous.getAutonomous().getStartingRotation();
-      odometry = new DifferentialDriveOdometry(rotation, Autonomous.getAutonomous().getStartingPos());
-    } else {
-      rotation = new Rotation2d(0, 0);
-      odometry = new DifferentialDriveOdometry(rotation, new Pose2d());
-    }
+    rotation = new Rotation2d(0, 0);
+    odometry = new DifferentialDriveOdometry(rotation, new Pose2d());
 
     // setup left drive
     frontLeft = new WPI_TalonFX(Drive.FRONT_LEFT);
@@ -103,6 +110,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     shifter = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Constants.Drive.SHIFTER_HIGH, Constants.Drive.SHIFTER_LOW);
     shifter.set(Value.kReverse);
 
+    // setup timeout
+    isStopped = true;
+    lastUpdateTime = Timer.getFPGATimestamp();
+
     setBreak();
   }
 
@@ -124,6 +135,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void stop()
   {
     set(new DifferentialDriveWheelSpeeds(0, 0));
+
+    isStopped = true;
   }
 
   /**
@@ -142,6 +155,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
    */
   public void set(DifferentialDriveWheelSpeeds wheelSpeeds)
   {
+    
+    lastUpdateTime = Timer.getFPGATimestamp();
+
     // convert wheelSpeeds to motor speeds
     double leftVelocity = wheelSpeeds.leftMetersPerSecond;
     double rightVelocity = wheelSpeeds.rightMetersPerSecond;
@@ -191,9 +207,24 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
   }
 
+  public void setPosition(Pose2d robotPos)
+  {
+    rotation = robotPos.getRotation();
+    odometry.resetPosition(robotPos, rotation);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // check for timeouts
+    // if the lastUpdateTime is 0.5 seconds ago then kill the motors
+    if (!isStopped && lastUpdateTime + 0.5 < Timer.getFPGATimestamp())
+    {
+      stop();
+
+      System.out.println("Drive Stopped. 0.5 second timeout exceeded Please Command Subsystem!!!");
+    }
 
     
 

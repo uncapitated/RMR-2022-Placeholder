@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -30,6 +33,9 @@ public class ClimberSubsystem extends SubsystemBase {
   // winch solenoid
   private DoubleSolenoid climberSolenoid;
   private CLIMBER_STATE currentClimberState;
+
+  private ShuffleboardTab climberTab;
+  private NetworkTableEntry positionEntry;
  
   /** Creates a new Winch. */
   public ClimberSubsystem() {
@@ -58,11 +64,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // climber starts angled
     setClimberState(CLIMBER_STATE.ANGLED);
-    
 
     // initialize the starting position
     winch.getEncoder().setPosition(toMotorRotations(Climber.STARTING_POSITION));
     setPoint = Climber.STARTING_POSITION;
+
+    climberTab = Shuffleboard.getTab("Climber");
+    positionEntry = climberTab.add("Elevator Position", winch.getEncoder().getPosition()).getEntry();
   }
 
   public void setElevatorPosition(double position) {
@@ -130,6 +138,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // update the PID Controller
     // winchPID.setReference(toMotorRotations(setPoint), CANSparkMax.ControlType.kPosition);
+
+    // update shuffleboard
+    positionEntry.setValue(winch.getEncoder().getPosition());
   }
 
   
