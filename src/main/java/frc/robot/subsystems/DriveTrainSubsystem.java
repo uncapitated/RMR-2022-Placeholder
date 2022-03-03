@@ -93,12 +93,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // setup left drive
     frontLeft = new WPI_TalonFX(Drive.FRONT_LEFT);
     backLeft = new WPI_TalonFX(Drive.BACK_LEFT); 
+    frontLeft.setNeutralMode(NeutralMode.Coast);
+    backLeft.setNeutralMode(NeutralMode.Coast);
 
     backLeft.follow(frontLeft);
 
     // setup right drive
     frontRight = new WPI_TalonFX(Drive.FRONT_RIGHT);
     backRight = new WPI_TalonFX(Drive.BACK_RIGHT);
+    frontRight.setNeutralMode(NeutralMode.Coast);
+    backRight.setNeutralMode(NeutralMode.Coast);
 
     backRight.follow(frontRight);
 
@@ -155,7 +159,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   /**
-   * set with chassis speeds 
+   * set with chassis speeds m/s, m/s, rad/s
    */
   public void set(ChassisSpeeds chassisSpeeds)
   {
