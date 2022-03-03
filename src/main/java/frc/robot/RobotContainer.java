@@ -9,6 +9,7 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,8 +38,8 @@ public class RobotContainer {
 
   //private final Limelight limelight = new Limelight();
 
-  // sensors
-  private final DistanceSensor distanceSensor = new DistanceSensor();
+  // sensors (doesn't have sim support)
+  private DistanceSensor distanceSensor;
 
   // subsystems
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
@@ -55,6 +56,11 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (RobotBase.isReal())
+    {
+      distanceSensor = new DistanceSensor();
+    }
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -76,7 +82,11 @@ public class RobotContainer {
 
     Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.7);}, climberSubsystem));
     Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.7);}, climberSubsystem));
-    Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+    
+    if (RobotBase.isReal())
+    {
+      Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+    }
   }
 
   private void configureDefaultCommands(){

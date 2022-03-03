@@ -63,18 +63,22 @@ public class Controller
             return addDeadBand(controller.getLeftX(), 0.1);
         }
 
+        /** B Button */
         public static boolean getSlowButton() {
             return controller.getBButton();
         }
 
+        /** Left bumper */
         public static JoystickButton getLeftBumper()  {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         }
 
+        /** Right bumper */
         public static JoystickButton getRightBumper()  {
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
+        /** A Button */
         public static JoystickButton getAlignButton() {
             return new JoystickButton(controller, XboxController.Button.kA.value);
         }
@@ -112,10 +116,12 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
 
+        /** X Button */
         public static JoystickButton getWinchDownButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
+        /** Y Button */
         public static JoystickButton getWinchUpButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
@@ -128,10 +134,6 @@ public class Controller
         /** Climber UP button is mapped to the left bumper */
         public static JoystickButton getClimberUpButton() {
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
-        }
-
-        public static JoystickButton getTargetBallButton() {
-            return new JoystickButton(controller, XboxController.Button.kLeftStick.value);
         }
 
         public static void setRumble(boolean hasRumble)

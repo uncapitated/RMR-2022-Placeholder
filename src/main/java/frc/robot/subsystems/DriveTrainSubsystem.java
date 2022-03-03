@@ -35,6 +35,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
   
   // class for getting robot position
   private DifferentialDriveOdometry odometry;
+  /** Distance the left side of the robot has traveled */
+  private double leftPosition;
+  /** Distance the right side of the robot has traveled */
+  private double rightPosition;
+
+  private double lastLeftEncoderPosition;
+  private double lastRightEncoderPosition;
+  private double lastUpdateTime;
 
   /**
    * Link to the CTRE Phoenix Documentation
@@ -63,7 +71,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   // timeout
   private boolean isStopped;
-  private double lastUpdateTime;
+  private double safetyTimeout;
 
   // shuffleboard
   ShuffleboardTab driveTab = Shuffleboard.getTab("Drive Train");
@@ -73,9 +81,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   /** Creates a new DriveTrain. */
   public DriveTrainSubsystem(){
-    
+    // used to calculate robot position
     rotation = new Rotation2d(0, 0);
     odometry = new DifferentialDriveOdometry(rotation, new Pose2d());
+
+    leftPosition = 0;
+    rightPosition = 0;
+
+    lastUpdateTime = Timer.getFPGATimestamp();
 
     // setup left drive
     frontLeft = new WPI_TalonFX(Drive.FRONT_LEFT);
@@ -104,6 +117,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
+    lastLeftEncoderPosition = frontLeft.getSelectedSensorPosition();
+    lastRightEncoderPosition = frontRight.getSelectedSensorPosition();
 
     // setup shifter
     shifterPosition = SHIFTER_POSITION.LOW;
@@ -112,7 +127,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     // setup timeout
     isStopped = true;
-    lastUpdateTime = Timer.getFPGATimestamp();
+    safetyTimeout = Timer.getFPGATimestamp();
 
     setBreak();
   }
@@ -156,7 +171,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void set(DifferentialDriveWheelSpeeds wheelSpeeds)
   {
     
-    lastUpdateTime = Timer.getFPGATimestamp();
+    safetyTimeout = Timer.getFPGATimestamp();
 
     // convert wheelSpeeds to motor speeds
     double leftVelocity = wheelSpeeds.leftMetersPerSecond;
@@ -219,7 +234,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     // check for timeouts
     // if the lastUpdateTime is 0.5 seconds ago then kill the motors
-    if (!isStopped && lastUpdateTime + 0.5 < Timer.getFPGATimestamp())
+    if (!isStopped && safetyTimeout + 0.5 < Timer.getFPGATimestamp())
     {
       stop();
 
@@ -228,24 +243,27 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     
 
-    // update odomitry
-    double leftWheelSpeed = (frontLeft.getSelectedSensorVelocity() + backLeft.getSelectedSensorVelocity()) / 2; 
-    double rightWheelSpeed = (frontRight.getSelectedSensorVelocity() + backRight.getSelectedSensorVelocity()) / 2;
-    // anticipating encoder positions desyncing
-    double leftEncoder = frontLeft.getSelectedSensorPosition();
-    double rightEncoder = frontRight.getSelectedSensorPosition();
+    // update odometry
+    double changeInTime = Timer.getFPGATimestamp() - lastUpdateTime;
+    double changeInLeftPosition = toRobotPosition(frontLeft.getSelectedSensorPosition() - lastLeftEncoderPosition);
+    double changeInRightPosition = toRobotPosition(frontRight.getSelectedSensorPosition() - lastRightEncoderPosition);
 
-    leftWheelSpeed = toRobotSpeed(leftWheelSpeed);
-    rightWheelSpeed = toRobotSpeed(rightWheelSpeed);
+    double leftWheelSpeed = changeInLeftPosition / changeInTime;
+    double rightWheelSpeed = changeInRightPosition / changeInTime;
 
-    leftEncoder = toRobotPosition(leftEncoder);
-    rightEncoder = toRobotPosition(rightEncoder);
+    leftPosition += changeInLeftPosition;
+    rightPosition += changeInRightPosition;
 
     DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftWheelSpeed, rightWheelSpeed);
     ChassisSpeeds chassisSpeeds = Constants.Drive.KINEMATICS.toChassisSpeeds(wheelSpeeds);
     rotation = rotation.rotateBy(new Rotation2d(chassisSpeeds.omegaRadiansPerSecond).times(Robot.period));
 
-    odometry.update(rotation, leftEncoder, rightEncoder);
+    odometry.update(rotation, leftPosition, rightPosition);
+
+    // reset for next loop
+    lastLeftEncoderPosition = frontLeft.getSelectedSensorPosition();
+    lastRightEncoderPosition = frontRight.getSelectedSensorPosition();
+    lastUpdateTime = Timer.getFPGATimestamp();
   }
 
   // code for simulation (does not run when this isn't a simulation)

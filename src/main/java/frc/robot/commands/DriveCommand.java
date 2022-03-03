@@ -59,8 +59,8 @@ public class DriveCommand extends CommandBase {
     double angularVelocity = targetTurnPower * maxTurn;
 
     if (Controller.Drive.getSlowButton()) {
-      forwardVelocity /= 2;
-      angularVelocity /= 2;
+      forwardVelocity *= 0.5;
+      angularVelocity *= 0.3;
 
       driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
     } else {
