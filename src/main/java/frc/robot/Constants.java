@@ -47,7 +47,7 @@ public final class Constants
     public static final class Drive {
         // drive max accel meters per second
         public static final double DRIVE_MAX_ACCEL = 5.0;
-        public static final double DRIVE_MAX_ANGLE_ACCEL = 5.0;
+        public static final double DRIVE_MAX_ANGLE_ACCEL = 15.0;
 
         /** CAN ID */
         public static final int FRONT_RIGHT = 9;
