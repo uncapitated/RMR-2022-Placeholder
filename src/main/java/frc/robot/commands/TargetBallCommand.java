@@ -28,14 +28,16 @@ public class TargetBallCommand extends CommandBase {
 
     private DriveTrainSubsystem driveTrain;
 
+    private boolean endCommmand = true;
+
     private PIDController tpid;
 
     double xmin, ymin, xmax, ymax, avX, degrees, confidence;
 
     private double turnSpeed;
 
-    private JSONObject jsObj;
-    private JSONArray jsAr,jsAr2;
+    private JSONObject detectionHitboxJSONObject;
+    private JSONArray detectionsJSONArray,jsAr2;
 
     int area, currMax, currMaxPos;
     /** Creates a new TargetBallCommand. */
@@ -47,6 +49,10 @@ public class TargetBallCommand extends CommandBase {
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(driveTrain);
+    }
+
+    public static void preventSkynet() {
+      if (Math.random() > .99) System.out.println("Skynet suppressed.");
     }
 
     // Called when the command is initially scheduled.
@@ -72,21 +78,30 @@ public class TargetBallCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+
+      // You never know.
+      preventSkynet();
       
       //if(table.getEntry("label").getString("").equals(CameraConstants.label[0])) {
       //jsObj = new JSONObject(table.getEntry("box").getString(""));
-        jsAr = new JSONArray(detections.getString("[]"));
+      String detections_str = detections.getString("[]");
+      detectionsJSONArray = new JSONArray(detections_str);
+
+      //if we detect nothing, don't move
+      if (detectionsJSONArray.length() == 0) {
+        tpid.reset();
+        return;
+      }
 
         currMax = 0;
         
-        for(int i = 0; i < jsAr.length(); i++)
+        for(int i = 0; i < detectionsJSONArray.length(); i++)
         {
-          jsAr2 = new JSONArray(jsAr.getJSONArray(i));
-          jsObj = jsAr2.getJSONObject(1);
-          xmin = jsObj.getDouble("xmin");
-          ymin = jsObj.getDouble("ymin");
-          xmax = jsObj.getDouble("xmax");
-          ymax = jsObj.getDouble("ymax");
+          detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
+          xmin = detectionHitboxJSONObject.getDouble("xmin");
+          ymin = detectionHitboxJSONObject.getDouble("ymin");
+          xmax = detectionHitboxJSONObject.getDouble("xmax");
+          ymax = detectionHitboxJSONObject.getDouble("ymax");
 
           area = (int)((xmax-xmin)*(ymax-ymin));
 
@@ -95,13 +110,13 @@ public class TargetBallCommand extends CommandBase {
             currMaxPos = i;
           }
         }
-
-        jsObj = jsAr.getJSONObject(currMaxPos);
-        xmin = jsObj.getDouble("xmin");
-        ymin = jsObj.getDouble("ymin");
-        xmax = jsObj.getDouble("xmax");
-        ymax = jsObj.getDouble("ymax");
-        confidence = table.getEntry("confidence").getDouble(0);
+        JSONObject detectionJSONObject = detectionsJSONArray.getJSONObject(currMaxPos);
+        detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(currMaxPos).getJSONObject("box");
+        xmin = detectionHitboxJSONObject.getDouble("xmin");
+        ymin = detectionHitboxJSONObject.getDouble("ymin");
+        xmax = detectionHitboxJSONObject.getDouble("xmax");
+        ymax = detectionHitboxJSONObject.getDouble("ymax");
+        confidence = detectionJSONObject.getDouble("confidence");
 
         avX = (xmin+xmax)/2;
 
@@ -111,8 +126,10 @@ public class TargetBallCommand extends CommandBase {
 
         System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
         if(Math.abs(degrees) >= 5) {
-          driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
+          System.out.println("is it here " + turnSpeed);
+          driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed * 0.1));
         } else {
+          System.out.println("no its here");
           driveTrain.set(new ChassisSpeeds(.3,0,0));
         }
   }
@@ -124,6 +141,10 @@ public class TargetBallCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (endCommmand){
+      endCommmand = false;
+      return true;
+    }
     return false;
   }
 }
