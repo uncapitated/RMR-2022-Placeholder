@@ -6,6 +6,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.CameraPIDConstants;
@@ -14,11 +15,16 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
+
 import org.json.*;
 
 public class TargetBallCommand extends CommandBase {
 
-    NetworkTable table, ck;
+    NetworkTable table;
+    NetworkTableEntry coral, detections;
+
+    int cameraXSize = 160;
+    int cameraYSize = 120;
 
     private DriveTrainSubsystem driveTrain;
 
@@ -46,12 +52,21 @@ public class TargetBallCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-      table = NetworkTableInstance.getDefault().getTable("ML/detections");
+      table = NetworkTableInstance.getDefault().getTable("ML");
+      coral = table.getEntry("coral");
+      detections = table.getEntry("detections");
+      
+      // Get the resolution of the camera from Network Tables
+      // todo
+      // NetworkTableEntry resolutionNetworkTableEntry = table.getEntry("resolution");
+      // String resolutionIntegers = resolutionNetworkTableEntry.getValue().toString();
+      // if (resolutionInteger.length == 0)
+      // cameraXSize = Integer.parseInt(resolutionIntegers.substring(0, resolutionIntegers.indexOf(',')));
+      // cameraYSize = Integer.parseInt(resolutionIntegers.substring(resolutionIntegers.indexOf(", ")));
+      
+      
 
       //Note: this is for use to check if the coral is attached, first must check how this is sent to NetworkTables. 
-      ck = NetworkTableInstance.getDefault().getTable("ML/coral");
-
-      driveTrain.stop();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -60,7 +75,7 @@ public class TargetBallCommand extends CommandBase {
       
       //if(table.getEntry("label").getString("").equals(CameraConstants.label[0])) {
       //jsObj = new JSONObject(table.getEntry("box").getString(""));
-        jsAr = new JSONArray(table.toString());
+        jsAr = new JSONArray(detections.getString("[]"));
 
         currMax = 0;
         
@@ -90,16 +105,16 @@ public class TargetBallCommand extends CommandBase {
 
         avX = (xmin+xmax)/2;
 
-        degrees = (CameraConstants.maxX/2-avX)/(CameraConstants.maxX/2)*180;
+        degrees = (cameraXSize/2-avX)/(cameraXSize/2)*180;
 
         turnSpeed = -1*tpid.calculate(degrees, 0);
 
         System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
-        if(degrees != 0)
+        if(Math.abs(degrees) >= 5) {
           driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
-        else 
+        } else {
           driveTrain.set(new ChassisSpeeds(.3,0,0));
-      //}
+        }
   }
 
   // Called once the command ends or is interrupted.

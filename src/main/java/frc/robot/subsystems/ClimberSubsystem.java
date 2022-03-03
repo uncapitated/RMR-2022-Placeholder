@@ -109,7 +109,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void set(double val){
     winch.set(val);
-    System.out.println(distanceSensor.getDistance());
   }
   
   // set the Climber to be in or out

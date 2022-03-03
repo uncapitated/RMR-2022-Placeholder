@@ -83,6 +83,7 @@ public class RobotContainer {
     compressorSubsystem.setDefaultCommand(compressorCommand);
     driveTrainSubsystem.setDefaultCommand(driveCommand);
     climberSubsystem.setDefaultCommand(new RunCommand(() -> {climberSubsystem.set(0);}, climberSubsystem));
+    beltSubsystem.setDefaultCommand(new RunCommand(() -> {beltSubsystem.stop();}, beltSubsystem));
   }
 
   /**
