@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Controller;
 import frc.robot.Controller.Drive;
@@ -41,11 +43,10 @@ public class DriveCommand extends CommandBase {
   @Override
   public void initialize() {
     // stop the robot from moving
-    driveTrainSubsystem.stop();
     driveTrainSubsystem.setCoast();
 
-    forwardLimiter.reset(0);
-    turnLimiter.reset(0);
+    forwardLimiter.reset(Constants.Drive.KINEMATICS.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveTrainSubsystem.getLeftSpeed(), driveTrainSubsystem.getRightSpeed())).vxMetersPerSecond);
+    turnLimiter.reset(Constants.Drive.KINEMATICS.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveTrainSubsystem.getLeftSpeed(), driveTrainSubsystem.getRightSpeed())).omegaRadiansPerSecond);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -62,9 +63,9 @@ public class DriveCommand extends CommandBase {
       forwardVelocity *= 0.5;
       angularVelocity *= 0.3;
 
-      driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
+      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), this)).schedule();
     } else {
-      driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH);
+      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), this)).schedule();
     }
 
     //command subsystem

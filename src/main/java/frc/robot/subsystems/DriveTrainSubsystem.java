@@ -311,6 +311,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // _talon.setSensorPhase(true);
   }
 
+  public double getRightSpeed()
+  {
+    return toRobotSpeed(frontRight.getSelectedSensorVelocity());
+  }
+  public double getLeftSpeed()
+  {
+    return toRobotSpeed(frontLeft.getSelectedSensorVelocity());
+  }
+
   private double toRobotSpeed(double motorSpeed)
   {
     // In rotations per second
