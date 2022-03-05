@@ -71,13 +71,13 @@ public class Controller
             return controller.getBButton();
         }
 
-        /** Left bumper */
-        public static JoystickButton getLeftBumper()  {
+        /** Intake button is mapped to the left bumper on the second controller */
+        public static JoystickButton getIntakeButton() {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         }
 
-        /** Right bumper */
-        public static JoystickButton getRightBumper()  {
+        /** Dispense button is mapped to the right bumper on the second controller */
+        public static JoystickButton getDispenseButton() {
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
@@ -159,16 +159,6 @@ public class Controller
         /** Auto Climb for the first bar is set to the Right Joystick Button */
         public static JoystickButton getSecondBarAutoClimbButton() {
             return new JoystickButton(controller, XboxController.Button.kRightStick.value);
-        }
-
-        /** Intake button is mapped to the left bumper on the second controller */
-        public static JoystickButton getIntakeButton() {
-            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
-        }
-
-        /** Dispense button is mapped to the right bumper on the second controller */
-        public static JoystickButton getDispenseButton() {
-            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
         /** Down DPad */

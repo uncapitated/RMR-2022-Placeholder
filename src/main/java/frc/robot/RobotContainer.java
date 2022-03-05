@@ -79,8 +79,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
-    Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+    Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
+    Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
     Controller.Manipulator.getClimberInButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
     Controller.Manipulator.getClimberOutButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
