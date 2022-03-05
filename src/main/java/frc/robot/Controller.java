@@ -96,16 +96,6 @@ public class Controller
             return controller.getLeftTriggerAxis();
         }
 
-        /** Start button */
-        public static boolean getJonahButton() {
-            return controller.getStartButton();
-        }
-
-        /** Back button */
-        public static boolean getCalebButton() {
-            return controller.getBackButton();
-        }
-
         /** X button */
         public static boolean getControlledTurnButton() {
             return controller.getXButton();
@@ -114,12 +104,6 @@ public class Controller
         /** Y button */
         public static boolean getNormalTurnButton() {
             return controller.getYButton();
-        }
-
-        // Driver modes
-        public enum Drivers {
-            JONAH,
-            CALEB
         }
 
         // Turn modes
