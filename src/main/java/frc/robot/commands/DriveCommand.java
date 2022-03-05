@@ -26,6 +26,8 @@ public class DriveCommand extends CommandBase {
   // in rad/s
   private double maxTurn = 3.5;
 
+  private Drive.Drivers drivers = Drive.Drivers.JONAH;
+  private Drive.TurnModes turnModes = Drive.TurnModes.NORMAL;
 
   private SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ACCEL);
   private SlewRateLimiter turnLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ANGLE_ACCEL);
@@ -52,8 +54,21 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     // smoothing of the forward and turn power is handled in controller
-    double targetForwardPower = Controller.Drive.get_forward();
-    double targetTurnPower = Controller.Drive.get_turn();
+    double targetForwardPower;
+    if (drivers == Drive.Drivers.JONAH) {
+      targetForwardPower = Controller.Drive.getLeftTriggerSpeed() * Controller.Drive.get_forward();
+    } else {
+      targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
+    }
+
+    // Gets the turn power based on input mode
+    double targetTurnPower;
+    if (turnModes == Drive.TurnModes.NORMAL) { 
+      targetTurnPower = Controller.Drive.get_turn();
+    } else {
+      targetTurnPower = Controller.Drive.getLeftTriggerSpeed() + -Controller.Drive.getRightTriggerSpeed();
+      targetForwardPower = Controller.Drive.get_forward();
+    }
 
     double forwardVelocity = targetForwardPower * maxForward;
     double angularVelocity = targetTurnPower * maxTurn;
@@ -70,12 +85,15 @@ public class DriveCommand extends CommandBase {
     //command subsystem
     driveTrainSubsystem.set(new ChassisSpeeds(forwardLimiter.calculate(forwardVelocity), 0, turnLimiter.calculate(angularVelocity)));
 
-    /*
-    if(Controller.Drive.getTriggerLeft().get()){
-      driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.HIGH);
-    } else if (Controller.Drive.getTriggerRight().get()){
-      driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.LOW);
-    }/**/
+
+    // Switch driving modes
+    if (Controller.Drive.getCalebButton()) {
+      drivers = Drive.Drivers.CALEB;
+    }
+
+    if (Controller.Drive.getJonahButton()) {
+      drivers = Drive.Drivers.JONAH;
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -103,7 +103,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // only run Autonomous when the status switch is at one
-    if (statusSwitch.GetSwitchValue() != 1)
+    if (statusSwitch.GetSwitchValue() != 1 && RobotBase.isReal())
     {
       return null;
     }
