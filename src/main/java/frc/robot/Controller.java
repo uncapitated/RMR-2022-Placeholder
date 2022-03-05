@@ -83,6 +83,48 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
+        /** Right trigger */
+        public static double getRightTriggerSpeed() {
+            return controller.getRightTriggerAxis();
+        }
+
+        /** Left trigger */
+        public static double getLeftTriggerSpeed() {
+            return controller.getLeftTriggerAxis();
+        }
+
+        /** Start button */
+        public static boolean getJonahButton() {
+            return controller.getStartButton();
+        }
+
+        /** Back button */
+        public static boolean getCalebButton() {
+            return controller.getBackButton();
+        }
+
+        /** X button */
+        public static boolean getControlledTurnButton() {
+            return controller.getXButton();
+        }
+
+        /** Y button */
+        public static boolean getNormalTurnButton() {
+            return controller.getYButton();
+        }
+
+        // Driver modes
+        public enum Drivers {
+            JONAH,
+            CALEB
+        }
+
+        // Turn modes
+        public enum TurnModes {
+            NORMAL,
+            CONTROLLED
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             /**
