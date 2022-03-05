@@ -133,7 +133,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     isStopped = true;
     safetyTimeout = Timer.getFPGATimestamp();
 
-    setBreak();
+    // easy to push robot
+    setCoast();
+    setPercent(0, 0);
   }
 
   public DriveTrainSubsystem(Simulation sim)
