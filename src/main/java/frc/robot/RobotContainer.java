@@ -85,13 +85,8 @@ public class RobotContainer {
     Controller.Manipulator.getClimberInButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
     Controller.Manipulator.getClimberOutButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
 
-<<<<<<< HEAD
-    Controller.Manipulator.getWinchDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.7);}, climberSubsystem));
-    Controller.Manipulator.getWinchUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.7);}, climberSubsystem));
-=======
-    Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
-    Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
->>>>>>> 7988c0690807c83e23dfd1627dd79d07453c4341
+    Controller.Manipulator.getWinchDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
+    Controller.Manipulator.getWinchUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
     
     if (RobotBase.isReal())
     {
