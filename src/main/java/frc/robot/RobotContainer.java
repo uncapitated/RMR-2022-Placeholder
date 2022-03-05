@@ -111,7 +111,7 @@ public class RobotContainer {
     // generate autonomous command
     return new SequentialCommandGroup(
       // go to the hub
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(0, false)),
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(0, false)),
 
       // dispense ball for 0.5 seconds
       new ParallelRaceGroup(
@@ -120,8 +120,16 @@ public class RobotContainer {
       ),
 
       // exit the inner terminal area
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(1, true))
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(1, true))
     );
+  }
+
+  /**
+   * setup auto variables
+   */
+  public void startAutonomous()
+  {
+    driveTrainSubsystem.setPosition(Autonomous.AUTONOMOUS[0].getStartingPosition());
   }
 
   public void scheduleTeleOpCommands() {

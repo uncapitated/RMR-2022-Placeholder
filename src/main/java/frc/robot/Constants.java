@@ -29,7 +29,7 @@ public final class Constants
         {
             // Auto 1
             /** Simple Auto */
-            new Auto(new Pose2d(0, 0, new Rotation2d(0)), new Pose2d(0.3, 0, new Rotation2d(0)), new Pose2d(-1.5, 0, new Rotation2d(0)))
+            new Auto(new Pose2d(6, 3, new Rotation2d(1.20428)), new Pose2d(7, 4, new Rotation2d(1.20428)), new Pose2d(6, 3, new Rotation2d(1.20428)))
         };
 
     }
