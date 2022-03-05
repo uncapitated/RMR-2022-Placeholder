@@ -18,6 +18,7 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.Constants;
 import frc.robot.Constants.Climber;
 import frc.robot.sensors.DistanceSensor;
+import frc.robot.sensors.LimitSwitchSensor;
 
 public class ClimberSubsystem extends SubsystemBase {
   public enum CLIMBER_STATE {UP, ANGLED};
@@ -39,13 +40,18 @@ public class ClimberSubsystem extends SubsystemBase {
   private NetworkTableEntry positionEntry;
 
   private DistanceSensor distanceSensor;
+
+  private LimitSwitchSensor topLimitSwitchSensor;
+  private LimitSwitchSensor bottomLimitSwitchSensor;
  
   /** Creates a new Winch. */
-  public ClimberSubsystem(DistanceSensor distanceSensor) {
+  public ClimberSubsystem(DistanceSensor distanceSensor, LimitSwitchSensor topLimitSwitchSensor, LimitSwitchSensor bottomLimitSwitchSensor) {
     // Use addRequirements() here to declare subsystem dependencies.
     winch = new CANSparkMax(Climber.WINCH_MOTOR, MotorType.kBrushless);
 
     this.distanceSensor = distanceSensor;
+    this.topLimitSwitchSensor = topLimitSwitchSensor;
+    this.bottomLimitSwitchSensor = bottomLimitSwitchSensor;
 
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration parameters
@@ -79,24 +85,28 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void setElevatorPosition(double position) {
-    switch(currentClimberState)
-    {
-      case ANGLED:
-      // clamp the highest it can go
-      position = Math.min(position, Climber.MAX_ANGLED);
-      // clamp the lowest it can go
-      position = Math.max(position, Climber.MIN_ANGLED);
-      break;
+      switch(currentClimberState)
+      {
+        case ANGLED:
+        // clamp the highest it can go
+        position = Math.min(position, Climber.MAX_ANGLED);
+        // clamp the lowest it can go
+        position = Math.max(position, Climber.MIN_ANGLED);
+        break;
 
-      case UP:
-      // clamp the highest it can go
-      position = Math.min(position, Climber.MAX_UP);
-      // clamp the lowest it can go
-      position = Math.max(position, Climber.MIN_UP);
-      break;
-    }
+        case UP:
+        // clamp the highest it can go
+        position = Math.min(position, Climber.MAX_UP);
+        // clamp the lowest it can go
+        position = Math.max(position, Climber.MIN_UP);
+        break;
+      }
 
-    setPoint = position;
+      if (position > setPoint && !topLimitSwitchSensor.getPressed()) {
+        setPoint = position;
+      } else if (position < setPoint && !bottomLimitSwitchSensor.getPressed()) {
+        setPoint = position;
+      }
   }
 
   /**

@@ -134,6 +134,10 @@ public final class Constants
         /** highest the winch can go when it is up (m) */
         public static final double MAX_UP = 0.60;
 
+        //limit switches for carriage
+        public static final int BOTTOM_LIMIT_SWITCH_DIO_PORT = 5;
+        public static final int TOP_LIMIT_SWITCH_DIO_PORT = 6;
+
         /**
          * PID Gains for the Elevator
          * 

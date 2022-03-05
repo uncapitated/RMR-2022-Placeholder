@@ -22,6 +22,7 @@ import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
 import frc.robot.sensors.DistanceSensor;
+import frc.robot.sensors.LimitSwitchSensor;
 import frc.robot.sim.Simulation;
 
 /**
@@ -40,11 +41,13 @@ public class RobotContainer {
 
   // sensors (doesn't have sim support)
   private DistanceSensor distanceSensor;
+  private LimitSwitchSensor carriageTopLimitSwitch;
+  private LimitSwitchSensor carriageBottomLimitSwtich;
 
   // subsystems
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
   private final BeltSubsystem beltSubsystem = new BeltSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor);
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor, carriageTopLimitSwitch, carriageBottomLimitSwtich);
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
@@ -59,6 +62,8 @@ public class RobotContainer {
     if (RobotBase.isReal())
     {
       distanceSensor = new DistanceSensor();
+      carriageBottomLimitSwtich = new LimitSwitchSensor(Constants.Climber.BOTTOM_LIMIT_SWITCH_DIO_PORT);
+      carriageTopLimitSwitch = new LimitSwitchSensor(Constants.Climber.TOP_LIMIT_SWITCH_DIO_PORT);
     }
 
     // Configure the button bindings
