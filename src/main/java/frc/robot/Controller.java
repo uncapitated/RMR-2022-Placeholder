@@ -103,6 +103,16 @@ public class Controller
             return controller.getBackButton();
         }
 
+        /** X button */
+        public static boolean getControlledTurnButton() {
+            return controller.getXButton();
+        }
+
+        /** Y button */
+        public static boolean getNormalTurnButton() {
+            return controller.getYButton();
+        }
+
         // Driver modes
         public enum Drivers {
             JONAH,
