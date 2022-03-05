@@ -28,8 +28,8 @@ public class DriveCommand extends CommandBase {
   // in rad/s
   private double maxTurn = 3.5;
 
-  private Drive.Drivers drivers = Drive.Drivers.CALEB;
-  private Drive.TurnModes turnMode = Drive.TurnModes.NORMAL;
+  private Controller.Drive.Drivers drivers = Controller.Drive.Drivers.CALEB;
+  private Controller.Drive.TurnModes turnMode = Controller.Drive.TurnModes.NORMAL;
 
   private SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ACCEL);
   private SlewRateLimiter turnLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ANGLE_ACCEL);
@@ -56,7 +56,7 @@ public class DriveCommand extends CommandBase {
   public void execute() {
     // smoothing of the forward and turn power is handled in controller
     double targetForwardPower;
-    if (drivers == Drive.Drivers.JONAH) {
+    if (drivers == Controller.Drive.Drivers.JONAH) {
       targetForwardPower = Controller.Drive.getLeftTriggerSpeed() * Controller.Drive.get_forward();
     } else {
       targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
@@ -64,7 +64,7 @@ public class DriveCommand extends CommandBase {
 
     // Gets the turn power based on input mode
     double targetTurnPower;
-    if (turnMode == Drive.TurnModes.NORMAL) { 
+    if (turnMode == Controller.Drive.TurnModes.NORMAL) { 
       targetTurnPower = Controller.Drive.get_turn();
     } else {
       targetTurnPower = Controller.Drive.getLeftTriggerSpeed() + -Controller.Drive.getRightTriggerSpeed();
@@ -95,18 +95,18 @@ public class DriveCommand extends CommandBase {
 
     // Switch driving modes
     if (Controller.Drive.getCalebButton()) {
-      drivers = Drive.Drivers.CALEB;
+      drivers = Controller.Drive.Drivers.CALEB;
     }
     if (Controller.Drive.getJonahButton()) {
-      drivers = Drive.Drivers.JONAH;
+      drivers = Controller.Drive.Drivers.JONAH;
     }
 
     // Switch turn modes
     if (Controller.Drive.getNormalTurnButton()) {
-      turnMode = Drive.TurnModes.NORMAL;
+      turnMode = Controller.Drive.TurnModes.NORMAL;
     }
     if (Controller.Drive.getControlledTurnButton()) {
-      turnMode = Drive.TurnModes.CONTROLLED;
+      turnMode = Controller.Drive.TurnModes.CONTROLLED;
     }
   }
 

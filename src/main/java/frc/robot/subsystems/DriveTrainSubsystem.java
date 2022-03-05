@@ -255,10 +255,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
   }
 
+
+
   public void setPosition(Pose2d robotPos)
   {
     rotation = robotPos.getRotation();
     odometry.resetPosition(robotPos, rotation);
+
+    leftPosition = 0;
+    rightPosition = 0;
   }
 
   @Override
