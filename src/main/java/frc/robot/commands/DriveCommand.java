@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Controller;
-import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
@@ -29,7 +28,7 @@ public class DriveCommand extends CommandBase {
   // in rad/s
   private double maxTurn = 3.5;
   
-  private Drive.TurnModes turnMode = Drive.TurnModes.NORMAL;
+  private Controller.Drive.TurnModes turnMode = Controller.Drive.TurnModes.NORMAL;
 
   private SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ACCEL);
   private SlewRateLimiter turnLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ANGLE_ACCEL);
@@ -60,7 +59,7 @@ public class DriveCommand extends CommandBase {
 
     // Gets the turn power based on input mode
     double targetTurnPower;
-    if (turnMode == Drive.TurnModes.NORMAL) { 
+    if (turnMode == Controller.Drive.TurnModes.NORMAL) { 
       targetTurnPower = Controller.Drive.get_turn();
     } else {
       targetTurnPower = Controller.Drive.getLeftTriggerSpeed() + -Controller.Drive.getRightTriggerSpeed();
@@ -96,17 +95,19 @@ public class DriveCommand extends CommandBase {
 
     // Switch turn modes
     if (Controller.Drive.getNormalTurnButton()) {
-      turnMode = Drive.TurnModes.NORMAL;
+      turnMode = Controller.Drive.TurnModes.NORMAL;
     }
     if (Controller.Drive.getControlledTurnButton()) {
-      turnMode = Drive.TurnModes.CONTROLLED;
+      turnMode = Controller.Drive.TurnModes.CONTROLLED;
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //driveTrainSubsystem.stop();
+    // zero the motor
+    driveTrainSubsystem.setPercent(0, 0);
+
     driveTrainSubsystem.setBreak();
   }
 

@@ -133,7 +133,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     isStopped = true;
     safetyTimeout = Timer.getFPGATimestamp();
 
-    setBreak();
+    // easy to push robot
+    setCoast();
+    setPercent(0, 0);
   }
 
   public DriveTrainSubsystem(Simulation sim)
@@ -203,6 +205,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
     frontRight.set(TalonFXControlMode.PercentOutput, rightPercent);
   }
 
+  public double getRightSpeed()
+  {
+    return toRobotSpeed(frontRight.getSelectedSensorVelocity());
+  }
+  public double getLeftSpeed()
+  {
+    return toRobotSpeed(frontLeft.getSelectedSensorVelocity());
+  }
+
+
   // set shifter
   public void setShifter(SHIFTER_POSITION position)
   {
@@ -245,10 +257,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
   }
 
+
+
   public void setPosition(Pose2d robotPos)
   {
     rotation = robotPos.getRotation();
     odometry.resetPosition(robotPos, rotation);
+
+    leftPosition = 0;
+    rightPosition = 0;
   }
 
   @Override
@@ -334,14 +351,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // _talon.setSensorPhase(true);
   }
 
-  public double getRightSpeed()
-  {
-    return toRobotSpeed(frontRight.getSelectedSensorVelocity());
-  }
-  public double getLeftSpeed()
-  {
-    return toRobotSpeed(frontLeft.getSelectedSensorVelocity());
-  }
+
 
   private double toRobotSpeed(double motorSpeed)
   {

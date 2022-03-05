@@ -135,6 +135,16 @@ public class Controller
         // manipulator controller
         private static XboxController controller = new XboxController(1);
 
+        /** Auto Climb for the first bar is set to the Left Joystick Button */
+        public static JoystickButton getFirstBarAutoClimbButton() {
+            return new JoystickButton(controller, XboxController.Button.kLeftStick.value);
+        }
+
+        /** Auto Climb for the first bar is set to the Right Joystick Button */
+        public static JoystickButton getSecondBarAutoClimbButton() {
+            return new JoystickButton(controller, XboxController.Button.kRightStick.value);
+        }
+
         /** Intake button is mapped to the left bumper on the second controller */
         public static JoystickButton getIntakeButton() {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
@@ -145,32 +155,43 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
+        /** Down DPad */
+        public static Trigger getWinchDownButton() {
+            BooleanSupplier POVUp = () -> controller.getPOV() == 270;
+            return new Trigger(POVUp);
+        }
+
+        /** Up DPad */
+        public static Trigger getWinchUpButton() {
+            BooleanSupplier POVUp = () -> controller.getPOV() == 90;
+            return new Trigger(POVUp);
+        }
+
         /** A Button */
-        public static JoystickButton getWinchDownButton() {
+        public static JoystickButton getLowPointButton() {
             return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
-        /** Y Button */
-        public static JoystickButton getWinchUpButton() {
-            return new JoystickButton(controller, XboxController.Button.kY.value);
-        }
-
-        /** X button */
+        /** X Button */
         public static JoystickButton getTransferPointButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
-        /** Climber Angle button is mapped to the left bumper */
-        public static JoystickButton getClimberAngleButton() {
-            /* BooleanSupplier POVUp = () -> controller.getPOV() == 90;
-            new Trigger(() -> controller.getPOV() == 90)
-            return new JoystickButton(controller, XboxController.); */
+        /** Y Button */
+        public static JoystickButton getHighPointButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
 
-        /** Climber UP button is mapped to the left bumper */
-        public static JoystickButton getClimberUpButton() {
-            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+        /** Left DPad */
+        public static Trigger getClimberInButton() {
+            BooleanSupplier POVUp = () -> controller.getPOV() == 180;
+            return new Trigger(POVUp);
+        }
+
+        /** Right DPad */
+        public static Trigger getClimberOutButton() {
+            BooleanSupplier POVUp = () -> controller.getPOV() == 0;
+            return new Trigger(POVUp);
         }
 
         public static void setRumble(boolean hasRumble)

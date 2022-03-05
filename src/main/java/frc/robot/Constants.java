@@ -22,14 +22,14 @@ public final class Constants
      * Contains Autonomous Planning constants
      */
     public static final class Autonomous {
-        public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+        public static final double MAX_SPEED_METERS_PER_SECOND = 1;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
 
         public static final Auto[] AUTONOMOUS = 
         {
             // Auto 1
-            /** Simple Auto */
-            new Auto(new Pose2d(0, 0, new Rotation2d(0)), new Pose2d(0.3, 0, new Rotation2d(0)), new Pose2d(-1.5, 0, new Rotation2d(0)))
+            /** Simple Auto From Right Most Blue Alliance*/
+            new Auto(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
         };
 
     }

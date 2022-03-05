@@ -35,7 +35,12 @@ public class Auto {
         positions.addAll(Arrays.asList(nextPositions));
     }
 
-    public Trajectory getTragectory(int index, boolean reversed)
+    public Pose2d getStartingPosition()
+    {
+        return positions.get(0);
+    }
+
+    public Trajectory getTrajectory(int index, boolean reversed)
     {
         // invalid index
         if (index >= positions.size() - 1)
