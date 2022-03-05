@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Controller;
@@ -63,9 +64,9 @@ public class DriveCommand extends CommandBase {
       forwardVelocity *= 0.5;
       angularVelocity *= 0.3;
 
-      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), this)).schedule();
+      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
     } else {
-      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), this)).schedule();
+      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
     }
 
     //command subsystem
