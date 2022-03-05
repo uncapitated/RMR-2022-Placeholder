@@ -28,8 +28,7 @@ public class DriveCommand extends CommandBase {
   private double maxForward = 3.0;
   // in rad/s
   private double maxTurn = 3.5;
-
-  private Drive.Drivers drivers = Drive.Drivers.CALEB;
+  
   private Drive.TurnModes turnMode = Drive.TurnModes.NORMAL;
 
   private SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ACCEL);
@@ -57,11 +56,7 @@ public class DriveCommand extends CommandBase {
   public void execute() {
     // smoothing of the forward and turn power is handled in controller
     double targetForwardPower;
-    if (drivers == Drive.Drivers.JONAH) {
-      targetForwardPower = Controller.Drive.getLeftTriggerSpeed() * Controller.Drive.get_forward();
-    } else {
-      targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
-    }
+    targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
 
     // Gets the turn power based on input mode
     double targetTurnPower;
@@ -98,15 +93,6 @@ public class DriveCommand extends CommandBase {
 
     //command subsystem
     driveTrainSubsystem.set(new ChassisSpeeds(forwardLimiter.calculate(forwardVelocity), 0, turnLimiter.calculate(angularVelocity)));
-
-
-    // Switch driving modes
-    if (Controller.Drive.getCalebButton()) {
-      drivers = Drive.Drivers.CALEB;
-    }
-    if (Controller.Drive.getJonahButton()) {
-      drivers = Drive.Drivers.JONAH;
-    }
 
     // Switch turn modes
     if (Controller.Drive.getNormalTurnButton()) {
