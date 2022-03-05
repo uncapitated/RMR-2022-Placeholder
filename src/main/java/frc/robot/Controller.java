@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 //import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /** Add your docs here. */
 public class Controller
@@ -148,19 +151,19 @@ public class Controller
         // manipulator controller
         private static XboxController controller = new XboxController(1);
 
-        /** Intake button is mapped to the A Button on the second controller */
+        /** Intake button is mapped to the left bumper on the second controller */
         public static JoystickButton getIntakeButton() {
-            return new JoystickButton(controller, XboxController.Button.kA.value);
+            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         }
 
-        /** Dispense button is mapped to the B Button on the second controller */
+        /** Dispense button is mapped to the right bumper on the second controller */
         public static JoystickButton getDispenseButton() {
-            return new JoystickButton(controller, XboxController.Button.kB.value);
+            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
-        /** X Button */
+        /** A Button */
         public static JoystickButton getWinchDownButton() {
-            return new JoystickButton(controller, XboxController.Button.kX.value);
+            return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
         /** Y Button */
@@ -168,9 +171,17 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
 
+        /** X button */
+        public static JoystickButton getTransferPointButton() {
+            return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
+
         /** Climber Angle button is mapped to the left bumper */
         public static JoystickButton getClimberAngleButton() {
-            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+            /* BooleanSupplier POVUp = () -> controller.getPOV() == 90;
+            new Trigger(() -> controller.getPOV() == 90)
+            return new JoystickButton(controller, XboxController.); */
+            return new JoystickButton(controller, XboxController.Button.kY.value);
         }
 
         /** Climber UP button is mapped to the left bumper */

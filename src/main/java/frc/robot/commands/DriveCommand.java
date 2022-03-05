@@ -68,7 +68,13 @@ public class DriveCommand extends CommandBase {
       targetTurnPower = Controller.Drive.get_turn();
     } else {
       targetTurnPower = Controller.Drive.getLeftTriggerSpeed() + -Controller.Drive.getRightTriggerSpeed();
-      targetForwardPower = Controller.Drive.get_forward();
+      targetForwardPower = 0;
+
+      if (Controller.Drive.get_turn() != 0) {
+        Controller.Drive.setRumble(true);
+      } else {
+        Controller.Drive.setRumble(false);
+      }
     }
 
     double forwardVelocity = targetForwardPower * maxForward;
