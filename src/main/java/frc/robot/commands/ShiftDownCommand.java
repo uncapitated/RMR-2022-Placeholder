@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
-public class ShiftUpCommand extends CommandBase {
+public class ShiftDownCommand extends CommandBase {
   private DriveTrainSubsystem driveTrain;
 
   private double startTime;
@@ -18,7 +18,7 @@ public class ShiftUpCommand extends CommandBase {
   /** Creates a new ShiftUpCommand. 
    * This command runs for 0.1 seconds in coast mode, shifts the gear, and waits 0.1 seconds in coast mode
   */
-  public ShiftUpCommand(DriveTrainSubsystem driveTrainSubsystem) {
+  public ShiftDownCommand(DriveTrainSubsystem driveTrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     driveTrain = driveTrainSubsystem;
     addRequirements(driveTrainSubsystem);
@@ -30,25 +30,28 @@ public class ShiftUpCommand extends CommandBase {
   public void initialize() {
     startTime = Timer.getFPGATimestamp();
 
-    
     driveTrain.setCoast();
     
     // zero the motor
-    driveTrain.stop();
+    driveTrain.setPercent(0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    driveTrain.setPercent(0, 0);
+
     if (Timer.getFPGATimestamp() - startTime > 0.1)
     {
-      driveTrain.setShifter(SHIFTER_POSITION.HIGH);
+      driveTrain.setShifter(SHIFTER_POSITION.LOW);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    driveTrain.setPercent(0, 0);
+    
     driveTrain.set(new DifferentialDriveWheelSpeeds(driveTrain.getRightSpeed(), driveTrain.getLeftSpeed()));
     driveTrain.setBreak();
   }

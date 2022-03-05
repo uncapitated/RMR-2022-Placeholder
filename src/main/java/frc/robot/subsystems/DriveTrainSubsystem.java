@@ -93,12 +93,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // setup left drive
     frontLeft = new WPI_TalonFX(Drive.FRONT_LEFT);
     backLeft = new WPI_TalonFX(Drive.BACK_LEFT); 
+    frontLeft.setNeutralMode(NeutralMode.Coast);
+    backLeft.setNeutralMode(NeutralMode.Coast);
 
     backLeft.follow(frontLeft);
 
     // setup right drive
     frontRight = new WPI_TalonFX(Drive.FRONT_RIGHT);
     backRight = new WPI_TalonFX(Drive.BACK_RIGHT);
+    frontRight.setNeutralMode(NeutralMode.Coast);
+    backRight.setNeutralMode(NeutralMode.Coast);
 
     backRight.follow(frontRight);
 
@@ -155,7 +159,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   /**
-   * set with chassis speeds 
+   * set with chassis speeds m/s, m/s, rad/s
    */
   public void set(ChassisSpeeds chassisSpeeds)
   {
@@ -185,6 +189,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
     frontRight.set(TalonFXControlMode.Velocity, rightVelocity);
   }
 
+  /**
+   * 
+   * @param leftPercent the percent output of the left side of the drive train
+   * @param rightPercent the percent output of the right side of the drive train
+   */
+  public void setPercent(double leftPercent, double rightPercent)
+  {
+    // reset the timer
+    safetyTimeout = Timer.getFPGATimestamp();
+
+    frontLeft.set(TalonFXControlMode.PercentOutput, leftPercent);
+    frontRight.set(TalonFXControlMode.PercentOutput, rightPercent);
+  }
+
   // set shifter
   public void setShifter(SHIFTER_POSITION position)
   {
@@ -198,6 +216,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     {
       shifter.set(Value.kForward);
     }
+  }
+
+  public SHIFTER_POSITION getShifter()
+  {
+    return shifterPosition;
   }
 
   /**
@@ -309,6 +332,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		 * https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#sensor-phase
 		 */
         // _talon.setSensorPhase(true);
+  }
+
+  public double getRightSpeed()
+  {
+    return toRobotSpeed(frontRight.getSelectedSensorVelocity());
+  }
+  public double getLeftSpeed()
+  {
+    return toRobotSpeed(frontLeft.getSelectedSensorVelocity());
   }
 
   private double toRobotSpeed(double motorSpeed)
