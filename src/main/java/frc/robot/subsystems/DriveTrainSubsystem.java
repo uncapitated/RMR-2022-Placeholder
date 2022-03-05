@@ -189,6 +189,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
     frontRight.set(TalonFXControlMode.Velocity, rightVelocity);
   }
 
+  /**
+   * 
+   * @param leftPercent the percent output of the left side of the drive train
+   * @param rightPercent the percent output of the right side of the drive train
+   */
+  public void setPercent(double leftPercent, double rightPercent)
+  {
+    // reset the timer
+    safetyTimeout = Timer.getFPGATimestamp();
+
+    frontLeft.set(TalonFXControlMode.PercentOutput, leftPercent);
+    frontRight.set(TalonFXControlMode.PercentOutput, rightPercent);
+  }
+
   // set shifter
   public void setShifter(SHIFTER_POSITION position)
   {
@@ -202,6 +216,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     {
       shifter.set(Value.kForward);
     }
+  }
+
+  public SHIFTER_POSITION getShifter()
+  {
+    return shifterPosition;
   }
 
   /**

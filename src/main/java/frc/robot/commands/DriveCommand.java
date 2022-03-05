@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Controller;
@@ -63,9 +64,15 @@ public class DriveCommand extends CommandBase {
       forwardVelocity *= 0.5;
       angularVelocity *= 0.3;
 
-      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), this)).schedule();
+      // if it is not in the lower position
+      if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.LOW) {
+        (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      }
     } else {
-      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), this)).schedule();
+      // if it is not in the lower position
+      if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.HIGH) {
+        (new SequentialCommandGroup(new ShiftUpCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      }
     }
 
     //command subsystem
@@ -82,7 +89,7 @@ public class DriveCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrainSubsystem.stop();
+    //driveTrainSubsystem.stop();
     driveTrainSubsystem.setBreak();
   }
 

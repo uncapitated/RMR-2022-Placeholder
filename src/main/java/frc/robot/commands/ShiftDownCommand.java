@@ -21,6 +21,7 @@ public class ShiftDownCommand extends CommandBase {
   public ShiftDownCommand(DriveTrainSubsystem driveTrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     driveTrain = driveTrainSubsystem;
+    addRequirements(driveTrainSubsystem);
     startTime = Timer.getFPGATimestamp();
   }
 
@@ -32,21 +33,25 @@ public class ShiftDownCommand extends CommandBase {
     driveTrain.setCoast();
     
     // zero the motor
-    driveTrain.stop();
+    driveTrain.setPercent(0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    driveTrain.setPercent(0, 0);
+
     if (Timer.getFPGATimestamp() - startTime > 0.1)
     {
-      driveTrain.setShifter(SHIFTER_POSITION.HIGH);
+      driveTrain.setShifter(SHIFTER_POSITION.LOW);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    driveTrain.setPercent(0, 0);
+    
     driveTrain.set(new DifferentialDriveWheelSpeeds(driveTrain.getRightSpeed(), driveTrain.getLeftSpeed()));
     driveTrain.setBreak();
   }

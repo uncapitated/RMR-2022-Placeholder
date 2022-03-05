@@ -21,6 +21,7 @@ public class ShiftUpCommand extends CommandBase {
   public ShiftUpCommand(DriveTrainSubsystem driveTrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     driveTrain = driveTrainSubsystem;
+    addRequirements(driveTrainSubsystem);
     startTime = Timer.getFPGATimestamp();
   }
 

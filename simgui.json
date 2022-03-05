@@ -61,5 +61,8 @@
       "/Shuffleboard/Shuffleboard/Field": "Field2d",
       "/Shuffleboard/Simulation/Field": "Field2d"
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }
