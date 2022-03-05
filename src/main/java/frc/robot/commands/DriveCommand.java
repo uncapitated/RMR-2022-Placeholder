@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Controller;
-import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
@@ -29,6 +28,8 @@ public class DriveCommand extends CommandBase {
   // in rad/s
   private double maxTurn = 3.5;
 
+  private Controller.Drive.Drivers drivers = Controller.Drive.Drivers.CALEB;
+  private Controller.Drive.TurnModes turnMode = Controller.Drive.TurnModes.NORMAL;
 
   private SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ACCEL);
   private SlewRateLimiter turnLimiter = new SlewRateLimiter(Constants.Drive.DRIVE_MAX_ANGLE_ACCEL);
@@ -54,8 +55,27 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     // smoothing of the forward and turn power is handled in controller
-    double targetForwardPower = Controller.Drive.get_forward();
-    double targetTurnPower = Controller.Drive.get_turn();
+    double targetForwardPower;
+    if (drivers == Controller.Drive.Drivers.JONAH) {
+      targetForwardPower = Controller.Drive.getLeftTriggerSpeed() * Controller.Drive.get_forward();
+    } else {
+      targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
+    }
+
+    // Gets the turn power based on input mode
+    double targetTurnPower;
+    if (turnMode == Controller.Drive.TurnModes.NORMAL) { 
+      targetTurnPower = Controller.Drive.get_turn();
+    } else {
+      targetTurnPower = Controller.Drive.getLeftTriggerSpeed() + -Controller.Drive.getRightTriggerSpeed();
+      targetForwardPower = 0;
+
+      if (Controller.Drive.get_turn() != 0) {
+        Controller.Drive.setRumble(true);
+      } else {
+        Controller.Drive.setRumble(false);
+      }
+    }
 
     double forwardVelocity = targetForwardPower * maxForward;
     double angularVelocity = targetTurnPower * maxTurn;
@@ -64,26 +84,44 @@ public class DriveCommand extends CommandBase {
       forwardVelocity *= 0.5;
       angularVelocity *= 0.3;
 
-      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      // if it is not in the lower position
+      if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.LOW) {
+        (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      }
     } else {
-      (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      // if it is not in the lower position
+      if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.HIGH) {
+        (new SequentialCommandGroup(new ShiftUpCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      }
     }
 
     //command subsystem
     driveTrainSubsystem.set(new ChassisSpeeds(forwardLimiter.calculate(forwardVelocity), 0, turnLimiter.calculate(angularVelocity)));
 
-    /*
-    if(Controller.Drive.getTriggerLeft().get()){
-      driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.HIGH);
-    } else if (Controller.Drive.getTriggerRight().get()){
-      driveTrainSubsystem.setShifter(DriveTrainSubsystem.SHIFTER_POSITION.LOW);
-    }/**/
+
+    // Switch driving modes
+    if (Controller.Drive.getCalebButton()) {
+      drivers = Controller.Drive.Drivers.CALEB;
+    }
+    if (Controller.Drive.getJonahButton()) {
+      drivers = Controller.Drive.Drivers.JONAH;
+    }
+
+    // Switch turn modes
+    if (Controller.Drive.getNormalTurnButton()) {
+      turnMode = Controller.Drive.TurnModes.NORMAL;
+    }
+    if (Controller.Drive.getControlledTurnButton()) {
+      turnMode = Controller.Drive.TurnModes.CONTROLLED;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrainSubsystem.stop();
+    // zero the motor
+    driveTrainSubsystem.setPercent(0, 0);
+
     driveTrainSubsystem.setBreak();
   }
 

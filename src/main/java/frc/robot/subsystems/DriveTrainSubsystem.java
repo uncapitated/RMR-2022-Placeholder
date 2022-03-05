@@ -189,6 +189,30 @@ public class DriveTrainSubsystem extends SubsystemBase {
     frontRight.set(TalonFXControlMode.Velocity, rightVelocity);
   }
 
+  /**
+   * 
+   * @param leftPercent the percent output of the left side of the drive train
+   * @param rightPercent the percent output of the right side of the drive train
+   */
+  public void setPercent(double leftPercent, double rightPercent)
+  {
+    // reset the timer
+    safetyTimeout = Timer.getFPGATimestamp();
+
+    frontLeft.set(TalonFXControlMode.PercentOutput, leftPercent);
+    frontRight.set(TalonFXControlMode.PercentOutput, rightPercent);
+  }
+
+  public double getRightSpeed()
+  {
+    return toRobotSpeed(frontRight.getSelectedSensorVelocity());
+  }
+  public double getLeftSpeed()
+  {
+    return toRobotSpeed(frontLeft.getSelectedSensorVelocity());
+  }
+
+
   // set shifter
   public void setShifter(SHIFTER_POSITION position)
   {
@@ -202,6 +226,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     {
       shifter.set(Value.kForward);
     }
+  }
+
+  public SHIFTER_POSITION getShifter()
+  {
+    return shifterPosition;
   }
 
   /**
@@ -226,10 +255,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
   }
 
+
+
   public void setPosition(Pose2d robotPos)
   {
     rotation = robotPos.getRotation();
     odometry.resetPosition(robotPos, rotation);
+
+    leftPosition = 0;
+    rightPosition = 0;
   }
 
   @Override
@@ -315,14 +349,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // _talon.setSensorPhase(true);
   }
 
-  public double getRightSpeed()
-  {
-    return toRobotSpeed(frontRight.getSelectedSensorVelocity());
-  }
-  public double getLeftSpeed()
-  {
-    return toRobotSpeed(frontLeft.getSelectedSensorVelocity());
-  }
+
 
   private double toRobotSpeed(double motorSpeed)
   {

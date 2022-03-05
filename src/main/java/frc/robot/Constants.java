@@ -22,14 +22,14 @@ public final class Constants
      * Contains Autonomous Planning constants
      */
     public static final class Autonomous {
-        public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+        public static final double MAX_SPEED_METERS_PER_SECOND = 1;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
 
         public static final Auto[] AUTONOMOUS = 
         {
             // Auto 1
-            /** Simple Auto */
-            new Auto(new Pose2d(0, 0, new Rotation2d(0)), new Pose2d(0.3, 0, new Rotation2d(0)), new Pose2d(-1.5, 0, new Rotation2d(0)))
+            /** Simple Auto From Right Most Blue Alliance*/
+            new Auto(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
         };
 
     }
@@ -133,6 +133,10 @@ public final class Constants
         public static final double MIN_UP = 0.00;
         /** highest the winch can go when it is up (m) */
         public static final double MAX_UP = 0.60;
+
+        //limit switches for carriage
+        public static final int BOTTOM_LIMIT_SWITCH_DIO_PORT = 5;
+        public static final int TOP_LIMIT_SWITCH_DIO_PORT = 6;
 
         /**
          * PID Gains for the Elevator
