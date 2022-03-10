@@ -79,19 +79,18 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
-    Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+    Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
+    Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
-    Controller.Manipulator.getClimberUpButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
+    Controller.Manipulator.getClimberInButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
+    Controller.Manipulator.getClimberOutButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
 
-    Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
-    Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
+    Controller.Manipulator.getWinchDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
+    Controller.Manipulator.getWinchUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
     
     if (RobotBase.isReal())
     {
-      // this is disabled because it is not complete
-      // Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+      //Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
   }
 
