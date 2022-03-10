@@ -168,12 +168,12 @@ public class Controller
 
         /** Y Button */
         public static JoystickButton getWinchUpButton() {
-            return new JoystickButton(controller, XboxController.Button.kY.value);
+            return new JoystickButton(controller, XboxController.Button.kB.value);
         }
 
-        /** X button */
+        //someone add a comment saying what this does
         public static JoystickButton getTransferPointButton() {
-            return new JoystickButton(controller, XboxController.Button.kX.value);
+            return new JoystickButton(controller, XboxController.Button.kRightStick.value);
         }
 
         /** Climber Angle button is mapped to the left bumper */
@@ -186,7 +186,7 @@ public class Controller
 
         /** Climber UP button is mapped to the left bumper */
         public static JoystickButton getClimberUpButton() {
-            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+            return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
         public static void setRumble(boolean hasRumble)
