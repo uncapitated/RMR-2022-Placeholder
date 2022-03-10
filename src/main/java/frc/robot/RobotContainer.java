@@ -22,6 +22,7 @@ import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
 import frc.robot.sensors.DistanceSensor;
+import frc.robot.sensors.LimitSwitchSensor;
 import frc.robot.sim.Simulation;
 
 /**
@@ -40,11 +41,13 @@ public class RobotContainer {
 
   // sensors (doesn't have sim support)
   private DistanceSensor distanceSensor;
+  private LimitSwitchSensor carriageTopLimitSwitch;
+  private LimitSwitchSensor carriageBottomLimitSwtich;
 
   // subsystems
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
   private final BeltSubsystem beltSubsystem = new BeltSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor);
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor, carriageTopLimitSwitch, carriageBottomLimitSwtich);
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
@@ -59,6 +62,8 @@ public class RobotContainer {
     if (RobotBase.isReal())
     {
       distanceSensor = new DistanceSensor();
+      carriageBottomLimitSwtich = new LimitSwitchSensor(Constants.Climber.BOTTOM_LIMIT_SWITCH_DIO_PORT);
+      carriageTopLimitSwitch = new LimitSwitchSensor(Constants.Climber.TOP_LIMIT_SWITCH_DIO_PORT);
     }
 
     // Configure the button bindings
@@ -74,18 +79,18 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Controller.Manipulator.getIntakeButton().whenHeld(intakeCommand);
-    Controller.Manipulator.getDispenseButton().whenHeld(dispenseCommand);
+    Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
+    Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    Controller.Manipulator.getClimberAngleButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
-    Controller.Manipulator.getClimberUpButton().whenPressed(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
+    Controller.Manipulator.getClimberInButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
+    Controller.Manipulator.getClimberOutButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
 
-    Controller.Manipulator.getWinchDownButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(.7);}, climberSubsystem));
-    Controller.Manipulator.getWinchUpButton().whileHeld(new InstantCommand(() -> {climberSubsystem.set(-.7);}, climberSubsystem));
+    Controller.Manipulator.getWinchDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
+    Controller.Manipulator.getWinchUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
     
     if (RobotBase.isReal())
     {
-      Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+      //Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
   }
 
@@ -103,7 +108,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // only run Autonomous when the status switch is at one
-    if (statusSwitch.GetSwitchValue() != 1)
+    if (statusSwitch.GetSwitchValue() != 1 && RobotBase.isReal())
     {
       return null;
     }
@@ -111,7 +116,7 @@ public class RobotContainer {
     // generate autonomous command
     return new SequentialCommandGroup(
       // go to the hub
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(0, false)),
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(0, false)),
 
       // dispense ball for 0.5 seconds
       new ParallelRaceGroup(
@@ -120,8 +125,16 @@ public class RobotContainer {
       ),
 
       // exit the inner terminal area
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTragectory(1, true))
+      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(1, true))
     );
+  }
+
+  /**
+   * setup auto variables
+   */
+  public void startAutonomous()
+  {
+    driveTrainSubsystem.setPosition(Autonomous.AUTONOMOUS[0].getStartingPosition());
   }
 
   public void scheduleTeleOpCommands() {
