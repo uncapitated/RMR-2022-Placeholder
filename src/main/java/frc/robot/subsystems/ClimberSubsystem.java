@@ -121,6 +121,10 @@ public class ClimberSubsystem extends SubsystemBase {
     winch.set(val);
   }
   
+  public CLIMBER_STATE getClimberState() {
+    return currentClimberState;
+  }
+
   // set the Climber to be in or out
   public void setClimberState(CLIMBER_STATE state)
   {

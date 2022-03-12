@@ -146,8 +146,8 @@ public class Controller
         }
 
         /** Right bumper */
-        public static boolean getToggleButton() {
-            return controller.getRightBumper();
+        public static JoystickButton getToggleButton() {
+            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
         public static void setRumble(boolean hasRumble)
