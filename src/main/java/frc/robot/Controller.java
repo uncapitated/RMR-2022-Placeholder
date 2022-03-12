@@ -150,7 +150,7 @@ public class Controller
             BooleanSupplier POVUp = () -> controller.getPOV() == 270;
             return new Trigger(POVUp);
         }
-
+        
         /** Up DPad */
         public static Trigger getWinchUpButton() {
             BooleanSupplier POVUp = () -> controller.getPOV() == 90;
@@ -164,24 +164,35 @@ public class Controller
 
         /** X Button */
         public static JoystickButton getTransferPointButton() {
+            return new JoystickButton(controller, XboxController.Button.kRightStick.value);
+        }
+        /** X Button */
+        public static JoystickButton getElevatorUpButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
         /** Y Button */
-        public static JoystickButton getHighPointButton() {
+        public static JoystickButton getElevatorDownButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
 
+        /** Climber UP button is mapped to the left bumper */
+        public static JoystickButton getClimberUpButton() {
+            return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
         /** Left DPad */
         public static Trigger getClimberInButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 180;
-            return new Trigger(POVUp);
+            return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
         /** Right DPad */
         public static Trigger getClimberOutButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 0;
-            return new Trigger(POVUp);
+            return new JoystickButton(controller, XboxController.Button.kB.value);
+        }
+        
+        /** Right bumper */
+        public static JoystickButton getToggleButton() {
+            return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
         public static void setRumble(boolean hasRumble)

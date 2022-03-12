@@ -171,18 +171,17 @@ public final class Constants
     public static final class CameraConstants
     {
         //Constants for the camera
-        public static final double maxX = 1280;
-        public static final double maxY = 720;
+        public static final double maxX = 160;
+        public static final double maxY = 120;
 
-        public static final String[] label = {"Re", "Blu"};
     }
 
     public static final class CameraPIDConstants{
 
         //Angular constants; tune for robot
-        public static final double akP = .01;
+        public static final double akP = .00001;
         public static final double akI = .00000;
-        public static final double akD = 0.05;
+        public static final double akD = 0.00;
     }
 
     public static final class Pneumatics {
