@@ -174,6 +174,9 @@ public final class Constants
         public static final double maxX = 160;
         public static final double maxY = 120;
 
+        //could be 59.7
+        public static final int degs = 53;
+
     }
 
     public static final class CameraPIDConstants{
