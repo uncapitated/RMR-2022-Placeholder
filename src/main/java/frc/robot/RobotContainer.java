@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -83,14 +84,6 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    /* Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
-      if (climberSubsystem.getClimberState() == CLIMBER_STATE.ANGLED) {
-        climberSubsystem.setClimberState(CLIMBER_STATE.UP);
-      } else {
-        climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
-      }
-    }, climberSubsystem)); */
-
     Controller.Manipulator.getToggleButton().toggleWhenPressed(new StartEndCommand(
       () -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, 
       () -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, 
@@ -98,8 +91,8 @@ public class RobotContainer {
     );    
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
-    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
-    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
+    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     
     if (RobotBase.isReal())
     {
