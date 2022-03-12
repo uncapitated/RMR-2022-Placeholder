@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -85,8 +86,8 @@ public class RobotContainer {
     Controller.Manipulator.getClimberInButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, climberSubsystem));
     Controller.Manipulator.getClimberOutButton().whenActive(new InstantCommand(() -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, climberSubsystem));
 
-    Controller.Manipulator.getWinchDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
-    Controller.Manipulator.getWinchUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
+    Controller.Manipulator.getWinchDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getWinchUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     
     if (RobotBase.isReal())
     {
