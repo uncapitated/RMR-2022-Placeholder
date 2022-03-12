@@ -32,12 +32,12 @@ public class TargetBallCommand extends CommandBase {
 
     private PIDController tpid;
 
-    double xmin, ymin, xmax, ymax, avX, degrees, confidence;
+    double xmin, ymin, xmax, ymax, avX, degrees, currDegrees, confidence;
 
     private double turnSpeed;
 
     private JSONObject detectionHitboxJSONObject;
-    private JSONArray detectionsJSONArray,jsAr2;
+    private JSONArray detectionsJSONArray;
 
     int area, currMax, currMaxPos;
     /** Creates a new TargetBallCommand. */
@@ -61,6 +61,8 @@ public class TargetBallCommand extends CommandBase {
       table = NetworkTableInstance.getDefault().getTable("ML");
       coral = table.getEntry("coral");
       detections = table.getEntry("detections");
+
+      currDegrees = 0;
       
       // Get the resolution of the camera from Network Tables
       // todo
@@ -87,11 +89,7 @@ public class TargetBallCommand extends CommandBase {
       String detections_str = detections.getString("[]");
       detectionsJSONArray = new JSONArray(detections_str);
 
-      //if we detect nothing, don't move
-      if (detectionsJSONArray.length() == 0) {
-        tpid.reset();
-        return;
-      }
+      if (detectionsJSONArray.length() != 0) {
 
         currMax = 0;
         
@@ -124,16 +122,26 @@ public class TargetBallCommand extends CommandBase {
 
         degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; /////
 
+<<<<<<< HEAD
         turnSpeed = -1 * tpid.calculate(degrees, 0);
+=======
+        if(degrees != currDegrees)
+        {
+          currDegrees = degrees;
 
-        System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
-        if(Math.abs(degrees) >= 5) {
-          System.out.println("is it here " + turnSpeed);
-          driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed * 0.1));
-        } else {
-          System.out.println("no its here");
-          driveTrain.set(new ChassisSpeeds(.3,0,0));
+          turnSpeed = -1*tpid.calculate(degrees, 0);
+>>>>>>> 0fdb6079177bd9ea19ed0d3a19ef0effa6149d71
+
+          System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
+          if(Math.abs(degrees) >= 15) {
+            System.out.println("is it here " + turnSpeed);
+            driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed * 0.1));
+          } else {
+            System.out.println("no its here");
+            driveTrain.set(new ChassisSpeeds(.3,0,0));
+          }
         }
+      }
   }
 
   // Called once the command ends or is interrupted.
