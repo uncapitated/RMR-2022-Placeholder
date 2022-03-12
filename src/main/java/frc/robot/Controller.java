@@ -178,14 +178,12 @@ public class Controller
         }
         /** Left DPad */
         public static Trigger getClimberInButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 180;
-            return new Trigger(POVUp);
+            return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
         /** Right DPad */
         public static Trigger getClimberOutButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 0;
-            return new Trigger(POVUp);
+            return new JoystickButton(controller, XboxController.Button.kB.value);
         }
 
         public static void setRumble(boolean hasRumble)

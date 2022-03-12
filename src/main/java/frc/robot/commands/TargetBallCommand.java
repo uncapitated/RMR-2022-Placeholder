@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.CameraPIDConstants;
 import frc.robot.Controller;
 import frc.robot.Constants.CameraConstants;
@@ -36,6 +37,8 @@ public class TargetBallCommand extends CommandBase {
 
     private double turnSpeed;
 
+    private ChassisSpeeds currentChassisSpeeds;
+
     private JSONObject detectionHitboxJSONObject;
     private JSONArray detectionsJSONArray;
 
@@ -61,6 +64,7 @@ public class TargetBallCommand extends CommandBase {
       table = NetworkTableInstance.getDefault().getTable("ML");
       coral = table.getEntry("coral");
       detections = table.getEntry("detections");
+      currentChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
       currDegrees = 0;
       
@@ -96,6 +100,9 @@ public class TargetBallCommand extends CommandBase {
         for(int i = 0; i < detectionsJSONArray.length(); i++)
         {
           detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
+
+          System.out.println(detectionHitboxJSONObject.toString());
+
           xmin = detectionHitboxJSONObject.getDouble("xmin");
           ymin = detectionHitboxJSONObject.getDouble("ymin");
           xmax = detectionHitboxJSONObject.getDouble("xmax");
@@ -119,6 +126,7 @@ public class TargetBallCommand extends CommandBase {
         avX = (xmin+xmax)/2;
 
         degrees = (cameraXSize/2-avX)/(cameraXSize/2)*180;
+        System.out.println(degrees);
 
         if(degrees != currDegrees)
         {
@@ -126,16 +134,20 @@ public class TargetBallCommand extends CommandBase {
 
           turnSpeed = -1*tpid.calculate(degrees, 0);
 
+          System.out.println(turnSpeed);
+
           System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
           if(Math.abs(degrees) >= 15) {
             System.out.println("is it here " + turnSpeed);
-            driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed * 0.1));
+            currentChassisSpeeds = new ChassisSpeeds(0, 0, turnSpeed * 0.1);
           } else {
             System.out.println("no its here");
-            driveTrain.set(new ChassisSpeeds(.3,0,0));
+            currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+
           }
         }
       }
+    driveTrain.set(currentChassisSpeeds);
   }
 
   // Called once the command ends or is interrupted.
