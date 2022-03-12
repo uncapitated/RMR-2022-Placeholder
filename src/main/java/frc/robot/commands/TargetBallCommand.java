@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.CameraPIDConstants;
 import frc.robot.Constants;
 import frc.robot.Controller;
@@ -42,6 +43,8 @@ public class TargetBallCommand extends CommandBase {
 
     private double turnSpeed;
 
+    private ChassisSpeeds currentChassisSpeeds;
+
     private JSONObject detectionHitboxJSONObject;
     private JSONArray detectionsJSONArray;
 
@@ -68,6 +71,7 @@ public class TargetBallCommand extends CommandBase {
       table = NetworkTableInstance.getDefault().getTable("ML");
       coral = table.getEntry("coral");
       detections = table.getEntry("detections");
+      currentChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
       currDegrees = 0;
 
@@ -112,18 +116,22 @@ public class TargetBallCommand extends CommandBase {
           if(detectionsJSONArray.getJSONObject(i).getJSONObject("label").toString().equals(team))
             continue;
           detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
+
+          System.out.println(detectionHitboxJSONObject.toString());
+
           xmin = detectionHitboxJSONObject.getDouble("xmin");
           ymin = detectionHitboxJSONObject.getDouble("ymin");
           xmax = detectionHitboxJSONObject.getDouble("xmax");
           ymax = detectionHitboxJSONObject.getDouble("ymax");
 
-          area = (int)((xmax-xmin)*(ymax-ymin));
+          area = Math.abs((int)((xmax-xmin)*(ymax-ymin)));
 
           if(area > currMax){
             currMax = area;
             currMaxPos = i;
           }
         }
+
         JSONObject detectionJSONObject = detectionsJSONArray.getJSONObject(currMaxPos);
         detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(currMaxPos).getJSONObject("box");
         xmin = detectionHitboxJSONObject.getDouble("xmin");
@@ -134,10 +142,22 @@ public class TargetBallCommand extends CommandBase {
 
         avX = (xmin+xmax)/2;
 
-        degrees = (cameraXSize/2-avX)/(cameraXSize/2)*180;
+        degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; 
 
-        if(degrees != currDegrees)
-        {
+        turnSpeed = -1*tpid.calculate(degrees, 0);
+
+        System.out.println(turnSpeed);
+
+        System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
+        if(Math.abs(degrees) >= 15) {
+          System.out.println("is it here " + turnSpeed);
+          currentChassisSpeeds = new ChassisSpeeds(0, 0, turnSpeed * 0.1);
+        } else {
+          System.out.println("no its here");
+          currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+        }
+
+        if(degrees != currDegrees){
           currDegrees = degrees;
 
           turnSpeed = -1*tpid.calculate(degrees, 0);
@@ -152,7 +172,8 @@ public class TargetBallCommand extends CommandBase {
           }
         }
       }
-  }
+      driveTrain.set(currentChassisSpeeds);
+    }
 
   // Called once the command ends or is interrupted.
   @Override

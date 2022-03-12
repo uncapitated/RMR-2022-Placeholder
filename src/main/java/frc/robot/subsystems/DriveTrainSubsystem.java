@@ -155,7 +155,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   public void stop()
   {
-    set(new DifferentialDriveWheelSpeeds(0, 0));
+    setPercent(0, 0);
 
     isStopped = true;
   }

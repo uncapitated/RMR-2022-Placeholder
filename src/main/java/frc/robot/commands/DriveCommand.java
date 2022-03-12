@@ -108,7 +108,7 @@ public class DriveCommand extends CommandBase {
     // zero the motor
     driveTrainSubsystem.setPercent(0, 0);
 
-    driveTrainSubsystem.setBreak();
+    driveTrainSubsystem.setCoast();
   }
 
   // Returns true when the command should end.
