@@ -103,7 +103,7 @@ public class RobotContainer {
     
     if (RobotBase.isReal())
     {
-      //Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+      Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
   }
 
