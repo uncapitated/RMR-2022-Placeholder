@@ -126,9 +126,7 @@ public class TargetBallCommand extends CommandBase {
 
         avX = (xmin+xmax)/2;
 
-        degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; /////
-
-        turnSpeed = -1 * tpid.calculate(degrees, 0);
+        degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; 
 
         turnSpeed = -1*tpid.calculate(degrees, 0);
 
@@ -141,7 +139,21 @@ public class TargetBallCommand extends CommandBase {
         } else {
           System.out.println("no its here");
           currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+        }
 
+        if(degrees != currDegrees){
+          currDegrees = degrees;
+
+          turnSpeed = -1*tpid.calculate(degrees, 0);
+
+          System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
+          if(Math.abs(degrees) >= 15) {
+            System.out.println("is it here " + turnSpeed);
+            driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed * 0.1));
+          } else {
+            System.out.println("no its here");
+            driveTrain.set(new ChassisSpeeds(.3,0,0));
+          }
         }
       }
       driveTrain.set(currentChassisSpeeds);
