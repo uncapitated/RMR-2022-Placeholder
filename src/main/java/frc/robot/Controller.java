@@ -135,53 +135,19 @@ public class Controller
         // manipulator controller
         private static XboxController controller = new XboxController(1);
 
-        /** Auto Climb for the first bar is set to the Left Joystick Button */
-        public static JoystickButton getFirstBarAutoClimbButton() {
-            return new JoystickButton(controller, XboxController.Button.kLeftStick.value);
-        }
-
-        /** Auto Climb for the first bar is set to the Right Joystick Button */
-        public static JoystickButton getSecondBarAutoClimbButton() {
-            return new JoystickButton(controller, XboxController.Button.kRightStick.value);
-        }
-
-        /** Down DPad */
-        public static Trigger getWinchDownButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 270;
-            return new Trigger(POVUp);
-        }
-
-        /** Up DPad */
-        public static Trigger getWinchUpButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 90;
-            return new Trigger(POVUp);
-        }
-
-        /** A Button */
-        public static JoystickButton getLowPointButton() {
-            return new JoystickButton(controller, XboxController.Button.kA.value);
-        }
-
         /** X Button */
-        public static JoystickButton getTransferPointButton() {
+        public static JoystickButton getElevatorUpButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
         }
 
         /** Y Button */
-        public static JoystickButton getHighPointButton() {
+        public static JoystickButton getElevatorDownButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
 
-        /** Left DPad */
-        public static Trigger getClimberInButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 180;
-            return new Trigger(POVUp);
-        }
-
-        /** Right DPad */
-        public static Trigger getClimberOutButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 0;
-            return new Trigger(POVUp);
+        /** Right bumper */
+        public static boolean getToggleButton() {
+            return controller.getRightBumper();
         }
 
         public static void setRumble(boolean hasRumble)

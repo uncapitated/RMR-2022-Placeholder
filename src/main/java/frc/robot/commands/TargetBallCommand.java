@@ -97,19 +97,21 @@ public class TargetBallCommand extends CommandBase {
         
         for(int i = 0; i < detectionsJSONArray.length(); i++)
         {
+          System.out.println(detectionsJSONArray.getJSONObject(i).getJSONObject("box"));
           detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
           xmin = detectionHitboxJSONObject.getDouble("xmin");
           ymin = detectionHitboxJSONObject.getDouble("ymin");
           xmax = detectionHitboxJSONObject.getDouble("xmax");
           ymax = detectionHitboxJSONObject.getDouble("ymax");
 
-          area = (int)((xmax-xmin)*(ymax-ymin));
+          area = Math.abs((int)((xmax-xmin)*(ymax-ymin)));
 
           if(area > currMax){
             currMax = area;
             currMaxPos = i;
           }
         }
+
         JSONObject detectionJSONObject = detectionsJSONArray.getJSONObject(currMaxPos);
         detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(currMaxPos).getJSONObject("box");
         xmin = detectionHitboxJSONObject.getDouble("xmin");
@@ -120,9 +122,9 @@ public class TargetBallCommand extends CommandBase {
 
         avX = (xmin+xmax)/2;
 
-        degrees = (cameraXSize/2-avX)/(cameraXSize/2)*180;
+        degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; /////
 
-        turnSpeed = -1*tpid.calculate(degrees, 0);
+        turnSpeed = -1 * tpid.calculate(degrees, 0);
 
         System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
         if(Math.abs(degrees) >= 5) {
