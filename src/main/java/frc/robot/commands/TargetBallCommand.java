@@ -10,11 +10,15 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.CameraPIDConstants;
+import frc.robot.Constants;
 import frc.robot.Controller;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+import javax.lang.model.util.ElementScanner6;
 
 import org.json.*;
 
@@ -34,12 +38,15 @@ public class TargetBallCommand extends CommandBase {
 
     double xmin, ymin, xmax, ymax, avX, degrees, currDegrees, confidence;
 
+    String team;
+
     private double turnSpeed;
 
     private JSONObject detectionHitboxJSONObject;
     private JSONArray detectionsJSONArray;
 
     int area, currMax, currMaxPos;
+
     /** Creates a new TargetBallCommand. */
     public TargetBallCommand(DriveTrainSubsystem driveTrain) {
 
@@ -63,6 +70,13 @@ public class TargetBallCommand extends CommandBase {
       detections = table.getEntry("detections");
 
       currDegrees = 0;
+
+      if(DriverStation.getAlliance().equals(Alliance.Blue))
+        team = "Blu";
+      else if(DriverStation.getAlliance().equals(Alliance.Red))
+        team = "Re";
+      else
+        team = "";
       
       // Get the resolution of the camera from Network Tables
       // todo
@@ -95,6 +109,8 @@ public class TargetBallCommand extends CommandBase {
         
         for(int i = 0; i < detectionsJSONArray.length(); i++)
         {
+          if(detectionsJSONArray.getJSONObject(i).getJSONObject("label").toString().equals(team))
+            continue;
           detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
           xmin = detectionHitboxJSONObject.getDouble("xmin");
           ymin = detectionHitboxJSONObject.getDouble("ymin");
@@ -129,7 +145,7 @@ public class TargetBallCommand extends CommandBase {
           System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
           if(Math.abs(degrees) >= 15) {
             System.out.println("is it here " + turnSpeed);
-            driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed * 0.1));
+            driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
           } else {
             System.out.println("no its here");
             driveTrain.set(new ChassisSpeeds(.3,0,0));
