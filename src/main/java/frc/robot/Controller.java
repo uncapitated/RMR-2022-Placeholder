@@ -166,9 +166,13 @@ public class Controller
         public static JoystickButton getTransferPointButton() {
             return new JoystickButton(controller, XboxController.Button.kRightStick.value);
         }
+        /** X Button */
+        public static JoystickButton getElevatorUpButton() {
+            return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
 
         /** Y Button */
-        public static JoystickButton getHighPointButton() {
+        public static JoystickButton getElevatorDownButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
 
@@ -184,6 +188,11 @@ public class Controller
         /** Right DPad */
         public static Trigger getClimberOutButton() {
             return new JoystickButton(controller, XboxController.Button.kB.value);
+        }
+        
+        /** Right bumper */
+        public static boolean getToggleButton() {
+            return controller.getRightBumper();
         }
 
         public static void setRumble(boolean hasRumble)

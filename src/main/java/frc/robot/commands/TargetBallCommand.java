@@ -97,8 +97,8 @@ public class TargetBallCommand extends CommandBase {
 
         currMax = 0;
         
-        for(int i = 0; i < detectionsJSONArray.length(); i++)
-        {
+        for(int i = 0; i < detectionsJSONArray.length(); i++){
+          System.out.println(detectionsJSONArray.getJSONObject(i).getJSONObject("box"));
           detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
 
           System.out.println(detectionHitboxJSONObject.toString());
@@ -108,13 +108,14 @@ public class TargetBallCommand extends CommandBase {
           xmax = detectionHitboxJSONObject.getDouble("xmax");
           ymax = detectionHitboxJSONObject.getDouble("ymax");
 
-          area = (int)((xmax-xmin)*(ymax-ymin));
+          area = Math.abs((int)((xmax-xmin)*(ymax-ymin)));
 
           if(area > currMax){
             currMax = area;
             currMaxPos = i;
           }
         }
+
         JSONObject detectionJSONObject = detectionsJSONArray.getJSONObject(currMaxPos);
         detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(currMaxPos).getJSONObject("box");
         xmin = detectionHitboxJSONObject.getDouble("xmin");
@@ -125,30 +126,26 @@ public class TargetBallCommand extends CommandBase {
 
         avX = (xmin+xmax)/2;
 
-        degrees = (cameraXSize/2-avX)/(cameraXSize/2)*180;
-        System.out.println(degrees);
+        degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; /////
 
-        if(degrees != currDegrees)
-        {
-          currDegrees = degrees;
+        turnSpeed = -1 * tpid.calculate(degrees, 0);
 
-          turnSpeed = -1*tpid.calculate(degrees, 0);
+        turnSpeed = -1*tpid.calculate(degrees, 0);
 
-          System.out.println(turnSpeed);
+        System.out.println(turnSpeed);
 
-          System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
-          if(Math.abs(degrees) >= 15) {
-            System.out.println("is it here " + turnSpeed);
-            currentChassisSpeeds = new ChassisSpeeds(0, 0, turnSpeed * 0.1);
-          } else {
-            System.out.println("no its here");
-            currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+        System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
+        if(Math.abs(degrees) >= 15) {
+          System.out.println("is it here " + turnSpeed);
+          currentChassisSpeeds = new ChassisSpeeds(0, 0, turnSpeed * 0.1);
+        } else {
+          System.out.println("no its here");
+          currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
 
-          }
         }
       }
-    driveTrain.set(currentChassisSpeeds);
-  }
+      driveTrain.set(currentChassisSpeeds);
+    }
 
   // Called once the command ends or is interrupted.
   @Override
