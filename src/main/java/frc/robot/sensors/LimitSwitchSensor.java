@@ -14,7 +14,7 @@ public class LimitSwitchSensor {
         limitSwitch = new DigitalInput(dioPort);
     }
 
-    public boolean getPressed() {
-        return limitSwitch.get();
+    public boolean isPressed() {
+        return !limitSwitch.get();
     }
 }

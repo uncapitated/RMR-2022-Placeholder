@@ -23,6 +23,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
 import frc.robot.sim.Simulation;
@@ -42,14 +43,12 @@ public class RobotContainer {
   //private final Limelight limelight = new Limelight();
 
   // sensors (doesn't have sim support)
-  private DistanceSensor distanceSensor;
-  private LimitSwitchSensor carriageTopLimitSwitch;
-  private LimitSwitchSensor carriageBottomLimitSwtich;
+  private final ClimberSensorCollection climberSensors = new ClimberSensorCollection();
 
   // subsystems
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
   private final BeltSubsystem beltSubsystem = new BeltSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor, carriageTopLimitSwitch, carriageBottomLimitSwtich);
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(climberSensors);
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
@@ -61,13 +60,6 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if (RobotBase.isReal())
-    {
-      distanceSensor = new DistanceSensor();
-      carriageBottomLimitSwtich = new LimitSwitchSensor(Constants.Climber.BOTTOM_LIMIT_SWITCH_DIO_PORT);
-      carriageTopLimitSwitch = new LimitSwitchSensor(Constants.Climber.TOP_LIMIT_SWITCH_DIO_PORT);
-    }
-
     // Configure the button bindings
     configureButtonBindings();
 
@@ -85,8 +77,8 @@ public class RobotContainer {
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
     Controller.Manipulator.getToggleButton().toggleWhenPressed(new StartEndCommand(
-      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, 
-      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, 
+      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.OUT);}, 
+      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.IN);}, 
       climberSubsystem)
     );    
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));

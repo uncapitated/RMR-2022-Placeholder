@@ -126,13 +126,13 @@ public final class Constants
 
         // height restraints 
         /** lowest the winch can go when it is angled (m) */
-        public static final double MIN_ANGLED = 0.10;
+        public static final double MIN_IN = 0.10;
         /** highest the winch can go when it is angled (m) */
-        public static final double MAX_ANGLED = 0.70;
+        public static final double MAX_IN = 0.50;
         /** lowest the winch can go when it is up (m) */
-        public static final double MIN_UP = 0.00;
+        public static final double MIN_OUT = 0.00;
         /** highest the winch can go when it is up (m) */
-        public static final double MAX_UP = 0.60;
+        public static final double MAX_OUT = 0.40;
 
         //limit switches for carriage
         public static final int BOTTOM_LIMIT_SWITCH_DIO_PORT = 5;
