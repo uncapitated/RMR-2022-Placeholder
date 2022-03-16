@@ -24,7 +24,7 @@ public class FollowPathCommand extends CommandBase {
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem, Trajectory to_follow) {
+  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem, Trajectory toFollow) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
 
@@ -32,7 +32,7 @@ public class FollowPathCommand extends CommandBase {
 
     controller = new RamseteController();
 
-    currentTrajectory = to_follow;
+    currentTrajectory = toFollow;
 
     robotPosition = currentTrajectory.getInitialPose();
   }

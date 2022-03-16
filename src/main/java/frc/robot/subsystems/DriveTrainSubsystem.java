@@ -268,6 +268,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightPosition = 0;
   }
 
+  public Pose2d getCalculatedRobotPose()
+  {
+    return odometry.getPoseMeters();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -28,16 +30,13 @@ public class TargetBallCommand extends CommandBase {
     NetworkTable table;
     NetworkTableEntry coral, detections;
 
-    int cameraXSize = 160;
-    int cameraYSize = 120;
-
     private DriveTrainSubsystem driveTrain;
 
     private boolean endCommmand = true;
 
     private PIDController tpid;
 
-    double xmin, ymin, xmax, ymax, avX, degrees, currDegrees, confidence;
+    double xmin, ymin, xmax, ymax, avX, offset, robotAngle, confidence, ballAngle, difference;
 
     String team;
 
@@ -68,19 +67,24 @@ public class TargetBallCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-      table = NetworkTableInstance.getDefault().getTable("ML");
-      coral = table.getEntry("coral");
-      detections = table.getEntry("detections");
-      currentChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
-      currDegrees = 0;
-
+      
       if(DriverStation.getAlliance().equals(Alliance.Blue))
         team = "Blu";
       else if(DriverStation.getAlliance().equals(Alliance.Red))
         team = "Re";
       else
         team = "";
+      
+      table = NetworkTableInstance.getDefault().getTable("ML");
+
+      table.addEntryListener("detections", (table, key, entry, value, flags) -> {
+        newValues(value.getString());
+      }, EntryListenerFlags.kUpdate);
+
+      currentChassisSpeeds = new ChassisSpeeds(0, 0, 0);
+
+      robotAngle = 0;
       
       // Get the resolution of the camera from Network Tables
       // todo
@@ -95,35 +99,35 @@ public class TargetBallCommand extends CommandBase {
       //Note: this is for use to check if the coral is attached, first must check how this is sent to NetworkTables. 
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
 
-      // You never know.
-      preventSkynet();
-      
-      //if(table.getEntry("label").getString("").equals(CameraConstants.label[0])) {
-      //jsObj = new JSONObject(table.getEntry("box").getString(""));
-      String detections_str = detections.getString("[]");
+    //set coords
+     public void newValues(String detections_str){
+      //get the detection data
       detectionsJSONArray = new JSONArray(detections_str);
 
+      //if we have data, update data
       if (detectionsJSONArray.length() != 0) {
-
+        
+        //set this round's max area
         currMax = 0;
         
+        //parse through detections
         for(int i = 0; i < detectionsJSONArray.length(); i++)
         {
+          //check for inverted ball
           if(detectionsJSONArray.getJSONObject(i).getJSONObject("label").toString().equals(team))
             continue;
+
+          //grab the object
           detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
 
-          System.out.println(detectionHitboxJSONObject.toString());
-
+          //grab relevent data
           xmin = detectionHitboxJSONObject.getDouble("xmin");
           ymin = detectionHitboxJSONObject.getDouble("ymin");
           xmax = detectionHitboxJSONObject.getDouble("xmax");
           ymax = detectionHitboxJSONObject.getDouble("ymax");
 
+          //calculate area
           area = Math.abs((int)((xmax-xmin)*(ymax-ymin)));
 
           if(area > currMax){
@@ -132,6 +136,7 @@ public class TargetBallCommand extends CommandBase {
           }
         }
 
+        //set the object
         JSONObject detectionJSONObject = detectionsJSONArray.getJSONObject(currMaxPos);
         detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(currMaxPos).getJSONObject("box");
         xmin = detectionHitboxJSONObject.getDouble("xmin");
@@ -140,38 +145,37 @@ public class TargetBallCommand extends CommandBase {
         ymax = detectionHitboxJSONObject.getDouble("ymax");
         confidence = detectionJSONObject.getDouble("confidence");
 
+        //find average x coordinate
         avX = (xmin+xmax)/2;
 
-        degrees = (cameraXSize / 2 - avX) / (cameraXSize / 2) * 180; 
+        //solve for degrees
+        offset = (avX - CameraConstants.maxX / 2) / (CameraConstants.maxX / 2) * CameraConstants.degs; 
 
-        turnSpeed = -1*tpid.calculate(degrees, 0);
-
-        System.out.println(turnSpeed);
-
-        System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
-        if(Math.abs(degrees) >= 15) {
-          System.out.println("is it here " + turnSpeed);
-          currentChassisSpeeds = new ChassisSpeeds(0, 0, turnSpeed * 0.1);
-        } else {
-          System.out.println("no its here");
-          currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
-        }
-
-        if(degrees != currDegrees){
-          currDegrees = degrees;
-
-          turnSpeed = -1*tpid.calculate(degrees, 0);
-
-          System.out.println(xmin + " " + xmax + " " + degrees + " " + confidence);
-          if(Math.abs(degrees) >= 15) {
-            System.out.println("is it here " + turnSpeed);
-            driveTrain.set(new ChassisSpeeds(0, 0, turnSpeed));
-          } else {
-            System.out.println("no its here");
-            driveTrain.set(new ChassisSpeeds(.3,0,0));
-          }
-        }
+        robotAngle = driveTrain.getCalculatedRobotPose().getRotation().getDegrees();
+        ballAngle = robotAngle + offset;
       }
+    }
+   
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+      // You never know.
+      preventSkynet();
+
+      //find current robot angle
+      robotAngle = driveTrain.getCalculatedRobotPose().getRotation().getDegrees();
+
+      //otherwise, figure out how to move
+      difference = ballAngle - robotAngle;
+      turnSpeed = -1*tpid.calculate(difference,0);
+
+      //move the robot towards the ball
+      if(Math.abs(robotAngle - offset) > 15)
+        currentChassisSpeeds = new ChassisSpeeds(0,0,turnSpeed);
+      //move robot linearly towards ball
+      else
+        currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+      //set robot speed
       driveTrain.set(currentChassisSpeeds);
     }
 
