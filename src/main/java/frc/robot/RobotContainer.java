@@ -23,6 +23,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.commands.autonomous.SimpleAuto;
 import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
@@ -105,26 +106,17 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // only run Autonomous when the status switch is at one
-    if (statusSwitch.GetSwitchValue() != 1 && RobotBase.isReal())
+    System.out.println(statusSwitch.GetSwitchValue());
+
+    // use simulated status switch to control witch autonomous to use
+    switch(statusSwitch.GetSwitchValue())
     {
+      case 1:
+      return new SimpleAuto(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
+
+      default:
       return null;
     }
-
-    // generate autonomous command
-    return new SequentialCommandGroup(
-      // go to the hub
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(0, false)),
-
-      // dispense ball for 0.5 seconds
-      new ParallelRaceGroup(
-        new BeltDispenseCommand(beltSubsystem),
-        new WaitCommand(0.5)
-      ),
-
-      // exit the inner terminal area
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(1, true))
-    );
   }
 
   /**
@@ -132,7 +124,7 @@ public class RobotContainer {
    */
   public void startAutonomous()
   {
-    driveTrainSubsystem.setPosition(Autonomous.AUTONOMOUS[0].getStartingPosition());
+    //driveTrainSubsystem.setPosition(Autonomous.AUTONOMOUS[0].getStartingPosition());
   }
 
   public void scheduleTeleOpCommands() {

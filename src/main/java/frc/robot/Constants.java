@@ -25,11 +25,11 @@ public final class Constants
         public static final double MAX_SPEED_METERS_PER_SECOND = 1;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
 
-        public static final Auto[] AUTONOMOUS = 
+        public static final AutonomousPoints[] AUTONOMOUS = 
         {
             // Auto 1
             /** Simple Auto From Right Most Blue Alliance*/
-            new Auto(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
+            new AutonomousPoints(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
         };
 
     }
@@ -145,7 +145,7 @@ public final class Constants
          * 
          * 
          * 	                                    			  kP   	kI   kD kF Iz PeakOut */
-        public final static Gains kGains_Position = new Gains(0.1, 1e-4, 1, 0, 0, 1);
+        public final static Gains kGains_Position = new Gains(0.1, 1e-4, 1, 0, 0, 0.3);
     }
 
     /**
