@@ -90,12 +90,16 @@ public class RobotContainer {
         climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
       }
     }, climberSubsystem)); */
-
-    Controller.Manipulator.getToggleButton().toggleWhenPressed(new StartEndCommand(
-      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.UP);}, 
-      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);}, 
-      climberSubsystem)
-    );    
+  
+    // less elegant but it actually works
+    // old one folded down whenever you moved the elevator, which we don't want
+    Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
+      if (climberSubsystem.getClimberState() == CLIMBER_STATE.ANGLED){
+        climberSubsystem.setClimberState(CLIMBER_STATE.UP);
+      } else {
+        climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
+      }
+    }, climberSubsystem));
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
     Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));

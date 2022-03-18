@@ -69,8 +69,8 @@ public class BeltSubsystem extends SubsystemBase {
     escalatorSolenoid.set(Value.kReverse);
 
     // 15% speed for dispensing balls
-    lowBelt.set(0.5);
-    highBelt.set(0.5);
+    lowBelt.set(0.9);
+    highBelt.set(0.9);
 
     lastUpdateTime = Timer.getFPGATimestamp();
   }
