@@ -25,11 +25,11 @@ public final class Constants
         public static final double MAX_SPEED_METERS_PER_SECOND = 1;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
 
-        public static final Auto[] AUTONOMOUS = 
+        public static final AutonomousPoints[] AUTONOMOUS = 
         {
             // Auto 1
             /** Simple Auto From Right Most Blue Alliance*/
-            new Auto(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
+            new AutonomousPoints(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
         };
 
     }
@@ -126,13 +126,13 @@ public final class Constants
 
         // height restraints 
         /** lowest the winch can go when it is angled (m) */
-        public static final double MIN_ANGLED = 0.10;
+        public static final double MIN_IN = 0.10;
         /** highest the winch can go when it is angled (m) */
-        public static final double MAX_ANGLED = 0.70;
+        public static final double MAX_IN = 0.50;
         /** lowest the winch can go when it is up (m) */
-        public static final double MIN_UP = 0.00;
+        public static final double MIN_OUT = 0.00;
         /** highest the winch can go when it is up (m) */
-        public static final double MAX_UP = 0.60;
+        public static final double MAX_OUT = 0.40;
 
         //limit switches for carriage
         public static final int BOTTOM_LIMIT_SWITCH_DIO_PORT = 5;
@@ -145,7 +145,7 @@ public final class Constants
          * 
          * 
          * 	                                    			  kP   	kI   kD kF Iz PeakOut */
-        public final static Gains kGains_Position = new Gains(0.1, 1e-4, 1, 0, 0, 1);
+        public final static Gains kGains_Position = new Gains(0.1, 1e-4, 1, 0, 0, 0.3);
     }
 
     /**
@@ -174,13 +174,15 @@ public final class Constants
         public static final double maxX = 160;
         public static final double maxY = 120;
 
-        public static final String[] label = {"Re", "Blu"};
+        //could be 59.7
+        public static final int degs = 53;
+
     }
 
     public static final class CameraPIDConstants{
 
         //Angular constants; tune for robot
-        public static final double akP = .001;
+        public static final double akP = .00001;
         public static final double akI = .00000;
         public static final double akD = 0.00;
     }

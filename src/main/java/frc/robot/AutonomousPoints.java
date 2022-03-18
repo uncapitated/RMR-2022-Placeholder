@@ -17,16 +17,16 @@ import frc.robot.Constants.Autonomous;
 // contains path to follow
 
 /** Add your docs here. */
-public class Auto {
+public class AutonomousPoints {
     // setup trajectory
-    private final TrajectoryConfig config = new TrajectoryConfig(Autonomous.MAX_SPEED_METERS_PER_SECOND, 
+    private TrajectoryConfig config = new TrajectoryConfig(Autonomous.MAX_SPEED_METERS_PER_SECOND, 
       Autonomous.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED).setKinematics(Constants.Drive.KINEMATICS);
 
     private Pose2d startingPosition;
     
     private List<Pose2d> positions;
 
-    public Auto(Pose2d startPos, Pose2d... nextPositions)
+    public AutonomousPoints(Pose2d startPos, Pose2d... nextPositions)
     {
         positions = new ArrayList<Pose2d>();
         startingPosition = startPos;
@@ -35,16 +35,26 @@ public class Auto {
         positions.addAll(Arrays.asList(nextPositions));
     }
 
-    public Pose2d getStartingPosition()
-    {
+    public Pose2d getStartingPosition() {
         return positions.get(0);
     }
 
-    public Trajectory getTrajectory(int index, boolean reversed)
-    {
+    public Pose2d getPosition(int index) {
         // invalid index
-        if (index >= positions.size() - 1)
-        {
+        if (index >= positions.size()) {
+            throw(new IndexOutOfBoundsException("position index out of bounds"));
+        }
+
+        return positions.get(index);
+    }
+
+    public Trajectory getTrajectory(int index) {
+        return getTrajectory(index, false);
+    }
+
+    public Trajectory getTrajectory(int index, boolean reversed) {
+        // invalid index
+        if (index >= positions.size() - 1) {
             throw(new IndexOutOfBoundsException("trajectory index out of bounds"));
         }
 

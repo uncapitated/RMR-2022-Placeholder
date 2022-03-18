@@ -21,10 +21,12 @@ public class FollowPathCommand extends CommandBase {
   private RamseteController controller;
 
   private Pose2d robotPosition;
+  /** Use to align a trajectory if robot position is off the starting position */
+  private Pose2d robotOffset;
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem, Trajectory to_follow) {
+  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem, Trajectory toFollow) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
 
@@ -32,26 +34,34 @@ public class FollowPathCommand extends CommandBase {
 
     controller = new RamseteController();
 
-    currentTrajectory = to_follow;
+    currentTrajectory = toFollow;
 
+    // calculates offset that aligns the current robot pos to the path
+    robotOffset = driveTrainSubsystem.getCalculatedRobotPose().relativeTo(currentTrajectory.getInitialPose());
     robotPosition = currentTrajectory.getInitialPose();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // calculates offset that aligns the current robot pos to the path
+    robotOffset = driveTrainSubsystem.getCalculatedRobotPose().relativeTo(currentTrajectory.getInitialPose());
     robotPosition = currentTrajectory.getInitialPose();
     startTime = Timer.getFPGATimestamp();
 
     driveTrainSubsystem.stop();
-    driveTrainSubsystem.setBreak();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // this calculation ignores sensors
+    //robotPosition = currentTrajectory.sample(Timer.getFPGATimestamp() - startTime).poseMeters;
+
+    // this calculation uses sensors (uses the offset to align the robot pos to the path)
+    robotPosition = driveTrainSubsystem.getCalculatedRobotPose().relativeTo(robotOffset);
+
     ChassisSpeeds chassisSpeeds = controller.calculate(robotPosition, currentTrajectory.sample(Timer.getFPGATimestamp() - startTime));
-    robotPosition = currentTrajectory.sample(Timer.getFPGATimestamp() - startTime).poseMeters;
 
     DifferentialDriveWheelSpeeds wheelSpeeds = Constants.Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds);
 

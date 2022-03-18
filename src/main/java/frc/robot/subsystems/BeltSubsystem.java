@@ -20,7 +20,7 @@ public class BeltSubsystem extends SubsystemBase {
   private CANSparkMax lowBelt;
   private CANSparkMax highBelt;
 
-  private DoubleSolenoid escalatorSolenoid;
+  private DoubleSolenoid gateSolenoid;
 
   private double lastUpdateTime;
   private boolean isStopped;
@@ -39,8 +39,8 @@ public class BeltSubsystem extends SubsystemBase {
 
       highBelt.set(0);
 
-      escalatorSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Belt.SOLENOID_OUT, Belt.SOLENOID_IN);
-      escalatorSolenoid.set(Value.kReverse);
+      gateSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Belt.SOLENOID_OUT, Belt.SOLENOID_IN);
+      gateSolenoid.set(Value.kReverse);
 
       isStopped = true;
       lastUpdateTime = Timer.getFPGATimestamp();
@@ -55,7 +55,7 @@ public class BeltSubsystem extends SubsystemBase {
   // intake balls
   public void intake()
   {
-    escalatorSolenoid.set(Value.kForward);
+    gateSolenoid.set(Value.kForward);
 
     // 5% speed for intake
     lowBelt.set(0.25);
@@ -66,7 +66,7 @@ public class BeltSubsystem extends SubsystemBase {
 
   public void dispense()
   {
-    escalatorSolenoid.set(Value.kReverse);
+    gateSolenoid.set(Value.kReverse);
 
     // 15% speed for dispensing balls
     lowBelt.set(0.9);

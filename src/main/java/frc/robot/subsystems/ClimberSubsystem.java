@@ -17,41 +17,52 @@ import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.Constants;
 import frc.robot.Constants.Climber;
+import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
 
 public class ClimberSubsystem extends SubsystemBase {
-  public enum CLIMBER_STATE {UP, ANGLED};
+  public enum CLIMBER_STATE {OUT, IN};
 
   // declare SparkMax motor
   private CANSparkMax winch;
 
   // use closed loop position control
   private SparkMaxPIDController winchPID;
-  /** setPoint */
-  private double setPoint;
+
+  // used to tell when the command reaches the setPoint
+  double setPoint;
 
 
   // winch solenoid
   private DoubleSolenoid climberSolenoid;
   private CLIMBER_STATE currentClimberState;
 
-  private ShuffleboardTab climberTab;
-  private NetworkTableEntry positionEntry;
-
+  // sensors
+  private ClimberSensorCollection sensorCollection;
   private DistanceSensor distanceSensor;
 
   private LimitSwitchSensor topLimitSwitchSensor;
   private LimitSwitchSensor bottomLimitSwitchSensor;
+
+  // shuffleboard
+  private ShuffleboardTab climberTab;
+  private NetworkTableEntry positionEntry;
+  private NetworkTableEntry currentEntry;
+  private NetworkTableEntry topLimitEntry;
+  private NetworkTableEntry bottomLimitEntry;
+  private NetworkTableEntry distanceSensorEntry;
  
   /** Creates a new Winch. */
-  public ClimberSubsystem(DistanceSensor distanceSensor, LimitSwitchSensor topLimitSwitchSensor, LimitSwitchSensor bottomLimitSwitchSensor) {
+  public ClimberSubsystem(ClimberSensorCollection climberSensorCollection) {
     // Use addRequirements() here to declare subsystem dependencies.
     winch = new CANSparkMax(Climber.WINCH_MOTOR, MotorType.kBrushless);
 
-    this.distanceSensor = distanceSensor;
-    this.topLimitSwitchSensor = topLimitSwitchSensor;
-    this.bottomLimitSwitchSensor = bottomLimitSwitchSensor;
+    sensorCollection = climberSensorCollection;
+
+    distanceSensor = sensorCollection.getDistanceSensor();
+    topLimitSwitchSensor = sensorCollection.getTopLimitSwitchSensor();
+    bottomLimitSwitchSensor = sensorCollection.getBottomLimitSwitchSensor();
 
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration parameters
@@ -59,6 +70,8 @@ public class ClimberSubsystem extends SubsystemBase {
      * parameters will not persist between power cycles
      */
     winch.restoreFactoryDefaults();
+    winch.getEncoder().setPositionConversionFactor(Climber.WINCH_RATIO);
+    winch.getEncoder().setVelocityConversionFactor(Climber.WINCH_RATIO);
 
     // setup PID
     winchPID = winch.getPIDController();
@@ -74,39 +87,97 @@ public class ClimberSubsystem extends SubsystemBase {
     climberSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Climber.SOLENOID_OUT, Climber.SOLENOID_IN);
 
     // climber starts angled
-    setClimberState(CLIMBER_STATE.ANGLED);
+    setClimberState(CLIMBER_STATE.IN);
 
     // initialize the starting position
-    winch.getEncoder().setPosition(toMotorRotations(Climber.STARTING_POSITION));
     setPoint = Climber.STARTING_POSITION;
+    winch.getEncoder().setPosition(Climber.STARTING_POSITION);
 
+    // setup shuffle board
     climberTab = Shuffleboard.getTab("Climber");
     positionEntry = climberTab.add("Elevator Position", winch.getEncoder().getPosition()).getEntry();
+    currentEntry = climberTab.add("Winch Current", winch.getOutputCurrent()).getEntry();
+    if(topLimitSwitchSensor != null) topLimitEntry = climberTab.add("Top Limit Switch", topLimitSwitchSensor.isPressed()).getEntry();
+    if(bottomLimitSwitchSensor != null) bottomLimitEntry = climberTab.add("Bottom Limit Switch", bottomLimitSwitchSensor.isPressed()).getEntry();
+    if(distanceSensor != null) distanceSensorEntry = climberTab.add("REV Distance Sensor", distanceSensor.getDistance()).getEntry();
   }
 
-  public void setElevatorPosition(double position) {
-      switch(currentClimberState)
-      {
-        case ANGLED:
-        // clamp the highest it can go
-        position = Math.min(position, Climber.MAX_ANGLED);
-        // clamp the lowest it can go
-        position = Math.max(position, Climber.MIN_ANGLED);
-        break;
+  public void setPosition(double position) {
+    switch(currentClimberState)
+    {
+      case IN:
+      // clamp the highest it can go
+      position = Math.min(position, Climber.MAX_IN);
+      // clamp the lowest it can go
+      position = Math.max(position, Climber.MIN_IN);
+      break;
 
-        case UP:
-        // clamp the highest it can go
-        position = Math.min(position, Climber.MAX_UP);
-        // clamp the lowest it can go
-        position = Math.max(position, Climber.MIN_UP);
-        break;
-      }
+      case OUT:
+      // clamp the highest it can go
+      position = Math.min(position, Climber.MAX_OUT);
+      // clamp the lowest it can go
+      position = Math.max(position, Climber.MIN_OUT);
+      break;
+    }
 
-      if (position > setPoint && !topLimitSwitchSensor.getPressed()) {
-        setPoint = position;
-      } else if (position < setPoint && !bottomLimitSwitchSensor.getPressed()) {
-        setPoint = position;
-      }
+    // ues pid to run motor
+    winchPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+    setPoint = position;
+
+    if (topLimitSwitchSensor.isPressed()) // top sensor is at MAX_ANGLED
+    {
+      winch.getEncoder().setPosition(Climber.MAX_IN + 0.02);
+    }
+
+    if (bottomLimitSwitchSensor.isPressed()) // bottom sensor is at MIN_UP
+    {
+      winch.getEncoder().setPosition(Climber.MIN_OUT - 0.02);
+    }
+
+    // guess that negative current is up (Gearboxes?)
+    winch.get();
+    if(winch.getOutputCurrent() < 0 && topLimitSwitchSensor.isPressed())
+    {
+      winch.set(0);
+    }
+    // guess that positive current is down
+    if(winch.getOutputCurrent() > 0 && bottomLimitSwitchSensor.isPressed())
+    {
+      winch.set(0);
+    }
+  }
+
+  /**
+   * sets the elevator to the highest it can go
+   */
+  public void setPositionTop()
+  {
+    if(currentClimberState == CLIMBER_STATE.IN) {
+      setPosition(Climber.MAX_IN);
+    }
+    else if (currentClimberState == CLIMBER_STATE.OUT) {
+      setPosition(Climber.MAX_OUT);
+    }
+  }
+
+  /**
+   * sets the elevator to a point where it can change from UP to ANGLED
+   */
+  public void setPositionTransition()
+  {
+    // go to a mid way point
+    double midwayPoint = (Climber.MIN_IN + Climber.MAX_OUT) / 2;
+    setPosition(midwayPoint);
+  }
+
+  public void setPositionBottom()
+  {
+    if(currentClimberState == CLIMBER_STATE.IN) {
+      setPosition(Climber.MIN_IN);
+    }
+    else if (currentClimberState == CLIMBER_STATE.OUT) {
+      setPosition(Climber.MIN_OUT);
+    }
   }
 
   /**
@@ -114,10 +185,10 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public double getElevatorPosition()
   {
-    return toElevatorMeters(winch.getEncoder().getPosition());
+    return winch.getEncoder().getPosition();
   }
 
-  public void set(double val){
+  public void set(double val) {
     winch.set(val);
   }
   
@@ -126,29 +197,30 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   // set the Climber to be in or out
-  public void setClimberState(CLIMBER_STATE state)
-  {
+  public void setClimberState(CLIMBER_STATE state) {
     currentClimberState = state;
 
-    if (state == CLIMBER_STATE.UP)
-    {
+    if (state == CLIMBER_STATE.OUT) {
       climberSolenoid.set(Value.kForward);
     }
-    else if (state == CLIMBER_STATE.ANGLED)
-    {
+    else if (state == CLIMBER_STATE.IN) {
       climberSolenoid.set(Value.kReverse);
     }
   }
 
   /** helper function for setClimberState */
-  public void setClimberAngled()
-  {
-    setClimberState(CLIMBER_STATE.ANGLED);
+  public void setClimberIn() {
+    setClimberState(CLIMBER_STATE.IN);
   }
   /** helper function for setClimberState */
-  public void setClimberUP()
-  {
-    setClimberState(CLIMBER_STATE.UP);
+  public void setClimberOut() {
+    setClimberState(CLIMBER_STATE.OUT);
+  }
+
+  public boolean atSetPoint() {
+
+    // if the winch is within 5 cm of the set point
+    return (Math.abs(winch.getEncoder().getPosition() - setPoint) < 0.05);
   }
 
   @Override
@@ -156,18 +228,35 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // update the PID Controller
-    // winchPID.setReference(toMotorRotations(setPoint), CANSparkMax.ControlType.kPosition);
+
+    // guess that negative current is up (Gearboxes?)
+    if(winch.getOutputCurrent() < 0 && topLimitSwitchSensor.isPressed())
+    {
+      winch.set(0);
+    }
+    // guess that positive current is down
+    if(winch.getOutputCurrent() > 0 && bottomLimitSwitchSensor.isPressed())
+    {
+      winch.set(0);
+    }
+
+    // update encoder position if switches are pressed
+    if (topLimitSwitchSensor.isPressed()) // top sensor is at MAX_ANGLED
+    {
+      winch.getEncoder().setPosition(Climber.MAX_IN + 0.02);
+    }
+
+    if (bottomLimitSwitchSensor.isPressed()) // bottom sensor is at MIN_UP
+    {
+      winch.getEncoder().setPosition(Climber.MIN_OUT - 0.02);
+    }
 
     // update shuffleboard
-    positionEntry.setValue(winch.getEncoder().getPosition());
-  }
-
-  
-  private double toElevatorMeters(double rotations) {
-    return rotations * Climber.WINCH_RATIO;
-  }
-
-  private double toMotorRotations(double meters) {
-    return meters / Climber.WINCH_RATIO;
+    positionEntry.setDouble(winch.getEncoder().getPosition());
+    currentEntry.setDouble(winch.getOutputCurrent());
+    // could be null if in simulation
+    if(topLimitSwitchSensor != null) topLimitEntry.setBoolean(topLimitSwitchSensor.isPressed());
+    if(bottomLimitSwitchSensor != null) bottomLimitEntry.setBoolean(bottomLimitSwitchSensor.isPressed());
+    if(distanceSensor != null) distanceSensorEntry.setDouble(distanceSensor.getDistance());
   }
 }

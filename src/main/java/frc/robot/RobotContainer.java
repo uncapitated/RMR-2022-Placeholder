@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,6 +23,8 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.commands.autonomous.SimpleAuto;
+import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
 import frc.robot.sim.Simulation;
@@ -41,14 +44,12 @@ public class RobotContainer {
   //private final Limelight limelight = new Limelight();
 
   // sensors (doesn't have sim support)
-  private DistanceSensor distanceSensor;
-  private LimitSwitchSensor carriageTopLimitSwitch;
-  private LimitSwitchSensor carriageBottomLimitSwtich;
+  private final ClimberSensorCollection climberSensors = new ClimberSensorCollection();
 
   // subsystems
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(sim);
   private final BeltSubsystem beltSubsystem = new BeltSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(distanceSensor, carriageTopLimitSwitch, carriageBottomLimitSwtich);
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(climberSensors);
   private final CompressorSubsystem compressorSubsystem = new CompressorSubsystem();
 
   // commands
@@ -60,13 +61,6 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if (RobotBase.isReal())
-    {
-      distanceSensor = new DistanceSensor();
-      carriageBottomLimitSwtich = new LimitSwitchSensor(Constants.Climber.BOTTOM_LIMIT_SWITCH_DIO_PORT);
-      carriageTopLimitSwitch = new LimitSwitchSensor(Constants.Climber.TOP_LIMIT_SWITCH_DIO_PORT);
-    }
-
     // Configure the button bindings
     configureButtonBindings();
 
@@ -94,16 +88,16 @@ public class RobotContainer {
     // less elegant but it actually works
     // old one folded down whenever you moved the elevator, which we don't want
     Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
-      if (climberSubsystem.getClimberState() == CLIMBER_STATE.ANGLED){
-        climberSubsystem.setClimberState(CLIMBER_STATE.UP);
+      if (climberSubsystem.getClimberState() == CLIMBER_STATE.IN){
+        climberSubsystem.setClimberState(CLIMBER_STATE.OUT);
       } else {
-        climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
+        climberSubsystem.setClimberState(CLIMBER_STATE.IN);
       }
     }, climberSubsystem));
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
-    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem));
-    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem));
+    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     
     if (RobotBase.isReal())
     {
@@ -124,26 +118,17 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // only run Autonomous when the status switch is at one
-    if (statusSwitch.GetSwitchValue() != 1 && RobotBase.isReal())
+    System.out.println(statusSwitch.GetSwitchValue());
+
+    // use simulated status switch to control witch autonomous to use
+    switch(statusSwitch.GetSwitchValue())
     {
+      case 1:
+      return new SimpleAuto(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
+
+      default:
       return null;
     }
-
-    // generate autonomous command
-    return new SequentialCommandGroup(
-      // go to the hub
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(0, false)),
-
-      // dispense ball for 0.5 seconds
-      new ParallelRaceGroup(
-        new BeltDispenseCommand(beltSubsystem),
-        new WaitCommand(0.5)
-      ),
-
-      // exit the inner terminal area
-      new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[0].getTrajectory(1, true))
-    );
   }
 
   /**
@@ -151,7 +136,7 @@ public class RobotContainer {
    */
   public void startAutonomous()
   {
-    driveTrainSubsystem.setPosition(Autonomous.AUTONOMOUS[0].getStartingPosition());
+    //driveTrainSubsystem.setPosition(Autonomous.AUTONOMOUS[0].getStartingPosition());
   }
 
   public void scheduleTeleOpCommands() {
