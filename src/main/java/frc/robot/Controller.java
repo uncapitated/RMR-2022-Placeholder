@@ -169,6 +169,10 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
+        public static JoystickButton getToggleActivationButton() {
+            return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        }
+
         public static void setRumble(boolean hasRumble)
         {
             /**
