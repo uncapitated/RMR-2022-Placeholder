@@ -58,8 +58,8 @@ public class BeltSubsystem extends SubsystemBase {
     gateSolenoid.set(Value.kForward);
 
     // 5% speed for intake
-    lowBelt.set(0.25);
-    highBelt.set(0.25);
+    lowBelt.set(0.9);
+    highBelt.set(0.9);
 
     lastUpdateTime = Timer.getFPGATimestamp();
   }

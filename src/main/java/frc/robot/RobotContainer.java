@@ -96,8 +96,8 @@ public class RobotContainer {
     }, climberSubsystem));
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
-    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     
     if (RobotBase.isReal())
     {
