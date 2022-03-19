@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.List;
+import java.util.ResourceBundle.Control;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -58,6 +59,8 @@ public class RobotContainer {
   private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(beltSubsystem);
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
   private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
+
+  private boolean safetyCheck = false;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,26 +87,34 @@ public class RobotContainer {
         climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
       }
     }, climberSubsystem)); */
+
+    Controller.Manipulator.getToggleActivationButton().whenPressed(new InstantCommand(() -> safetyCheck = true ));
   
     // less elegant but it actually works
     // old one folded down whenever you moved the elevator, which we don't want
-    Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
-      if (climberSubsystem.getClimberState() == CLIMBER_STATE.IN){
-        climberSubsystem.setClimberState(CLIMBER_STATE.OUT);
-      } else {
-        climberSubsystem.setClimberState(CLIMBER_STATE.IN);
-      }
-    }, climberSubsystem));
+    if (safetyCheck) {
+      Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
+        if (climberSubsystem.getClimberState() == CLIMBER_STATE.IN){
+          climberSubsystem.setClimberState(CLIMBER_STATE.OUT);
+        } else {
+          climberSubsystem.setClimberState(CLIMBER_STATE.IN);
+        }
+      }, climberSubsystem));
+    }
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
-    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    if (Controller.Manipulator.getSlowButton().get()) {
+      Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.25);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+      Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.25);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    } else {
+      Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+      Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    }
     
     if (RobotBase.isReal())
     {
       Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
-  }
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
