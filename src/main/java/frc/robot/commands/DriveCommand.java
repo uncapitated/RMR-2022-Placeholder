@@ -55,13 +55,13 @@ public class DriveCommand extends CommandBase {
   public void execute() {
     // smoothing of the forward and turn power is handled in controller
     double targetForwardPower;
-    targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
+    double targetTurnPower;
+    // targetForwardPower = Controller.Drive.getRightTriggerSpeed() + -Controller.Drive.getLeftTriggerSpeed();
+    targetForwardPower = Controller.Drive.get_forward() * (1 - Controller.Drive.getRightTriggerSpeed());
+    targetTurnPower = Controller.Drive.get_turn();
 
     // Gets the turn power based on input mode
-    double targetTurnPower;
-    if (turnMode == Controller.Drive.TurnModes.NORMAL) { 
-      targetTurnPower = Controller.Drive.get_turn();
-    } else {
+    if (turnMode == Controller.Drive.TurnModes.CONTROLLED) { 
       targetTurnPower = Controller.Drive.getLeftTriggerSpeed() + -Controller.Drive.getRightTriggerSpeed();
       targetForwardPower = 0;
 
