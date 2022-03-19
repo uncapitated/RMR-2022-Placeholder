@@ -186,7 +186,7 @@ public class Controller
         }
 
         /** Right DPad */
-        public static Trigger getClimberOutButton() {
+        public static JoystickButton getSlowButton() {
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
         
@@ -195,6 +195,7 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         }
 
+        /** Left bumper */
         public static JoystickButton getToggleActivationButton() {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         }
