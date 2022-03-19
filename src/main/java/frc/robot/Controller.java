@@ -145,15 +145,6 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightStick.value);
         }
 
-        /** A Button */
-        public static JoystickButton getLowPointButton() {
-            return new JoystickButton(controller, XboxController.Button.kA.value);
-        }
-
-        /** X Button */
-        public static JoystickButton getTransferPointButton() {
-            return new JoystickButton(controller, XboxController.Button.kRightStick.value);
-        }
         /** X Button */
         public static JoystickButton getElevatorUpButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
@@ -162,6 +153,11 @@ public class Controller
         /** Y Button */
         public static JoystickButton getElevatorDownButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
+        }
+
+        /** B Button */
+        public static JoystickButton getSlowButton() {
+            return new JoystickButton(controller, XboxController.Button.kB.value);
         }
         
         /** Right bumper */
