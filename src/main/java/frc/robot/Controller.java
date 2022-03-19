@@ -145,18 +145,6 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightStick.value);
         }
 
-        /** Down DPad */
-        public static Trigger getWinchDownButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 270;
-            return new Trigger(POVUp);
-        }
-        
-        /** Up DPad */
-        public static Trigger getWinchUpButton() {
-            BooleanSupplier POVUp = () -> controller.getPOV() == 90;
-            return new Trigger(POVUp);
-        }
-
         /** A Button */
         public static JoystickButton getLowPointButton() {
             return new JoystickButton(controller, XboxController.Button.kA.value);
@@ -175,6 +163,7 @@ public class Controller
         public static JoystickButton getElevatorDownButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
+<<<<<<< HEAD
 
         /** Climber UP button is mapped to the left bumper */
         public static JoystickButton getClimberUpButton() {
@@ -189,6 +178,8 @@ public class Controller
         public static JoystickButton getSlowButton() {
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
+=======
+>>>>>>> 3a562556b1022d7df1115b94233d3b4e4616d690
         
         /** Right bumper */
         public static JoystickButton getToggleButton() {
