@@ -145,15 +145,6 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kRightStick.value);
         }
 
-        /** A Button */
-        public static JoystickButton getLowPointButton() {
-            return new JoystickButton(controller, XboxController.Button.kA.value);
-        }
-
-        /** X Button */
-        public static JoystickButton getTransferPointButton() {
-            return new JoystickButton(controller, XboxController.Button.kRightStick.value);
-        }
         /** X Button */
         public static JoystickButton getElevatorUpButton() {
             return new JoystickButton(controller, XboxController.Button.kX.value);
@@ -163,23 +154,11 @@ public class Controller
         public static JoystickButton getElevatorDownButton() {
             return new JoystickButton(controller, XboxController.Button.kY.value);
         }
-<<<<<<< HEAD
 
-        /** Climber UP button is mapped to the left bumper */
-        public static JoystickButton getClimberUpButton() {
-            return new JoystickButton(controller, XboxController.Button.kX.value);
-        }
-        /** Left DPad */
-        public static Trigger getClimberInButton() {
-            return new JoystickButton(controller, XboxController.Button.kA.value);
-        }
-
-        /** Right DPad */
+        /** B Button */
         public static JoystickButton getSlowButton() {
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
-=======
->>>>>>> 3a562556b1022d7df1115b94233d3b4e4616d690
         
         /** Right bumper */
         public static JoystickButton getToggleButton() {
