@@ -77,11 +77,23 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    Controller.Manipulator.getToggleButton().toggleWhenPressed(new StartEndCommand(
-      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.OUT);}, 
-      () -> {climberSubsystem.setClimberState(CLIMBER_STATE.IN);}, 
-      climberSubsystem)
-    );    
+    /* Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
+      if (climberSubsystem.getClimberState() == CLIMBER_STATE.ANGLED) {
+        climberSubsystem.setClimberState(CLIMBER_STATE.UP);
+      } else {
+        climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
+      }
+    }, climberSubsystem)); */
+  
+    // less elegant but it actually works
+    // old one folded down whenever you moved the elevator, which we don't want
+    Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
+      if (climberSubsystem.getClimberState() == CLIMBER_STATE.IN){
+        climberSubsystem.setClimberState(CLIMBER_STATE.OUT);
+      } else {
+        climberSubsystem.setClimberState(CLIMBER_STATE.IN);
+      }
+    }, climberSubsystem));
     // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
     Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.3);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
