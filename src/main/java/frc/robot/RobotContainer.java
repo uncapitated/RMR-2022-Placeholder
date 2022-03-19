@@ -106,10 +106,10 @@ public class RobotContainer {
     Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     
-    if (RobotBase.isReal())
-    {
+    if (RobotBase.isReal()){
       Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
+  }
 
   private void configureDefaultCommands(){
     compressorSubsystem.setDefaultCommand(compressorCommand);
