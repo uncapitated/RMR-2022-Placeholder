@@ -6,14 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Limelight;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class LimelightAlignCommand extends CommandBase {
   private Limelight limelight;
-  private DriveTrain driveTrain;
+  private DriveTrainSubsystem driveTrain;
 
   /** Creates a new LimelightCommand. */
-  public LimelightAlignCommand(Limelight Limelight, DriveTrain DriveTrain) {
+  public LimelightAlignCommand(Limelight Limelight, DriveTrainSubsystem DriveTrain) {
     // do not add the requirement of the limelight because multiple things can use it at the same time
     this.limelight = Limelight;
 
@@ -27,6 +27,8 @@ public class LimelightAlignCommand extends CommandBase {
   public void initialize() {
     // set the light to be on
     limelight.getLightValue().setNumber(3);
+
+    driveTrain.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,16 +36,16 @@ public class LimelightAlignCommand extends CommandBase {
   public void execute() {
     if(limelight.getHorizontalOffsetAngle().getDouble(0) > 3)
     {
-      driveTrain.set(0, -0.7);
+      
     }
     else if(limelight.getHorizontalOffsetAngle().getDouble(0) < -3)
     {
-      driveTrain.set(0, 0.7);
+      
     }
     else
     {
       //smoothly land in the middle
-      driveTrain.set(0, -0.233 * limelight.getHorizontalOffsetAngle().getDouble(0));
+      
     }
   }
 

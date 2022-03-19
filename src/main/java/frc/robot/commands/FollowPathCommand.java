@@ -4,34 +4,29 @@
 
 package frc.robot.commands;
 
-import java.util.List;
-
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.Constants;
 
-import frc.robot.Constants.Autonomous;
-
-public class TestAutomatedDriving extends CommandBase {
-  private DriveTrain driveTrainSubsystem;
+public class FollowPathCommand extends CommandBase {
+  private DriveTrainSubsystem driveTrainSubsystem;
 
   private Trajectory currentTrajectory;
   private RamseteController controller;
 
   private Pose2d robotPosition;
+  /** Use to align a trajectory if robot position is off the starting position */
+  private Pose2d robotOffset;
   private double startTime;
 
   /** Creates a new TestAutomatedDriving. */
-  public TestAutomatedDriving(DriveTrain driveTrainSubsystem) {
+  public FollowPathCommand(DriveTrainSubsystem driveTrainSubsystem, Trajectory toFollow) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainSubsystem = driveTrainSubsystem;
 
@@ -39,52 +34,44 @@ public class TestAutomatedDriving extends CommandBase {
 
     controller = new RamseteController();
 
-    // setup trajectory
-    TrajectoryConfig config = new TrajectoryConfig(Autonomous.MAX_SPEED_METERS_PER_SECOND, 
-      Autonomous.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED).setKinematics(Autonomous.KINEMATICS);
+    currentTrajectory = toFollow;
 
-    currentTrajectory = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(0, 0, new Rotation2d(0)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(
-          new Translation2d(1, 1),
-          new Translation2d(2, -1)
-      ),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(3, 0, new Rotation2d(0)),
-      // Pass config
-      config
-    );
-
+    // calculates offset that aligns the current robot pos to the path
+    robotOffset = driveTrainSubsystem.getCalculatedRobotPose().relativeTo(currentTrajectory.getInitialPose());
     robotPosition = currentTrajectory.getInitialPose();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // calculates offset that aligns the current robot pos to the path
+    robotOffset = driveTrainSubsystem.getCalculatedRobotPose().relativeTo(currentTrajectory.getInitialPose());
     robotPosition = currentTrajectory.getInitialPose();
     startTime = Timer.getFPGATimestamp();
 
-    driveTrainSubsystem.setLeftAndRight(0, 0);
-    driveTrainSubsystem.setBreak();
+    driveTrainSubsystem.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // this calculation ignores sensors
+    //robotPosition = currentTrajectory.sample(Timer.getFPGATimestamp() - startTime).poseMeters;
+
+    // this calculation uses sensors (uses the offset to align the robot pos to the path)
+    robotPosition = driveTrainSubsystem.getCalculatedRobotPose().relativeTo(robotOffset);
+
     ChassisSpeeds chassisSpeeds = controller.calculate(robotPosition, currentTrajectory.sample(Timer.getFPGATimestamp() - startTime));
-    robotPosition = currentTrajectory.sample(Timer.getFPGATimestamp() - startTime).poseMeters;
 
-    DifferentialDriveWheelSpeeds wheelSpeeds = Autonomous.KINEMATICS.toWheelSpeeds(chassisSpeeds);
+    DifferentialDriveWheelSpeeds wheelSpeeds = Constants.Drive.KINEMATICS.toWheelSpeeds(chassisSpeeds);
 
-    driveTrainSubsystem.setLeftAndRight(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    driveTrainSubsystem.set(wheelSpeeds);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrainSubsystem.setLeftAndRight(0, 0);
+    driveTrainSubsystem.stop();
   }
 
   // Returns true when the command should end.
