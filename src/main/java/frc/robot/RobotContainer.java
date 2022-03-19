@@ -23,7 +23,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
-import frc.robot.commands.autonomous.SimpleAuto;
+import frc.robot.commands.autonomous.SimpleAutoCommand;
 import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
@@ -112,7 +112,7 @@ public class RobotContainer {
     switch(statusSwitch.GetSwitchValue())
     {
       case 1:
-      return new SimpleAuto(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
+      return new SimpleAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
 
       default:
       return null;
