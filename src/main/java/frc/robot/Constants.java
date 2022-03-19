@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -18,6 +20,14 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants
 {
+    /**
+     * Constants for game pieces
+     */
+    public static final class GamePieces {
+        /** Width of the ball in (m) */
+        public static final double BALL_DIAMETER = 0.24;
+    }
+
     /**
      * Contains Autonomous Planning constants
      */
@@ -168,15 +178,21 @@ public final class Constants
         public static final int COMPRESSOR_SWITCH = 4;
     }
 
+    /** Constants for the camera */
     public static final class CameraConstants
     {
-        //Constants for the camera
-        public static final double maxX = 160;
-        public static final double maxY = 120;
+        public static final int width = 160;
+        public static final int height = 120;
 
-        //could be 59.7
-        public static final int degs = 53;
+        public static final double horizontalViewAngle = 53.0; //could be 59.7
+        public static final double verticalViewAngle = 40.0;
 
+        public static final double degreesPerPixel = horizontalViewAngle / width;
+
+        public static final Transform2d cameraOffset = new Transform2d(new Translation2d(0, -0.10), new Rotation2d(0)); // 10cm right of the intake
+
+        /** This is the minimum angle (in radians) a ball can change between axon updates */
+        public static final double minAngleChange = 0.1;
     }
 
     public static final class CameraPIDConstants{

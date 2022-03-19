@@ -101,12 +101,12 @@ public class TargetBallCommand extends CommandBase {
 
 
     //set coords
-     public void newValues(String detections_str){
+    public void newValues(String detections_str){
       //get the detection data
       detectionsJSONArray = new JSONArray(detections_str);
 
       //if we have data, update data
-      if (detectionsJSONArray.length() != 0) {
+      if (detectionsJSONArray.length() > 0) {
         
         //set this round's max area
         currMax = 0;
@@ -149,7 +149,7 @@ public class TargetBallCommand extends CommandBase {
         avX = (xmin+xmax)/2;
 
         //solve for degrees
-        offset = (avX - CameraConstants.maxX / 2) / (CameraConstants.maxX / 2) * CameraConstants.degs; 
+        offset = (avX - CameraConstants.width / 2) / (CameraConstants.width / 2) * CameraConstants.horizontalViewAngle; 
 
         robotAngle = driveTrain.getCalculatedRobotPose().getRotation().getDegrees();
         ballAngle = robotAngle + offset;
