@@ -53,30 +53,25 @@ public class BeltSubsystem extends SubsystemBase {
   }
 
   // intake balls
-  public void intake()
-  {
+  public void intake() {
     gateSolenoid.set(Value.kForward);
 
-    // 5% speed for intake
-    lowBelt.set(0.9);
-    highBelt.set(0.9);
+    lowBelt.set(0.75);
+    highBelt.set(0.75);
 
     lastUpdateTime = Timer.getFPGATimestamp();
   }
 
-  public void dispense()
-  {
+  public void dispense() {
     gateSolenoid.set(Value.kReverse);
 
-    // 15% speed for dispensing balls
     lowBelt.set(0.9);
     highBelt.set(0.9);
 
     lastUpdateTime = Timer.getFPGATimestamp();
   }
 
-  public void stop()
-  {
+  public void stop() {
     lowBelt.set(0);
     highBelt.set(0);
 

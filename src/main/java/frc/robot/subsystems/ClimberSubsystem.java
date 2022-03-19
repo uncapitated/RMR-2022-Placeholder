@@ -190,6 +190,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void set(double val) {
     winch.set(val);
+    checkLimitSwitches();
   }
   
   public CLIMBER_STATE getClimberState() {
@@ -223,22 +224,26 @@ public class ClimberSubsystem extends SubsystemBase {
     return (Math.abs(winch.getEncoder().getPosition() - setPoint) < 0.05);
   }
 
+  public void checkLimitSwitches() {
+    // guess that negative current is up (Gearboxes?)
+    if(winch.get() > 0 && topLimitSwitchSensor.isPressed())
+    {
+      winch.set(0);
+    }
+    // guess that positive current is down
+    if(winch.get() < 0 && bottomLimitSwitchSensor.isPressed())
+    {
+      winch.set(0);
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
     // update the PID Controller
 
-    // guess that negative current is up (Gearboxes?)
-    if(winch.getOutputCurrent() < 0 && topLimitSwitchSensor.isPressed())
-    {
-      winch.set(0);
-    }
-    // guess that positive current is down
-    if(winch.getOutputCurrent() > 0 && bottomLimitSwitchSensor.isPressed())
-    {
-      winch.set(0);
-    }
+    checkLimitSwitches();
 
     // update encoder position if switches are pressed
     if (topLimitSwitchSensor.isPressed()) // top sensor is at MAX_ANGLED
