@@ -124,27 +124,9 @@ public class ClimberSubsystem extends SubsystemBase {
     winchPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     setPoint = position;
 
-    if (topLimitSwitchSensor.isPressed()) // top sensor is at MAX_ANGLED
-    {
-      winch.getEncoder().setPosition(Climber.MAX_IN + 0.02);
-    }
+    
 
-    if (bottomLimitSwitchSensor.isPressed()) // bottom sensor is at MIN_UP
-    {
-      winch.getEncoder().setPosition(Climber.MIN_OUT - 0.02);
-    }
-
-    // guess that negative current is up (Gearboxes?)
-    winch.get();
-    if(winch.getOutputCurrent() < 0 && topLimitSwitchSensor.isPressed())
-    {
-      winch.set(0);
-    }
-    // guess that positive current is down
-    if(winch.getOutputCurrent() > 0 && bottomLimitSwitchSensor.isPressed())
-    {
-      winch.set(0);
-    }
+    checkLimitSwitches();
   }
 
   /**
@@ -226,14 +208,17 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void checkLimitSwitches() {
     // guess that negative current is up (Gearboxes?)
-    if(winch.get() > 0 && topLimitSwitchSensor.isPressed())
-    {
-      winch.set(0);
+    if(topLimitSwitchSensor.isPressed()){
+      winch.getEncoder().setPosition(Constants.Climber.MAX_OUT)
+      if (winch.get() > 0){
+        winch.set(0);
+      }
     }
     // guess that positive current is down
-    if(winch.get() < 0 && bottomLimitSwitchSensor.isPressed())
-    {
-      winch.set(0);
+    else if(bottomLimitSwitchSensor.isPressed()){
+      if (winch.get() < 0){
+        winch.set(0);
+      }
     }
   }
 
