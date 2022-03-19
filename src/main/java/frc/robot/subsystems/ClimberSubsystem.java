@@ -209,13 +209,14 @@ public class ClimberSubsystem extends SubsystemBase {
   public void checkLimitSwitches() {
     // guess that negative current is up (Gearboxes?)
     if(topLimitSwitchSensor.isPressed()){
-      winch.getEncoder().setPosition(Constants.Climber.MAX_OUT)
+      // winch.getEncoder().setPosition(Constants.Climber.MAX_OUT);
       if (winch.get() > 0){
         winch.set(0);
       }
     }
     // guess that positive current is down
     else if(bottomLimitSwitchSensor.isPressed()){
+      // winch.getEncoder().setPosition(Constants.Climber.ma)
       if (winch.get() < 0){
         winch.set(0);
       }
