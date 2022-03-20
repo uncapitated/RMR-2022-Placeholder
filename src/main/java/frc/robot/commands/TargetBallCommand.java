@@ -28,7 +28,7 @@ import org.json.*;
 public class TargetBallCommand extends CommandBase {
 
     NetworkTable table;
-    NetworkTableEntry coral, detections;
+    NetworkTableEntry coral, detections, cameraSize;
 
     private DriveTrainSubsystem driveTrain;
 
@@ -47,7 +47,11 @@ public class TargetBallCommand extends CommandBase {
     private JSONObject detectionHitboxJSONObject;
     private JSONArray detectionsJSONArray;
 
+    String[] cameraElements;
+
     int area, currMax, currMaxPos;
+
+    int xMaxCam, yMaxCam;
 
     /** Creates a new TargetBallCommand. */
     public TargetBallCommand(DriveTrainSubsystem driveTrain) {
@@ -84,6 +88,12 @@ public class TargetBallCommand extends CommandBase {
 
       currentChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
+      cameraSize = table.getEntry("resolution");
+      cameraElements = cameraSize.getString("").split(", ", 2);
+
+      xMaxCam = Integer.parseInt(cameraElements[0]);
+      yMaxCam = Integer.parseInt(cameraElements[1]);
+      
       robotAngle = 0;
       
       // Get the resolution of the camera from Network Tables
@@ -101,12 +111,12 @@ public class TargetBallCommand extends CommandBase {
 
 
     //set coords
-    public void newValues(String detections_str){
+     public void newValues(String detections_str){
       //get the detection data
       detectionsJSONArray = new JSONArray(detections_str);
 
       //if we have data, update data
-      if (detectionsJSONArray.length() > 0) {
+      if (detectionsJSONArray.length() != 0) {
         
         //set this round's max area
         currMax = 0;
@@ -149,7 +159,7 @@ public class TargetBallCommand extends CommandBase {
         avX = (xmin+xmax)/2;
 
         //solve for degrees
-        offset = (avX - CameraConstants.width / 2) / (CameraConstants.width / 2) * CameraConstants.horizontalViewAngle; 
+        offset = ((avX - xMaxCam / 2) / (xMaxCam / 2) * CameraConstants.horizontalViewAngle)/2; 
 
         robotAngle = driveTrain.getCalculatedRobotPose().getRotation().getDegrees();
         ballAngle = robotAngle + offset;
@@ -171,7 +181,9 @@ public class TargetBallCommand extends CommandBase {
 
       //move the robot towards the ball
       if(Math.abs(robotAngle - offset) > 15)
-        currentChassisSpeeds = new ChassisSpeeds(0,0,turnSpeed);
+      {
+        currentChassisSpeeds = new ChassisSpeeds(10 * 1/currMax,0,turnSpeed);
+      }
       //move robot linearly towards ball
       else
         currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
