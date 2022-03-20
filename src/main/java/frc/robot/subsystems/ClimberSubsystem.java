@@ -70,8 +70,8 @@ public class ClimberSubsystem extends SubsystemBase {
      * parameters will not persist between power cycles
      */
     winch.restoreFactoryDefaults();
-    //winch.getEncoder().setPositionConversionFactor(Climber.WINCH_RATIO);
-    //winch.getEncoder().setVelocityConversionFactor(Climber.WINCH_RATIO);
+    winch.getEncoder().setPositionConversionFactor(Climber.WINCH_RATIO);
+    winch.getEncoder().setVelocityConversionFactor(Climber.WINCH_RATIO);
 
     // setup PID
     winchPID = winch.getPIDController();

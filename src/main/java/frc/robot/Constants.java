@@ -132,7 +132,7 @@ public final class Constants
         public static final double STARTING_POSITION = 0.00;
 
         /** Gear ratio between the winch and the cable (m/rev) */
-        public static final double WINCH_RATIO = 1.0/48.0 * (0.027 * Math.PI);
+        public static final double WINCH_RATIO = 1.0/48.0 * 0.10300429184;
 
         // height restraints 
         /** lowest the winch can go when it is angled (m) */

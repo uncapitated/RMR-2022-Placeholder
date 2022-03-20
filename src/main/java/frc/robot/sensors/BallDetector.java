@@ -23,7 +23,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import lombok.Getter;
-import lombok.Setter;
 
 /** Add your docs here. */
 public class BallDetector {
@@ -97,6 +96,8 @@ public class BallDetector {
     private NetworkTable axonTable;
     private NetworkTableEntry detectionEntry;
 
+    private int cameraWidth;
+    private int cameraHeight;
 
     private DriveTrainSubsystem driveTrain;
 
@@ -118,9 +119,15 @@ public class BallDetector {
         detectionEntry.addListener(entry -> {
             updateDetectionsFromCamera(entry.value.getString());
         }, EntryListenerFlags.kUpdate | EntryListenerFlags.kNew);
+
+        cameraWidth = getCameraWidth();
+        cameraHeight = getCameraHeight();
     }
 
     private void updateDetectionsFromCamera(String JSONString) {
+        cameraWidth = getCameraWidth();
+        cameraHeight = getCameraHeight();
+
         JSONArray detectionArray = new JSONArray(JSONString);
 
         List<BallDetection> newDetections = new ArrayList<BallDetection>();
@@ -205,6 +212,13 @@ public class BallDetector {
 
             bestDetection = detections.get(0);
         }
+    }
+
+    private int getCameraWidth() {
+        return Integer.valueOf(axonTable.getEntry("resolution").getString(CameraConstants.width + ", " + CameraConstants.height).split(", ", 2)[0]);
+    }
+    private int getCameraHeight() {
+        return Integer.valueOf(axonTable.getEntry("resolution").getString(CameraConstants.width + ", " + CameraConstants.height).split(", ", 2)[1]);
     }
 
     /**
