@@ -27,8 +27,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Drive;
-import frc.robot.sim.PhysicsSim;
-import frc.robot.sim.Simulation;
+import frc.robot.simulation.PhysicsSim;
+import frc.robot.simulation.Simulation;
 
 
 public class DriveTrainSubsystem extends SubsystemBase {

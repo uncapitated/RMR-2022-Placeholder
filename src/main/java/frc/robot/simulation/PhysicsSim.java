@@ -1,4 +1,4 @@
-package frc.robot.sim;
+package frc.robot.simulation;
 
 import java.util.*;
 import com.ctre.phoenix.motorcontrol.can.*;

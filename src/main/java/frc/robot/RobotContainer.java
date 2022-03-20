@@ -28,7 +28,7 @@ import frc.robot.commands.autonomous.SimpleAutoCommand;
 import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
-import frc.robot.sim.Simulation;
+import frc.robot.simulation.Simulation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
