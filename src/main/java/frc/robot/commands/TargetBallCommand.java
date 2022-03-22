@@ -20,6 +20,8 @@ import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import javax.lang.model.util.ElementScanner6;
 
@@ -53,6 +55,11 @@ public class TargetBallCommand extends CommandBase {
 
     int xMaxCam, yMaxCam;
 
+    //Shuffleboard implementation
+    ShuffleboardTab target = Shuffleboard.getTab("Target Ball Data");
+    NetworkTableEntry diff = target.add("Ball degrees - Robot Degrees", 0).getEntry();
+    NetworkTableEntry speed = target.add("Rotational Speed", 0).getEntry();
+
     /** Creates a new TargetBallCommand. */
     public TargetBallCommand(DriveTrainSubsystem driveTrain) {
 
@@ -84,7 +91,7 @@ public class TargetBallCommand extends CommandBase {
 
       table.addEntryListener("detections", (table, key, entry, value, flags) -> {
         newValues(value.getString());
-      }, EntryListenerFlags.kUpdate);
+      }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
       currentChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
@@ -95,6 +102,8 @@ public class TargetBallCommand extends CommandBase {
       yMaxCam = Integer.parseInt(cameraElements[1]);
       
       robotAngle = 0;
+
+      difference = 0;
       
       // Get the resolution of the camera from Network Tables
       // todo
@@ -159,13 +168,13 @@ public class TargetBallCommand extends CommandBase {
         avX = (xmin+xmax)/2;
 
         //solve for degrees
-        offset = ((avX - xMaxCam / 2) / (xMaxCam / 2) * CameraConstants.horizontalViewAngle)/2; 
+        offset = ((avX - (double)xMaxCam / 2) / ((double)xMaxCam / 2) * CameraConstants.horizontalViewAngle)/2; 
 
         robotAngle = driveTrain.getCalculatedRobotPose().getRotation().getDegrees();
         ballAngle = robotAngle + offset;
       }
     }
-   
+
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
@@ -178,6 +187,10 @@ public class TargetBallCommand extends CommandBase {
       //otherwise, figure out how to move
       difference = ballAngle - robotAngle;
       turnSpeed = -1*tpid.calculate(difference,0);
+
+      //publish new data to shuffleboard
+      diff.setDouble(difference);
+      speed.setDouble(turnSpeed);
 
       //move the robot towards the ball
       if(Math.abs(robotAngle - offset) > 15)
