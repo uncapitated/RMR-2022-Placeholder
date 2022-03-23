@@ -24,6 +24,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import javax.lang.model.util.ElementScanner6;
 
 import org.json.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class TargetBallCommand extends CommandBase {
 
@@ -111,31 +114,37 @@ public class TargetBallCommand extends CommandBase {
 
 
     //set coords
-     public void newValues(String detections_str){
-      //get the detection data
-      detectionsJSONArray = new JSONArray(detections_str);
+    public void newValues(String detections_str){
+      JSONParser parser = new JSONParser();
+
+      try {
+        //get the detection data
+        detectionsJSONArray = (JSONArray) parser.parse(detections_str);
+      } catch (Exception e) {
+        //TODO: handle exception
+      }
 
       //if we have data, update data
-      if (detectionsJSONArray.length() != 0) {
+      if (detectionsJSONArray.size() != 0) {
         
         //set this round's max area
         currMax = 0;
         
         //parse through detections
-        for(int i = 0; i < detectionsJSONArray.length(); i++)
+        for(int i = 0; i < detectionsJSONArray.size(); i++)
         {
           //check for inverted ball
-          if(detectionsJSONArray.getJSONObject(i).getJSONObject("label").toString().equals(team))
+          if(( (JSONObject) detectionsJSONArray.get(i)).get("label").toString().equals(team))
             continue;
 
           //grab the object
-          detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(i).getJSONObject("box");
+          detectionHitboxJSONObject = (JSONObject) ( (JSONObject) detectionsJSONArray.get(i)).get("box");
 
           //grab relevent data
-          xmin = detectionHitboxJSONObject.getDouble("xmin");
-          ymin = detectionHitboxJSONObject.getDouble("ymin");
-          xmax = detectionHitboxJSONObject.getDouble("xmax");
-          ymax = detectionHitboxJSONObject.getDouble("ymax");
+          xmin = (double) detectionHitboxJSONObject.get("xmin");
+          ymin = (double) detectionHitboxJSONObject.get("ymin");
+          xmax = (double) detectionHitboxJSONObject.get("xmax");
+          ymax = (double) detectionHitboxJSONObject.get("ymax");
 
           //calculate area
           area = Math.abs((int)((xmax-xmin)*(ymax-ymin)));
@@ -147,13 +156,13 @@ public class TargetBallCommand extends CommandBase {
         }
 
         //set the object
-        JSONObject detectionJSONObject = detectionsJSONArray.getJSONObject(currMaxPos);
-        detectionHitboxJSONObject = detectionsJSONArray.getJSONObject(currMaxPos).getJSONObject("box");
-        xmin = detectionHitboxJSONObject.getDouble("xmin");
-        ymin = detectionHitboxJSONObject.getDouble("ymin");
-        xmax = detectionHitboxJSONObject.getDouble("xmax");
-        ymax = detectionHitboxJSONObject.getDouble("ymax");
-        confidence = detectionJSONObject.getDouble("confidence");
+        JSONObject detectionJSONObject = (JSONObject) detectionsJSONArray.get(currMaxPos);
+        detectionHitboxJSONObject = (JSONObject) detectionJSONObject.get("box");
+        xmin = (double) detectionHitboxJSONObject.get("xmin");
+        ymin = (double) detectionHitboxJSONObject.get("ymin");
+        xmax = (double) detectionHitboxJSONObject.get("xmax");
+        ymax = (double) detectionHitboxJSONObject.get("ymax");
+        confidence = (double) detectionJSONObject.get("confidence");
 
         //find average x coordinate
         avX = (xmin+xmax)/2;

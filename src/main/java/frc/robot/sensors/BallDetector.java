@@ -7,9 +7,6 @@ package frc.robot.sensors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -23,6 +20,10 @@ import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import lombok.Getter;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /** Add your docs here. */
 public class BallDetector {
@@ -128,18 +129,35 @@ public class BallDetector {
         cameraWidth = getCameraWidth();
         cameraHeight = getCameraHeight();
 
-        JSONArray detectionArray = new JSONArray(JSONString);
+        JSONParser parser = new JSONParser();
+
+        JSONArray detectionArray = new JSONArray();
+
+        try {
+            detectionArray =  (JSONArray) parser.parse(JSONString);
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
 
         List<BallDetection> newDetections = new ArrayList<BallDetection>();
 
         // loop through each detection
-        for (int i = 0; i < detectionArray.length(); i++) {
-            JSONObject detectionObject = detectionArray.getJSONObject(i);
-            JSONObject detectionBoundingBox = detectionObject.getJSONObject("box");
+        for (int i = 0; i < detectionArray.size(); i++) {
+            JSONObject detectionObject = (JSONObject) detectionArray.get(i);
+            JSONObject detectionBoundingBox = (JSONObject) detectionObject.get("box");
 
-            double ballCameraX = (detectionBoundingBox.getDouble("xmax") + detectionBoundingBox.getDouble("xmin")) / 2;
-            double ballCameraY = (detectionBoundingBox.getDouble("ymax") + detectionBoundingBox.getDouble("ymin")) / 2;
-            double ballCameraSize = ((detectionBoundingBox.getDouble("xmax") - detectionBoundingBox.getDouble("xmin")) + (detectionBoundingBox.getDouble("ymax") + detectionBoundingBox.getDouble("ymin"))) / 2;
+            // get bounding box variables
+            int xmax, xmin, ymax, ymin;
+            xmax = (int) detectionBoundingBox.get("xmax");
+            xmin = (int) detectionBoundingBox.get("xmin");
+            ymax = (int) detectionBoundingBox.get("ymax");
+            ymin = (int) detectionBoundingBox.get("ymin");
+
+
+            double ballCameraX = (xmax + xmin) / 2.0;
+            double ballCameraY = (ymax + ymin) / 2.0;
+            double ballCameraSize = ( (xmax - xmin)+(ymax - ymin) ) / 2.0;
 
             // calculates the angle offset from the middle in radians (left is positive, right is negative)
             double ballAngle = (1 / 2 - ballCameraX / CameraConstants.width) * Math.toRadians(CameraConstants.horizontalViewAngle);
