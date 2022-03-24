@@ -4,7 +4,10 @@
 
 package frc.robot.sensors;
 
+import java.util.Objects;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
 import lombok.Getter;
 
@@ -16,13 +19,24 @@ public class LimitSwitchSensor {
     private DIOSim limitSwitchSim;
 
     public LimitSwitchSensor(int dioPort) {
-        limitSwitch = new DigitalInput(dioPort);
-
-        limitSwitchSim = new DIOSim(limitSwitch);
-        limitSwitchSim.setValue(true); // off
+        try {
+            limitSwitch = new DigitalInput(dioPort);
+        } catch (Exception e) {
+            limitSwitch = null;
+            System.out.println("Limit Switch with DIO port " + dioPort + " not initialized");
+        }
+        if (RobotBase.isSimulation()){
+            limitSwitchSim = new DIOSim(limitSwitch);
+            limitSwitchSim.setValue(true); // off
+        }
     }
 
     public boolean isPressed() {
-        return !limitSwitch.get();
+        if (Objects.nonNull(limitSwitch)){
+            return !limitSwitch.get();
+        } else {
+            //if it isn't connected, it should just be like it isn't pressed
+            return true;
+        }
     }
 }

@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
+import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.commands.autonomous.ComplexAutoCommand;
 import frc.robot.commands.autonomous.SimpleAutoCommand;
 import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
@@ -110,7 +112,9 @@ public class RobotContainer {
       Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
       Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
     }
-    
+
+    Controller.Drive.getShiftDownButton().whenHeld(new RunCommand(driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);, driveTrainSubsystem));
+    Controller.Drive.getShiftUpButton().whenHeld(new RunCommand(driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH);, driveTrainSubsystem));
     if (RobotBase.isReal()){
       Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
@@ -136,6 +140,9 @@ public class RobotContainer {
     {
       case 1:
       return new SimpleAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
+
+      case 2:
+      return new ComplexAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[1]);
 
       default:
       return null;

@@ -39,7 +39,21 @@ public final class Constants
         {
             // Auto 1
             /** Simple Auto From Right Most Blue Alliance*/
-            new AutonomousPoints(new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90) )), new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )), new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) )))
+            new AutonomousPoints(
+                new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90 + 180) )),
+                new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69 + 180) )),
+                new Pose2d(6, 1, new Rotation2d( Math.toRadians(180) ))
+            ),        
+            
+            // Auto 2
+            /** Complex Auto From Right Most Alliance */
+            new AutonomousPoints(
+                new Pose2d(8, 1.9, new Rotation2d(Math.toRadians(90))),
+                new Pose2d(8, 0.8, new Rotation2d(Math.toRadians(90))),
+                new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )),
+                new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) ))
+
+            )
         };
 
     }
@@ -136,13 +150,13 @@ public final class Constants
 
         // height restraints 
         /** lowest the winch can go when it is angled (m) */
-        public static final double MIN_IN = 0.10;
+        public static final double MIN_IN = 0.5;
         /** highest the winch can go when it is angled (m) */
-        public static final double MAX_IN = 0.50;
+        public static final double MAX_IN = 1.0;
         /** lowest the winch can go when it is up (m) */
         public static final double MIN_OUT = 0.00;
         /** highest the winch can go when it is up (m) */
-        public static final double MAX_OUT = 0.40;
+        public static final double MAX_OUT = 0.95;
 
         //limit switches for carriage
         public static final int BOTTOM_LIMIT_SWITCH_DIO_PORT = 5;

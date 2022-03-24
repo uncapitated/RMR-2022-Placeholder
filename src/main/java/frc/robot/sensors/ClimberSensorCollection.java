@@ -24,7 +24,7 @@ public class ClimberSensorCollection {
     {
         topLimitSwitchSensor = new LimitSwitchSensor(Constants.Climber.TOP_LIMIT_SWITCH_DIO_PORT);
         bottomLimitSwitchSensor = new LimitSwitchSensor(Constants.Climber.BOTTOM_LIMIT_SWITCH_DIO_PORT);
-
+    
         if (RobotBase.isReal())
         {
             distanceSensor = new DistanceSensor();
