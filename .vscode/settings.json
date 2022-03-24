@@ -28,6 +28,10 @@
   "java.test.defaultConfig": "WPIlibUnitTests",
   "cSpell.words": [
     "odometry",
-    "Ramsete"
+    "Ramsete",
+    "xmax",
+    "xmin",
+    "ymax",
+    "ymin"
   ]
 }
