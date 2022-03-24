@@ -105,9 +105,15 @@ public class TargetBallCommand extends CommandBase {
       cameraSize = table.getEntry("resolution");
       cameraElements = cameraSize.getString("").split(", ", 2);
 
-      xMaxCam = Integer.parseInt(cameraElements[0]);
-      yMaxCam = Integer.parseInt(cameraElements[1]);
-      
+      if(cameraElements[0].equals("") || cameraElements[1].equals("")){
+        xMaxCam = CameraConstants.width;
+        yMaxCam = CameraConstants.height;
+      }
+      else{
+        xMaxCam = Integer.parseInt(cameraElements[0]);
+        yMaxCam = Integer.parseInt(cameraElements[1]);
+      }
+
       robotAngle = 0;
 
       difference = 0;
