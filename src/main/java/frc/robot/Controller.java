@@ -86,6 +86,16 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kA.value);
         }
 
+        /** X Button */
+        public static JoystickButton getShiftUpButton() {
+            return new JoystickButton(controller, XboxController.Button.kX.value);
+        }
+        public static JoystickButton getShiftDownButton() {
+            return new JoystickButton(controller, XboxController.Button.kY.value);
+        }
+
+        /** Y Button */
+
         /** Right trigger */
         public static double getRightTriggerSpeed() {
             return controller.getRightTriggerAxis();
