@@ -198,7 +198,7 @@ public final class Constants
     public static final class CameraPIDConstants{
 
         //Angular constants; tune for robot
-        public static final double akP = .00001;
+        public static final double akP = .01;
         public static final double akI = .00000;
         public static final double akD = 0.00;
     }
