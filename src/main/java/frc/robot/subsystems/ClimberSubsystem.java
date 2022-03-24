@@ -104,10 +104,9 @@ public class ClimberSubsystem extends SubsystemBase {
     climberSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Climber.SOLENOID_OUT, Climber.SOLENOID_IN);
 
     // climber starts angled
-    setClimberState(CLIMBER_STATE.IN);
+    climberSolenoid.set(Value.kReverse);
 
     // initialize the starting position
-    setPoint = Climber.STARTING_POSITION;
     winch.getEncoder().setPosition(Climber.STARTING_POSITION);
 
     // setup shuffle board

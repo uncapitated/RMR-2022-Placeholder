@@ -80,6 +80,11 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
+    Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
+    Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
+    driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
+
+
  
   
     // less elegant but it actually works
@@ -99,7 +104,7 @@ public class RobotContainer {
     Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? -0.25 : -0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
 
     if (RobotBase.isReal()){
-      Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+      // Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
   }
 

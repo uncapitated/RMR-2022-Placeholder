@@ -24,9 +24,9 @@ public class DriveCommand extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
 
   // in m/s
-  private double maxForward = 3.0;
+  private double maxForward = 4.5;
   // in rad/s
-  private double maxTurn = 3.5;
+  private double maxTurn = 4.0;
   
   private Controller.Drive.TurnModes turnMode = Controller.Drive.TurnModes.NORMAL;
 
@@ -75,20 +75,20 @@ public class DriveCommand extends CommandBase {
     double forwardVelocity = targetForwardPower * maxForward;
     double angularVelocity = targetTurnPower * maxTurn;
 
-    if (Controller.Drive.getSlowButton()) {
-      forwardVelocity *= 0.5;
-      angularVelocity *= 0.3;
+    // if (Controller.Drive.getSlowButton()) {
+      // forwardVelocity *= 0.5;
+      // angularVelocity *= 0.3;
 
       // if it is not in the lower position
-      if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.LOW) {
-        (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
-      }
-    } else {
+      // if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.LOW) {
+        // (new SequentialCommandGroup(new ShiftDownCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      // }
+    // } else {
       // if it is not in the lower position
-      if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.HIGH) {
-        (new SequentialCommandGroup(new ShiftUpCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
-      }
-    }
+      // if (driveTrainSubsystem.getShifter() != SHIFTER_POSITION.HIGH) {
+        // (new SequentialCommandGroup(new ShiftUpCommand(driveTrainSubsystem), new ScheduleCommand(this))).schedule();
+      // }
+    // }
 
     //command subsystem
     driveTrainSubsystem.set(new ChassisSpeeds(forwardLimiter.calculate(forwardVelocity), 0, turnLimiter.calculate(angularVelocity)));
