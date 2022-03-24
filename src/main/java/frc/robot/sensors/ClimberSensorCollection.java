@@ -27,7 +27,7 @@ public class ClimberSensorCollection {
     
         if (RobotBase.isReal())
         {
-            distanceSensor = new DistanceSensor();
+            // distanceSensor = new DistanceSensor();
         }
     }
 }

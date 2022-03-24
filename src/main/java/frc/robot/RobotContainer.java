@@ -80,15 +80,7 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    /* Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
-      if (climberSubsystem.getClimberState() == CLIMBER_STATE.ANGLED) {
-        climberSubsystem.setClimberState(CLIMBER_STATE.UP);
-      } else {
-        climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
-      }
-    }, climberSubsystem)); */
-
-    // Controller.Manipulator.getToggleActivationButton().whenPressed(new InstantCommand(() -> safetyCheck = true ));
+ 
   
     // less elegant but it actually works
     // old one folded down whenever you moved the elevator, which we don't want
@@ -99,13 +91,13 @@ public class RobotContainer {
         climberSubsystem.setClimberState(CLIMBER_STATE.IN);
       }
     }, climberSubsystem));
-    // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
 
-      Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? 0.25 : 0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-      Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? -0.25 : -0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    // the safety button
+    Controller.Manipulator.getSafetyButton().whileHeld(new InstantCommand(() -> climberSubsystem.incrementSafetyCounter()));
 
-    // Controller.Drive.getShiftDownButton().whenHeld(new RunCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW), driveTrainSubsystem));
-    // Controller.Drive.getShiftUpButton().whenHeld(new RunCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH), driveTrainSubsystem));
+    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? 0.25 : 0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? -0.25 : -0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+
     if (RobotBase.isReal()){
       Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }

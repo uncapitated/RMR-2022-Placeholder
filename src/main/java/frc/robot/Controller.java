@@ -166,7 +166,7 @@ public class Controller
         }
 
         /** Left bumper */
-        public static JoystickButton getToggleActivationButton() {
+        public static JoystickButton getSafetyButton() {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         }
 
