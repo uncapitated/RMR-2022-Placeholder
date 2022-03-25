@@ -94,7 +94,7 @@ public final class Constants
 
         public static final double HIGH_GEAR_RATIO = 12.0/42.0 * 24.0/50.0;
         public static final double LOW_GEAR_RATIO = 12.0/42.0 * 14.0/60.0;
-        public static final double WHEEL_RADIUS = 0.122237;
+        public static final double WHEEL_RADIUS = 0.10;
         
         /** converts chassis speeds to wheel speeds */
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.75);

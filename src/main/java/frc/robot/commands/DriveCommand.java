@@ -24,9 +24,9 @@ public class DriveCommand extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
 
   // in m/s
-  private double maxForward = 4.5;
+  private double maxForward = 4;
   // in rad/s
-  private double maxTurn = 4.0;
+  private double maxTurn = 3.25;
   
   private Controller.Drive.TurnModes turnMode = Controller.Drive.TurnModes.NORMAL;
 

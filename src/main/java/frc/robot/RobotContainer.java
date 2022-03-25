@@ -23,8 +23,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
-import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
+import frc.robot.subsystems.DriveTrainSubsystem.VENT_POSITION;
 import frc.robot.Constants.Autonomous;
+import frc.robot.Constants.Climber;
 import frc.robot.commands.*;
 import frc.robot.commands.autonomous.AutoCommand;
 import frc.robot.commands.autonomous.ComplexAutoCommand;
@@ -85,13 +86,15 @@ public class RobotContainer {
     // This is disabled because we use this solenoid for venting rather than shifting gears
     // Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
     // Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
-    driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
+    Controller.Manipulator.getVentButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.openVent()));
+    Controller.Manipulator.getVentButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.closeVent()));
+    
 
-    Controller.Manipulator.getVentButton().whenPressed(new SequentialCommandGroup(
-      new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)),
-      new WaitCommand(0.2),
-      new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH))
-    ));
+    // Controller.Manipulator.getVentButton().whenPressed(new SequentialCommandGroup(
+    //   new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)),
+    //   new WaitCommand(0.2),
+    //   new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH))
+    // ));
  
   
     // less elegant but it actually works
@@ -134,7 +137,7 @@ public class RobotContainer {
     switch(statusSwitch.GetSwitchValue())
     {
       case 1:
-      return new SimpleAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
+      return new SimpleAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0], climberSubsystem);
 
       case 2:
       return new ComplexAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[1]);
