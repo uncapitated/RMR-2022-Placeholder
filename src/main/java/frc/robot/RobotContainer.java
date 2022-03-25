@@ -100,8 +100,8 @@ public class RobotContainer {
     // the safety button
     Controller.Manipulator.getSafetyButton().whileHeld(new InstantCommand(() -> climberSubsystem.incrementSafetyCounter()));
 
-    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? 0.25 : 0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? -0.25 : -0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? 0.3 : 0.8);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? -0.3 : -0.8);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
 
     if (RobotBase.isReal()){
       // Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
@@ -131,6 +131,9 @@ public class RobotContainer {
 
       case 2:
       return new ComplexAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[1]);
+
+      case 3:
+      return new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[2].getTrajectory(0, false));
 
       default:
       return null;

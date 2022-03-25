@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.AutonomousPoints;
 import frc.robot.commands.BeltDispenseCommand;
+import frc.robot.commands.BeltIntakeCommand;
 import frc.robot.commands.DriveToPositionCommand;
 import frc.robot.subsystems.BeltSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -29,9 +30,6 @@ public class SimpleAutoCommand extends SequentialCommandGroup {
     driveTrain = driveTrainSubsystem;
     points = autoPoints;
 
-    // go to the hub (backwards)
-    addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(1), true));
-
     // dispense ball for 0.5 seconds
     addCommands(
       new ParallelRaceGroup(
@@ -42,6 +40,31 @@ public class SimpleAutoCommand extends SequentialCommandGroup {
 
     // exit the inner terminal area going strait
     addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(2)));
+
+    // intake ball for 0.5 seconds
+    addCommands(
+      new ParallelRaceGroup(
+        new BeltIntakeCommand(beltSubsystem),
+        new WaitCommand(0.7)
+      )
+    );
+
+    // go to the hub (backwards)
+    addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(1), true));
+
+    // dispense ball for 0.5 seconds
+    addCommands(
+      new ParallelRaceGroup(
+        new BeltDispenseCommand(beltSubsystem),
+        new SequentialCommandGroup(
+          new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(2)),
+          new WaitCommand(0.5)
+        )
+      )
+    );
+
+    // exit the inner terminal area going strait
+    addCommands();
   }
 
   // Called when the command is initially scheduled.

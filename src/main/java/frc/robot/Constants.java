@@ -42,7 +42,7 @@ public final class Constants
             new AutonomousPoints(
                 new Pose2d(8, 1.9, new Rotation2d( Math.toRadians(90 + 180) )),
                 new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69 + 180) )),
-                new Pose2d(6, 1, new Rotation2d( Math.toRadians(180) ))
+                new Pose2d(6, 0.95, new Rotation2d( Math.toRadians(180) ))
             ),        
             
             // Auto 2
@@ -53,6 +53,11 @@ public final class Constants
                 new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )),
                 new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) ))
 
+            ),
+            
+            new AutonomousPoints(
+                new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                new Pose2d(1, 1, new Rotation2d(Math.toRadians(90)))
             )
         };
 
@@ -92,7 +97,7 @@ public final class Constants
         public static final double WHEEL_RADIUS = 0.122237;
         
         /** converts chassis speeds to wheel speeds */
-        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.6);
+        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(0.75);
 
         /** The steps per revolution of a TalonFX */
         public static final int DRIVE_SPR = 2048;

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutonomousPoints;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.BeltDispenseCommand;
+import frc.robot.commands.BeltIntakeCommand;
 import frc.robot.commands.DriveToPositionCommand;
 import frc.robot.subsystems.BeltSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -31,6 +32,14 @@ public class ComplexAutoCommand extends SequentialCommandGroup {
 
     //Go back to pick up second ball
     addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(1)));
+
+    // intake ball for 0.5 seconds
+    addCommands(
+      new ParallelRaceGroup(
+        new BeltIntakeCommand(beltSubsystem),
+        new WaitCommand(0.5)
+      )
+    );
 
     //Drive back to hub
     addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(2)));
