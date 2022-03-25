@@ -48,16 +48,16 @@ public final class Constants
             // Auto 2
             /** Complex Auto From Right Most Alliance */
             new AutonomousPoints(
-                new Pose2d(8, 1.9, new Rotation2d(Math.toRadians(90))),
-                new Pose2d(8, 0.8, new Rotation2d(Math.toRadians(90))),
-                new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69) )),
-                new Pose2d(6, 1, new Rotation2d( Math.toRadians(0) ))
+                new Pose2d(7.65, 1.9, new Rotation2d(Math.toRadians(90 + 180))),
+                new Pose2d(7.65, 0.7, new Rotation2d(Math.toRadians(90 + 180))),
+                new Pose2d(7.83, 2.83, new Rotation2d( Math.toRadians(69 + 180) )),
+                new Pose2d(6, 1, new Rotation2d( Math.toRadians(180) ))
 
             ),
-            
+
             new AutonomousPoints(
-                new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-                new Pose2d(1, 1, new Rotation2d(Math.toRadians(90)))
+                new Pose2d(0, 0, new Rotation2d( Math.toRadians(0) )),
+                new Pose2d(1, 0, new Rotation2d( Math.toRadians(0) ))
             )
         };
 

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle.Control;
 
@@ -25,6 +26,7 @@ import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.commands.autonomous.AutoCommand;
 import frc.robot.commands.autonomous.ComplexAutoCommand;
 import frc.robot.commands.autonomous.SimpleAutoCommand;
 import frc.robot.sensors.ClimberSensorCollection;
@@ -80,11 +82,16 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
-    Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
+    // This is disabled because we use this solenoid for venting rather than shifting gears
+    // Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
+    // Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
     driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
 
-
+    Controller.Manipulator.getVentButton().whenPressed(new SequentialCommandGroup(
+      new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)),
+      new WaitCommand(0.2),
+      new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH))
+    ));
  
   
     // less elegant but it actually works
@@ -133,7 +140,7 @@ public class RobotContainer {
       return new ComplexAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[1]);
 
       case 3:
-      return new FollowPathCommand(driveTrainSubsystem, Autonomous.AUTONOMOUS[2].getTrajectory(0, false));
+      return new AutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[2]);
 
       default:
       return null;

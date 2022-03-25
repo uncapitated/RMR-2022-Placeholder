@@ -31,7 +31,20 @@ public class ComplexAutoCommand extends SequentialCommandGroup {
     points = autoPoints;
 
     //Go back to pick up second ball
-    addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(1)));
+    addCommands(
+      new ParallelRaceGroup(
+        new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(1)),
+        new BeltIntakeCommand(beltSubsystem)
+      )
+    );
+
+    // pick up balls for 0.5 seconds
+    addCommands(
+      new ParallelRaceGroup(
+        new BeltIntakeCommand(beltSubsystem),
+        new WaitCommand(1)
+      )
+    );
 
     // intake ball for 0.5 seconds
     addCommands(
@@ -42,13 +55,13 @@ public class ComplexAutoCommand extends SequentialCommandGroup {
     );
 
     //Drive back to hub
-    addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(2)));
+    addCommands(new DriveToPositionCommand(driveTrainSubsystem, autoPoints.getPosition(2), true));
 
     // dispense balls for 0.5 seconds
     addCommands(
       new ParallelRaceGroup(
         new BeltDispenseCommand(beltSubsystem),
-        new WaitCommand(0.5)
+        new WaitCommand(1)
       )
     );
 

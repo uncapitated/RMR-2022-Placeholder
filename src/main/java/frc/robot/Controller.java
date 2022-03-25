@@ -161,6 +161,11 @@ public class Controller
             return new JoystickButton(controller, XboxController.Button.kB.value);
         }
         
+        /** A Button */
+        public static JoystickButton getVentButton(){
+            return new JoystickButton(controller, XboxController.Button.kA.value);
+        }
+
         /** Right bumper */
         public static JoystickButton getToggleButton() {
             return new JoystickButton(controller, XboxController.Button.kRightBumper.value);
