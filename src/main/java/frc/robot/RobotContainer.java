@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
+import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.commands.autonomous.ComplexAutoCommand;
 import frc.robot.commands.autonomous.SimpleAutoCommand;
 import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
@@ -59,8 +61,6 @@ public class RobotContainer {
   private final BeltIntakeCommand intakeCommand = new BeltIntakeCommand(beltSubsystem);
   private final BeltDispenseCommand dispenseCommand = new BeltDispenseCommand(beltSubsystem);
   private final CompressorCommand compressorCommand = new CompressorCommand(compressorSubsystem);
-
-  private boolean safetyCheck = false;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -80,39 +80,31 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    /* Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
-      if (climberSubsystem.getClimberState() == CLIMBER_STATE.ANGLED) {
-        climberSubsystem.setClimberState(CLIMBER_STATE.UP);
-      } else {
-        climberSubsystem.setClimberState(CLIMBER_STATE.ANGLED);
-      }
-    }, climberSubsystem)); */
+    Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
+    Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
+    driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
 
-    Controller.Manipulator.getToggleActivationButton().whenPressed(new InstantCommand(() -> safetyCheck = true ));
+
+ 
   
     // less elegant but it actually works
     // old one folded down whenever you moved the elevator, which we don't want
-    if (safetyCheck) {
-      Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
-        if (climberSubsystem.getClimberState() == CLIMBER_STATE.IN){
-          climberSubsystem.setClimberState(CLIMBER_STATE.OUT);
-        } else {
-          climberSubsystem.setClimberState(CLIMBER_STATE.IN);
-        }
-      }, climberSubsystem));
-    }
-    // Controller.Manipulator.getToggleButton().toggleWhenPressed(new InstantCommand(}, climberSubsystem));
+    Controller.Manipulator.getToggleButton().whenPressed(new InstantCommand(() -> {
+      if (climberSubsystem.getClimberState() == CLIMBER_STATE.IN){
+        climberSubsystem.setClimberState(CLIMBER_STATE.OUT);
+      } else {
+        climberSubsystem.setClimberState(CLIMBER_STATE.IN);
+      }
+    }, climberSubsystem));
 
-    if (Controller.Manipulator.getSlowButton().get()) {
-      Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.25);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-      Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.25);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-    } else {
-      Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-      Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(-.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
-    }
-    
+    // the safety button
+    Controller.Manipulator.getSafetyButton().whileHeld(new InstantCommand(() -> climberSubsystem.incrementSafetyCounter()));
+
+    Controller.Manipulator.getElevatorDownButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? 0.25 : 0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+    Controller.Manipulator.getElevatorUpButton().whileActiveContinuous(new ParallelCommandGroup(new InstantCommand(() -> {climberSubsystem.set(Controller.Manipulator.getSlowButton().get() ? -0.25 : -0.5);}, climberSubsystem), new CoastCommand(driveTrainSubsystem)));
+
     if (RobotBase.isReal()){
-      Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
+      // Controller.Drive.getAlignButton().whileHeld(targetBallCommand);
     }
   }
 
@@ -136,6 +128,9 @@ public class RobotContainer {
     {
       case 1:
       return new SimpleAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[0]);
+
+      case 2:
+      return new ComplexAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[1]);
 
       default:
       return null;

@@ -19,13 +19,15 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Controller.Drive;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+import java.sql.Time;
+
 import javax.lang.model.util.ElementScanner6;
 
-import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -58,6 +60,8 @@ public class TargetBallCommand extends CommandBase {
 
     int xMaxCam, yMaxCam;
 
+    double recentTime;
+
     //Shuffleboard implementation
     ShuffleboardTab target = Shuffleboard.getTab("Target Ball Data");
     NetworkTableEntry diff = target.add("Ball degrees - Robot Degrees", 0).getEntry();
@@ -81,7 +85,7 @@ public class TargetBallCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
+      recentTime = 0;
       
       if(DriverStation.getAlliance().equals(Alliance.Blue))
         team = "Blu";
@@ -101,9 +105,15 @@ public class TargetBallCommand extends CommandBase {
       cameraSize = table.getEntry("resolution");
       cameraElements = cameraSize.getString("").split(", ", 2);
 
-      xMaxCam = Integer.parseInt(cameraElements[0]);
-      yMaxCam = Integer.parseInt(cameraElements[1]);
-      
+      if(cameraElements[0].equals("") || cameraElements[1].equals("")){
+        xMaxCam = CameraConstants.width;
+        yMaxCam = CameraConstants.height;
+      }
+      else{
+        xMaxCam = Integer.parseInt(cameraElements[0]);
+        yMaxCam = Integer.parseInt(cameraElements[1]);
+      }
+
       robotAngle = 0;
 
       difference = 0;
@@ -138,6 +148,9 @@ public class TargetBallCommand extends CommandBase {
         
         //set this round's max area
         currMax = 0;
+
+        //set the time of getting new data
+        recentTime = Timer.getFPGATimestamp();
         
         //parse through detections
         for(int i = 0; i < detectionsJSONArray.size(); i++)
@@ -208,7 +221,14 @@ public class TargetBallCommand extends CommandBase {
       }
       //move robot linearly towards ball
       else
-        currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+      {
+        if(Timer.getFPGATimestamp()-recentTime < 1.5)
+          currentChassisSpeeds = new ChassisSpeeds(.3,0,0);
+        else
+        {
+          endCommmand = true;
+        }
+      }
       //set robot speed
       driveTrain.set(currentChassisSpeeds);
     }

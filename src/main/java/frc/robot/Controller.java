@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -67,8 +68,8 @@ public class Controller
         }
 
         /** B Button */
-        public static boolean getSlowButton() {
-            return controller.getBButton();
+        public static JoystickButton getSlowButton() {
+            return new JoystickButton(controller, XboxController.Button.kB.value);
         }
 
         /** Intake button is mapped to the left bumper on the second controller */
@@ -166,7 +167,7 @@ public class Controller
         }
 
         /** Left bumper */
-        public static JoystickButton getToggleActivationButton() {
+        public static JoystickButton getSafetyButton() {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         }
 

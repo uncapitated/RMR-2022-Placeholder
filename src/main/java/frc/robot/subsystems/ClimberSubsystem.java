@@ -12,14 +12,19 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import java.util.ResourceBundle.Control;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.Constants;
+import frc.robot.Controller;
 import frc.robot.Constants.Climber;
 import frc.robot.sensors.ClimberSensorCollection;
 import frc.robot.sensors.DistanceSensor;
 import frc.robot.sensors.LimitSwitchSensor;
+import lombok.Getter;
 
 public class ClimberSubsystem extends SubsystemBase {
   public enum CLIMBER_STATE {OUT, IN};
@@ -52,6 +57,18 @@ public class ClimberSubsystem extends SubsystemBase {
   private NetworkTableEntry topLimitEntry;
   private NetworkTableEntry bottomLimitEntry;
   private NetworkTableEntry distanceSensorEntry;
+
+  // safety
+  @Getter
+  private boolean safety = false;
+  private int safetyCounter = 0;
+  private final int SAFETY_THRESHOLD = 30;
+  private boolean safetyCounterUpdate = false;
+  
+  public void incrementSafetyCounter(){
+    safetyCounter++;
+    safetyCounterUpdate = true;
+  }
  
   /** Creates a new Winch. */
   public ClimberSubsystem(ClimberSensorCollection climberSensorCollection) {
@@ -87,10 +104,9 @@ public class ClimberSubsystem extends SubsystemBase {
     climberSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Climber.SOLENOID_OUT, Climber.SOLENOID_IN);
 
     // climber starts angled
-    setClimberState(CLIMBER_STATE.IN);
+    climberSolenoid.set(Value.kReverse);
 
     // initialize the starting position
-    setPoint = Climber.STARTING_POSITION;
     winch.getEncoder().setPosition(Climber.STARTING_POSITION);
 
     // setup shuffle board
@@ -181,6 +197,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
   // set the Climber to be in or out
   public void setClimberState(CLIMBER_STATE state) {
+    //check to see if the safety has been disabled
+    if (!safety){
+      return;
+    }
+
     currentClimberState = state;
 
     if (state == CLIMBER_STATE.OUT) {
@@ -218,7 +239,7 @@ public class ClimberSubsystem extends SubsystemBase {
     else if(bottomLimitSwitchSensor.isPressed()){
       // winch.getEncoder().setPosition(Constants.Climber.ma)
       if (winch.get() < 0){
-        winch.set(0);
+        // winch.set(0);
       }
     }
   }
@@ -226,6 +247,22 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // update the safety
+    if (!safety){
+      if(safetyCounter > SAFETY_THRESHOLD){
+        safety = true;
+        Controller.Manipulator.setRumble(false);
+      } else {
+        if(safetyCounterUpdate){
+          safetyCounterUpdate = false;
+          Controller.Manipulator.setRumble(true);
+        } else {
+          safetyCounter = 0;
+          Controller.Manipulator.setRumble(false);
+        }
+      }
+    }
 
     // update the PID Controller
 
