@@ -26,6 +26,7 @@ import frc.robot.subsystems.ClimberSubsystem.CLIMBER_STATE;
 import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 import frc.robot.Constants.Autonomous;
 import frc.robot.commands.*;
+import frc.robot.commands.autonomous.AutoCommand;
 import frc.robot.commands.autonomous.ComplexAutoCommand;
 import frc.robot.commands.autonomous.SimpleAutoCommand;
 import frc.robot.sensors.ClimberSensorCollection;
@@ -137,6 +138,9 @@ public class RobotContainer {
 
       case 2:
       return new ComplexAutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[1]);
+
+      case 3:
+      return new AutoCommand(driveTrainSubsystem, beltSubsystem, Autonomous.AUTONOMOUS[2]);
 
       default:
       return null;
