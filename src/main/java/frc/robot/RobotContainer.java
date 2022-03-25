@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle.Control;
 
@@ -80,11 +81,16 @@ public class RobotContainer {
     Controller.Drive.getIntakeButton().whenHeld(intakeCommand);
     Controller.Drive.getDispenseButton().whenHeld(dispenseCommand);
 
-    Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
-    Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
+    // This is disabled because we use this solenoid for venting rather than shifting gears
+    // Controller.Drive.getSlowButton().whenPressed(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)));
+    // Controller.Drive.getSlowButton().whenReleased(new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH)));
     driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW);
 
-
+    Controller.Manipulator.getVentButton().whenPressed(new SequentialCommandGroup(
+      new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.LOW)),
+      new WaitCommand(0.2),
+      new InstantCommand(() -> driveTrainSubsystem.setShifter(SHIFTER_POSITION.HIGH))
+    ));
  
   
     // less elegant but it actually works
