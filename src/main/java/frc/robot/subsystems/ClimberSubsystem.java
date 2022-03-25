@@ -69,6 +69,10 @@ public class ClimberSubsystem extends SubsystemBase {
     safetyCounter++;
     safetyCounterUpdate = true;
   }
+
+  public void retractClimber(){
+    climberSolenoid.set(Value.kReverse);
+  }
  
   /** Creates a new Winch. */
   public ClimberSubsystem(ClimberSensorCollection climberSensorCollection) {
@@ -104,7 +108,7 @@ public class ClimberSubsystem extends SubsystemBase {
     climberSolenoid = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Climber.SOLENOID_OUT, Climber.SOLENOID_IN);
 
     // climber starts angled
-    climberSolenoid.set(Value.kReverse);
+    retractClimber();
 
     // initialize the starting position
     winch.getEncoder().setPosition(Climber.STARTING_POSITION);

@@ -67,11 +67,6 @@ public class Controller
             return addDeadBand(controller.getLeftX(), 0.1);
         }
 
-        /** B Button */
-        public static JoystickButton getSlowButton() {
-            return new JoystickButton(controller, XboxController.Button.kB.value);
-        }
-
         /** Intake button is mapped to the left bumper on the second controller */
         public static JoystickButton getIntakeButton() {
             return new JoystickButton(controller, XboxController.Button.kLeftBumper.value);

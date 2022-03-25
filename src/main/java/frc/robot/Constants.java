@@ -88,9 +88,9 @@ public final class Constants
         public static final int BACK_LEFT = 7;
 
         /** solenoid Pneumatic Hub port */
-        public static final int SHIFTER_HIGH = 5;
+        public static final int VENT_HIGH = 7;
         /** solenoid Pneumatic Hub port */
-        public static final int SHIFTER_LOW = 4;
+        public static final int VENT_LOW = 6;
 
         public static final double HIGH_GEAR_RATIO = 12.0/42.0 * 24.0/50.0;
         public static final double LOW_GEAR_RATIO = 12.0/42.0 * 14.0/60.0;

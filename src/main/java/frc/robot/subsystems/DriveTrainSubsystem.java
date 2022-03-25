@@ -29,6 +29,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.Drive;
 import frc.robot.simulation.PhysicsSim;
 import frc.robot.simulation.Simulation;
+import lombok.Getter;
 
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -62,9 +63,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private Simulation sim;
 
   // shifter
-  private DoubleSolenoid shifter;
-  public enum SHIFTER_POSITION {LOW, HIGH}
-  private SHIFTER_POSITION shifterPosition;
+  private DoubleSolenoid vent;
+  public enum VENT_POSITION {CLOSED, OPEN}
+  @Getter
+  private VENT_POSITION ventPosition;
+
+  public void closeVent(){
+    ventPosition = VENT_POSITION.CLOSED;
+    vent.set(Value.kReverse);
+  }
+
+  public void openVent(){
+    ventPosition = VENT_POSITION.OPEN;
+    vent.set(Value.kForward);
+  }
 
   // rotation of drive - should be changed to rely on Gyro
   private Rotation2d rotation;
@@ -77,6 +89,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   ShuffleboardTab driveTab = Shuffleboard.getTab("Drive Train");
   NetworkTableEntry leftSteps = driveTab.add("Left Motor", 0).getEntry();
   NetworkTableEntry rightSteps = driveTab.add("Right Motor", 0).getEntry();
+
+
+  
   
 
   /** Creates a new DriveTrain. */
@@ -124,10 +139,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     lastLeftEncoderPosition = frontLeft.getSelectedSensorPosition();
     lastRightEncoderPosition = frontRight.getSelectedSensorPosition();
 
-    // setup shifter
-    shifterPosition = SHIFTER_POSITION.LOW;
-    shifter = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Constants.Drive.SHIFTER_HIGH, Constants.Drive.SHIFTER_LOW);
-    shifter.set(Value.kReverse);
+    // setup vent
+    vent = new DoubleSolenoid(Constants.Pneumatics.COMPRESSOR_CAN_ID, PneumaticsModuleType.REVPH, Constants.Drive.VENT_HIGH, Constants.Drive.VENT_LOW);
+    closeVent();
+    
 
     // setup timeout
     isStopped = true;
@@ -216,24 +231,24 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
 
   // set shifter
-  public void setShifter(SHIFTER_POSITION position)
-  {
-    shifterPosition = position;
+  // public void setShifter(SHIFTER_POSITION position)
+  // {
+  //   shifterPosition = position;
 
-    if(position == SHIFTER_POSITION.HIGH)
-    {
-      shifter.set(Value.kReverse);
-    }
-    else if (position == SHIFTER_POSITION.LOW)
-    {
-      shifter.set(Value.kForward);
-    }
-  }
+  //   if(position == SHIFTER_POSITION.HIGH)
+  //   {
+  //     shifter.set(Value.kReverse);
+  //   }
+  //   else if (position == SHIFTER_POSITION.LOW)
+  //   {
+  //     shifter.set(Value.kForward);
+  //   }
+  // }
 
-  public SHIFTER_POSITION getShifter()
-  {
-    return shifterPosition;
-  }
+  // public SHIFTER_POSITION getShifter()
+  // {
+  //   return shifterPosition;
+  // }
 
   /**
    * sets the motors to coast mode to prevent current usage
@@ -364,7 +379,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     motorSpeed *= Drive.DRIVE_VELOCITY_FACTOR;
 
     // In rotations per second
-    if (shifterPosition == SHIFTER_POSITION.HIGH) {
+    if (false) {
       motorSpeed *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       motorSpeed *= Constants.Drive.LOW_GEAR_RATIO;
@@ -382,7 +397,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     motorPosition /= Drive.DRIVE_SPR;
 
     // In rotations
-    if (shifterPosition == SHIFTER_POSITION.HIGH) {
+    if (false) {
       motorPosition *= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       motorPosition *= Constants.Drive.LOW_GEAR_RATIO;
@@ -400,7 +415,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     robotSpeed /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
     // In rotations per second
-    if (shifterPosition == SHIFTER_POSITION.HIGH) {
+    if (false) {
       robotSpeed /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotSpeed /= Constants.Drive.LOW_GEAR_RATIO;
@@ -418,7 +433,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     robotPosition /= Math.PI * Constants.Drive.WHEEL_RADIUS * 2;
 
     // In rotations
-    if (shifterPosition == SHIFTER_POSITION.HIGH) {
+    if (false) {
       robotPosition /= Constants.Drive.HIGH_GEAR_RATIO;
     } else {
       robotPosition /= Constants.Drive.LOW_GEAR_RATIO;

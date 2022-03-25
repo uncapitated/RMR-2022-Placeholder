@@ -8,7 +8,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.SHIFTER_POSITION;
 
 public class ShiftDownCommand extends CommandBase {
   private DriveTrainSubsystem driveTrain;
@@ -43,7 +42,7 @@ public class ShiftDownCommand extends CommandBase {
 
     if (Timer.getFPGATimestamp() - startTime > 0.1)
     {
-      driveTrain.setShifter(SHIFTER_POSITION.LOW);
+      // driveTrain.setShifter(SHIFTER_POSITION.LOW);
     }
   }
 

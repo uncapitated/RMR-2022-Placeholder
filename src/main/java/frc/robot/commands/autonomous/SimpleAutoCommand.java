@@ -4,6 +4,9 @@
 
 package frc.robot.commands.autonomous;
 
+import java.time.Instant;
+
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -12,8 +15,10 @@ import frc.robot.AutonomousPoints;
 import frc.robot.commands.BeltDispenseCommand;
 import frc.robot.commands.BeltIntakeCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.DriveToPositionCommand;
 import frc.robot.subsystems.BeltSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -25,13 +30,17 @@ public class SimpleAutoCommand extends SequentialCommandGroup {
   AutonomousPoints points;
 
   /** Creates a new SimpleAuto. */
-  public SimpleAutoCommand(DriveTrainSubsystem driveTrainSubsystem, BeltSubsystem beltSubsystem, AutonomousPoints autoPoints) {
+  public SimpleAutoCommand(DriveTrainSubsystem driveTrainSubsystem, BeltSubsystem beltSubsystem, AutonomousPoints autoPoints, ClimberSubsystem climberSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
     driveTrain = driveTrainSubsystem;
     points = autoPoints;
 
+    // make ABSOLUTELY CERTAIN that the climber is retracted
+    addCommands(
+      new InstantCommand(() -> climberSubsystem.retractClimber())
+    );
     // dispense ball for 0.5 seconds
     addCommands(
       new ParallelRaceGroup(
@@ -39,6 +48,8 @@ public class SimpleAutoCommand extends SequentialCommandGroup {
         new WaitCommand(0.5)
       )
     );
+    //move backwards to get out of the thing
+    addCommands(new DriveStraightCommand(driveTrainSubsystem, 20, 1));
 
     //move out of range
     // addCommands(
